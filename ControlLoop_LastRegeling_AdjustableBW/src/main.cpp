@@ -22,6 +22,7 @@
 // HAL includes for RTSW board
 
 #include "led_lib.h"
+#include "command_console.h"
 #if 0
 #include "DeviceIOLib.h"
 #include "ADCLib.h"
@@ -157,14 +158,14 @@ void setup (void)
 	port_Init();
 	qc_Init();
 	i2c_Init();
-
-	StartCommandConsoleTask(NULL);
 #endif
+
 
   // Initialize the LED before starting the heartbeat task
 	myLed.init();
-
 	StartHartbeatTask();
+	delay(500);
+	StartCommandConsoleTask(NULL);
 	//StartApplicationTasks();
 }
 
