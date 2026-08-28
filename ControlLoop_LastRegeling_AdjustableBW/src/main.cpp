@@ -23,6 +23,7 @@
 
 #include "led_lib.h"
 #include "command_console.h"
+#include "oled_lib.h"
 #if 0
 #include "DeviceIOLib.h"
 #include "ADCLib.h"
@@ -54,6 +55,7 @@ void StartHartbeatTask(void);
 static TaskHandle_t handle_HartbeatTask = NULL;
 led myLed;
 bool ledOn = true;
+oledDisplay myOled;
 
 ///////////////////////////////////////////////////////////////////////////////
 // void StartHartbeatTask(void)
@@ -134,7 +136,8 @@ void HartbeatTask(void *pvParameters)
 void setup (void)
 {
 	Serial.begin(115200);
-	delay(100);
+	delay(1000);
+	Serial.println("System initializing");
 
 	// Insert system clock initialization code here (sysclk_init()).
 #if 0
@@ -163,8 +166,25 @@ void setup (void)
 
   // Initialize the LED before starting the heartbeat task
 	myLed.init();
+	bool oledOK  = myOled.init();
+	if(!oledOK) {
+		Serial.println("OLED Init failed!");
+	}
+	myOled.clear();
+	myOled.writeLine(0, "System Initialized", ALIGN_CENTER);
+	myOled.writeLine(1, "System Initialized", ALIGN_CENTER);
+	myOled.writeLine(2, "System Initialized", ALIGN_CENTER);
+	myOled.writeLine(3, "System Initialized", ALIGN_CENTER);
+
+	myOled.clear();
+	myOled.writeLine(0, "System Initialized", ALIGN_CENTER);
+	myOled.writeLine(1, "System Initialized", ALIGN_CENTER);
+	myOled.writeLine(2, "System Initialized", ALIGN_CENTER);
+	myOled.writeLine(3, "System Initialized", ALIGN_CENTER);
+
 	StartHartbeatTask();
 	delay(500);
+
 	StartCommandConsoleTask(NULL);
 	//StartApplicationTasks();
 }
