@@ -7,6 +7,7 @@
 #include <esp_additions/freertos/task_snapshot.h>
 
 #include "command_console.h"
+#include "vprintf.h"
 
 namespace
 {
@@ -15,29 +16,29 @@ constexpr UBaseType_t kMaxTasks = 32;
 
 void printPrompt()
 {
-	Serial.print("> ");
+	vPrint("> ");
 }
 
 void printCommandList()
 {
-	Serial.println("Available commands:");
-	Serial.println("  help     Show this help");
-	Serial.println("  version  Show firmware information");
-	Serial.println("  cpuinfo  Show ESP32 CPU/chip information");
-	Serial.println("  tasks    Show current task snapshot");
-	Serial.println("  taskstats Show command console task details");
-	Serial.println("  memory   Show ESP32 heap memory information");
-	Serial.println("  heap     Alias for memory");
-	Serial.println("  echo     Echo text, for example: echo hello");
+	vPrint("Available commands:\n");
+	vPrint("  help     Show this help\n");
+	vPrint("  version  Show firmware information\n");
+	vPrint("  cpuinfo  Show ESP32 CPU/chip information\n");
+	vPrint("  tasks    Show current task snapshot\n");
+	vPrint("  taskstats Show command console task details\n");
+	vPrint("  memory   Show ESP32 heap memory information\n");
+	vPrint("  heap     Alias for memory\n");
+	vPrint("  echo     Echo text, for example: echo hello\n");
 }
 
 void printMemoryInfo()
 {
-	Serial.println("ESP32 heap memory:");
-	Serial.printf("  Total heap:       %lu bytes\n", ESP.getHeapSize());
-	Serial.printf("  Free heap:        %lu bytes\n", ESP.getFreeHeap());
-	Serial.printf("  Minimum free:     %lu bytes\n", ESP.getMinFreeHeap());
-	Serial.printf("  Largest block:    %lu bytes\n", ESP.getMaxAllocHeap());
+	vPrint("ESP32 heap memory:");
+	vPrint("  Total heap:       %lu bytes\n", ESP.getHeapSize());
+	vPrint("  Free heap:        %lu bytes\n", ESP.getFreeHeap());
+	vPrint("  Minimum free:     %lu bytes\n", ESP.getMinFreeHeap());
+	vPrint("  Largest block:    %lu bytes\n", ESP.getMaxAllocHeap());
 }
 
 void printTaskStats()
@@ -46,12 +47,12 @@ void printTaskStats()
 	const TickType_t tickCount = xTaskGetTickCount();
 	const TickType_t msSinceBoot = pdTICKS_TO_MS(tickCount);
 
-	Serial.println("FreeRTOS task snapshot:");
-	Serial.printf("  Number of tasks:   %u\n", static_cast<unsigned int>(taskCount));
-	Serial.printf("  Uptime (ms):       %lu\n", static_cast<unsigned long>(msSinceBoot));
-	Serial.printf("  Current task:      %s\n", pcTaskGetName(nullptr));
-	Serial.printf("  Current priority:  %u\n", static_cast<unsigned int>(uxTaskPriorityGet(nullptr)));
-	Serial.printf("  Current stack HWM: %u words\n",
+	vPrint("FreeRTOS task snapshot:");
+	vPrint("  Number of tasks:   %u\n", static_cast<unsigned int>(taskCount));
+	vPrint("  Uptime (ms):       %lu\n", static_cast<unsigned long>(msSinceBoot));
+	vPrint("  Current task:      %s\n", pcTaskGetName(nullptr));
+	vPrint("  Current priority:  %u\n", static_cast<unsigned int>(uxTaskPriorityGet(nullptr)));
+	vPrint("  Current stack HWM: %u words\n",
 		static_cast<unsigned int>(uxTaskGetStackHighWaterMark(nullptr)));
 }
 
@@ -68,9 +69,9 @@ void printTasksInfo()
 {
 	UBaseType_t taskCount = uxTaskGetNumberOfTasks();
 
-	Serial.printf("--- %u tasks executing ---\n", static_cast<unsigned int>(taskCount));
-	Serial.println("Name                 State  Prio  Stack");
-	Serial.println("----------------------------------------");
+	vPrint("--- %u tasks executing ---\n", static_cast<unsigned int>(taskCount));
+	vPrint("Name                 State  Prio  Stack");
+	vPrint("----------------------------------------");
 
 #if defined(configENABLE_TASK_SNAPSHOT) && (configENABLE_TASK_SNAPSHOT == 1)
 	TaskSnapshot_t snapshots[kMaxTasks];
@@ -84,7 +85,7 @@ void printTasksInfo()
 		eTaskState state = eTaskGetState(handle);
 		UBaseType_t highWaterMark = uxTaskGetStackHighWaterMark(handle);
 
-		Serial.printf("%-20s %-6s %4u %6u\n",
+		vPrint("%-20s %-6s %4u %6u\n",
 			pcTaskGetName(handle),
 			getTaskState(state),
 			static_cast<unsigned int>(uxTaskPriorityGet(handle)),
@@ -93,7 +94,7 @@ void printTasksInfo()
 
 	if (listed < taskCount)
 	{
-		Serial.printf("(truncated: %u task(s) not shown; increase kMaxTasks)\n",
+		vPrint("(truncated: %u task(s) not shown; increase kMaxTasks)\n",
 			static_cast<unsigned int>(taskCount - listed));
 	}
 #else
@@ -101,12 +102,12 @@ void printTasksInfo()
 	eTaskState state = eTaskGetState(handle);
 	UBaseType_t highWaterMark = uxTaskGetStackHighWaterMark(handle);
 
-	Serial.printf("%-20s %-6s %4u %6u\n",
+	vPrint("%-20s %-6s %4u %6u\n",
 		pcTaskGetName(handle),
 		getTaskState(state),
 		static_cast<unsigned int>(uxTaskPriorityGet(handle)),
 		static_cast<unsigned int>(highWaterMark));
-	Serial.println("(full task listing unavailable in this FreeRTOS build)");
+	vPrint("(full task listing unavailable in this FreeRTOS build)");
 #endif
 }
 
@@ -127,28 +128,28 @@ void printCPUInfo(void)
 
 	const char *model = ESP.getChipModel();
 
-	Serial.printf("------------------------------------------\n");
-	Serial.printf("> chip model:         %s\n", model);
-	Serial.printf("> chip revision:      %d\n", revision);
-	Serial.printf("> number of cores:    %d\n", nCores);
-	Serial.printf("> CPU frequency:      %lu MHz\n", cpuFreq);
-	Serial.printf("> ESP32 core id:      %d\n", coreId);
-	Serial.printf("> time since boot:    %llu us\n", usSinceBoot);
-	Serial.printf("> free heap:          %lu bytes\n", freeheap);
-	Serial.printf("> sketch size:        %lu\n", sketchsize);
-	Serial.printf("> free sketch space:  %lu\n", freesketchspace);
-	Serial.printf("------------------------------------------\n");
+	vPrint("------------------------------------------\n");
+	vPrint("> chip model:         %s\n", model);
+	vPrint("> chip revision:      %d\n", revision);
+	vPrint("> number of cores:    %d\n", nCores);
+	vPrint("> CPU frequency:      %lu MHz\n", cpuFreq);
+	vPrint("> ESP32 core id:      %d\n", coreId);
+	vPrint("> time since boot:    %llu us\n", usSinceBoot);
+	vPrint("> free heap:          %lu bytes\n", freeheap);
+	vPrint("> sketch size:        %lu\n", sketchsize);
+	vPrint("> free sketch space:  %lu\n", freesketchspace);
+	vPrint("------------------------------------------\n");
 }
 
 void printVersion(void)
 {
 	const char *version = ESP.getSdkVersion();
 
-	Serial.printf("------------------------------------------\n");
-	Serial.printf("> Build:     %s\n", __TIMESTAMP__);
-	Serial.printf("> ESP32 SDK: %s\n", version);
-	Serial.printf("> FreeRTOS:  %s\n", tskKERNEL_VERSION_NUMBER);
-	Serial.printf("------------------------------------------\n");
+	vPrint("------------------------------------------\n");
+	vPrint("> Build:     %s\n", __TIMESTAMP__);
+	vPrint("> ESP32 SDK: %s\n", version);
+	vPrint("> FreeRTOS:  %s\n", tskKERNEL_VERSION_NUMBER);
+	vPrint("------------------------------------------\n");
 }
 
 void processCommand(const char *command)
@@ -196,13 +197,13 @@ void processCommand(const char *command)
 
 	if (strncmp(command, "echo ", 5) == 0)
 	{
-		Serial.println(command + 5);
+		vPrint(command + 5);
 		return;
 	}
 
-	Serial.print("Unknown command: ");
-	Serial.println(command);
-	Serial.println("Type 'help' for a list of commands.");
+	vPrint("Unknown command: ");
+	vPrint(command);
+	vPrint("Type 'help' for a list of commands.");
 }
 }
 
@@ -220,7 +221,7 @@ extern "C" void StartCommandConsoleTask(void *pvParameters)
 
 	if (result != pdPASS)
 	{
-		Serial.println("Unable to start command console task.");
+		vPrint("Unable to start command console task.");
 	}
 }
 
@@ -238,10 +239,10 @@ extern "C" void CommandConsoleTask(void *pvParameters)
 	size_t inputIndex = 0;
 	bool ignoreLineFeed = false;
 
-	Serial.println();
-	Serial.println("FreeRTOS command server");
+	//vPrint();
+	vPrint("FreeRTOS command server");
 	printCommandList();
-	Serial.println();
+	//vPrint();
 	printPrompt();
 
 	while (true)
@@ -262,7 +263,7 @@ extern "C" void CommandConsoleTask(void *pvParameters)
 		if (character == '\r' || (character == '\n' && !ignoreLineFeed))
 		{
 			ignoreLineFeed = character == '\r';
-			Serial.println();
+//			vPrint();
 			if (inputIndex == 0)
 			{
 				strncpy(input, lastInput, kMaxInputSize);
@@ -273,7 +274,7 @@ extern "C" void CommandConsoleTask(void *pvParameters)
 			lastInput[kMaxInputSize - 1] = '\0';
 			inputIndex = 0;
 			input[0] = '\0';
-			Serial.println();
+//			vPrint();
 			printPrompt();
 		}
 		else if (character == '\n')
@@ -286,14 +287,15 @@ extern "C" void CommandConsoleTask(void *pvParameters)
 			{
 				--inputIndex;
 				input[inputIndex] = '\0';
-				Serial.print("\b \b");
+				vPrint("\b \b");
 			}
 		}
 		else if (inputIndex < kMaxInputSize - 1)
 		{
 			input[inputIndex++] = character;
 			input[inputIndex] = '\0';
-			Serial.write(static_cast<uint8_t>(character));
+			vPrint("%c", character);
+			//Serial.write(static_cast<uint8_t>(character));
 		}
 	}
 }

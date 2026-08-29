@@ -117,31 +117,6 @@ void setup (void)
 	Start_vPrintTask(NULL);
 
 
-	// Insert system clock initialization code here (sysclk_init()).
-#if 0
-	sysclk_init();
-	board_init();
-#endif
-
-	// Insert application code here, after the board has been initialized.
-#if 0	
-	delay_ms(200);
-
-	dio_Init();	// *** must be called first, inits all IO lines ***
-
-	stled_Init();
-	
-	adc_Init();
-	spi_Init();
-	dac_Init();
-	led_Init();
-	switch_Init();
-	port_Init();
-	qc_Init();
-	i2c_Init();
-#endif
-
-
   // Initialize the LED before starting the heartbeat task
 	statusLed.init();
 	bool isOledOk  = statusOled.init();
