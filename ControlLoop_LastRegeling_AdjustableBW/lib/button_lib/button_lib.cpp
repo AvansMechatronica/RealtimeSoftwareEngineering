@@ -17,6 +17,18 @@
 
 #include "button_lib.h"
 
+static button buttonDevice;
+
+extern "C" void switch_Init(void)
+{
+	buttonDevice.init();
+}
+
+extern "C" bool switch_IsPressed(uint8_t buttonNumber)
+{
+	return buttonDevice.isPressed(buttonNumber);
+}
+
 
 ///////////////////////////////////////////////////////////////////////////////
 // void button_Init(void)

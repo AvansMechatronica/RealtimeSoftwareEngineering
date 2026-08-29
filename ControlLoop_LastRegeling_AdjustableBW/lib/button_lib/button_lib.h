@@ -10,6 +10,20 @@
 #ifndef BUTTONLIB_H_
 #define BUTTONLIB_H_
 
+#include <stdint.h>
+
+#ifdef __cplusplus
+extern "C" {
+#else
+#include <stdbool.h>
+#endif
+
+void switch_Init(void);
+bool switch_IsPressed(uint8_t buttonNumber);
+
+#ifdef __cplusplus
+}
+
 ///////////////////////////////////////////////////////////////////////////////
 // #defines
 
@@ -25,6 +39,8 @@ public:
     void init();
     bool isPressed(uint8_t buttonNumber);
 };
+
+#endif
 
 
 #endif /* BUTTONLIB_H_ */

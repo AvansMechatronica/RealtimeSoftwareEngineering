@@ -1,5 +1,5 @@
 /*
- * vPrintString.c
+ * vprintf.c
  *
  * Created: 11-9-2022 22:43:20
  *  Author: Roel Smeets
@@ -8,7 +8,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 // system includes
 
-#include <asf.h>
+#include <Arduino.h>
 #include <string.h>
 #include <stdarg.h>
 
@@ -16,31 +16,72 @@
 ///////////////////////////////////////////////////////////////////////////////
 // application includes
 
-#include "vPrintString.h"
+#include "vprintf.h"
 
 ///////////////////////////////////////////////////////////////////////////////
 // #define's
 
 #define MAX_PRINT_STRING_LENGTH	512
+#define PRINTF_QUEUE_SIZE		32
 
 ///////////////////////////////////////////////////////////////////////////////
 // external objects
 
-extern xQueueHandle printfQueue;
-extern freertos_uart_if the_command_uart;
+xQueueHandle printfQueue;
+xTaskHandle handle_PrintfTask		  = NULL;
+portMUX_TYPE printfMux = portMUX_INITIALIZER_UNLOCKED;
+
+
+void PrintfTask(void *pvParameters)
+{
+	char *p	= NULL;
+	int text_length = 0;
+	portTickType max_block_time_ticks = 200UL / portTICK_RATE_MS;
+
+	while(true)
+	{
+		xQueueReceive(printfQueue, &p, portMAX_DELAY);
+		Serial.printf("%s", p);
+		vPortFree(p);
+	}
+	
+	/* Should never go there */
+	vTaskDelete(NULL);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// void StartPrintTask(void *pvParameters)
+
+void Start_vPrintTask(void *pvParameters)
+{
+	char *p = NULL;
+		
+	printfQueue = xQueueCreate(PRINTF_QUEUE_SIZE, sizeof(p));
+	
+	xTaskCreate(PrintfTask, "tsk_Printf", 
+				(configMINIMAL_STACK_SIZE * 2), 
+				NULL, (configMAX_PRIORITIES - 2), &handle_PrintfTask);
+				
+}
+
 
 ///////////////////////////////////////////////////////////////////////////////
 // void vPrintString(const char *format, ...)
 
-void vPrintString(const char *format, ...)
+void vPrint(const char *format, ...)
 {
 	va_list ap;
 	char *p = NULL;
 	int text_length = 0;
 
-	taskENTER_CRITICAL();
+	taskENTER_CRITICAL(&printfMux);
 
-	p = pvPortMalloc(MAX_PRINT_STRING_LENGTH);
+	p = static_cast<char *>(pvPortMalloc(MAX_PRINT_STRING_LENGTH));
+	if (p == NULL)
+	{
+		taskEXIT_CRITICAL(&printfMux);
+		return;
+	}
 	p[0] = '\0';
 	
 	// Add this line to show Taskname before printed text on console
@@ -65,9 +106,9 @@ void vPrintString(const char *format, ...)
 	}
 #else
 	portTickType max_block_time_ticks = 200UL / portTICK_RATE_MS;
-	freertos_uart_write_packet(the_command_uart, p, text_length, max_block_time_ticks);
+	Serial.printf("%s", p);
 	vPortFree(p);
 #endif
 
-	taskEXIT_CRITICAL();
+	taskEXIT_CRITICAL(&printfMux);
 }

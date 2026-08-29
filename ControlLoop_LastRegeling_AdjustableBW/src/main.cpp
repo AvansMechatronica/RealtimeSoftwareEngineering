@@ -1,5 +1,3 @@
-
-
 /*
  * main.c
  *
@@ -24,20 +22,8 @@
 #include "led_lib.h"
 #include "command_console.h"
 #include "oled_lib.h"
-#if 0
-#include "DeviceIOLib.h"
-#include "ADCLib.h"
-#include "DAC4921Lib.h"
-#include "SPILib.h"
-#include "LEDLib.h"
-#include "SwitchLib.h"
-#include "PortIOLib.h"
-#include "QC7366Lib.h"
-#include "InterruptLib.h"
-#include "I2CLib.h"
-#include "GyroFXASLib.h"
-#include "StatusLED.h"
-#endif
+#include "ApplicationTasks.h"
+#include "vprintf.h"
 
 ///////////////////////////////////////////////////////////////////////////////
 // Function prototypes
@@ -128,6 +114,8 @@ void setup (void)
 	Serial.begin(115200);
 	delay(1000);
 	Serial.println("System initializing");
+	Start_vPrintTask(NULL);
+
 
 	// Insert system clock initialization code here (sysclk_init()).
 #if 0
@@ -166,17 +154,11 @@ void setup (void)
 	myOled.writeLine(2, "System Initialized", ALIGN_CENTER);
 	myOled.writeLine(3, "System Initialized", ALIGN_CENTER);
 
-	myOled.clear();
-	myOled.writeLine(0, "System Initialized", ALIGN_CENTER);
-	myOled.writeLine(1, "System Initialized", ALIGN_CENTER);
-	myOled.writeLine(2, "System Initialized", ALIGN_CENTER);
-	myOled.writeLine(3, "System Initialized", ALIGN_CENTER);
-
 	StartHartbeatTask();
 	delay(500);
 
 	StartCommandConsoleTask(NULL);
-	//StartApplicationTasks();
+	StartApplicationTasks();
 }
 
 void loop(void)
