@@ -4,6 +4,7 @@
 
 #include <freertos/FreeRTOS.h>
 #include <freertos/task.h>
+#include <esp_additions/freertos/task_snapshot.h>
 
 #include "command_console.h"
 
@@ -22,8 +23,11 @@ void printCommandList()
 	Serial.println("Available commands:");
 	Serial.println("  help     Show this help");
 	Serial.println("  version  Show firmware information");
-	Serial.println("  tasks    Show FreeRTOS task statistics");
+	Serial.println("  cpuinfo  Show ESP32 CPU/chip information");
+	Serial.println("  tasks    Show current task snapshot");
+	Serial.println("  taskstats Show command console task details");
 	Serial.println("  memory   Show ESP32 heap memory information");
+	Serial.println("  heap     Alias for memory");
 	Serial.println("  echo     Echo text, for example: echo hello");
 }
 
@@ -38,38 +42,113 @@ void printMemoryInfo()
 
 void printTaskStats()
 {
-	TaskStatus_t *taskStatus = static_cast<TaskStatus_t *>(
-		malloc(kMaxTasks * sizeof(TaskStatus_t)));
-	if (taskStatus == nullptr)
+	const UBaseType_t taskCount = uxTaskGetNumberOfTasks();
+	const TickType_t tickCount = xTaskGetTickCount();
+	const TickType_t msSinceBoot = pdTICKS_TO_MS(tickCount);
+
+	Serial.println("FreeRTOS task snapshot:");
+	Serial.printf("  Number of tasks:   %u\n", static_cast<unsigned int>(taskCount));
+	Serial.printf("  Uptime (ms):       %lu\n", static_cast<unsigned long>(msSinceBoot));
+	Serial.printf("  Current task:      %s\n", pcTaskGetName(nullptr));
+	Serial.printf("  Current priority:  %u\n", static_cast<unsigned int>(uxTaskPriorityGet(nullptr)));
+	Serial.printf("  Current stack HWM: %u words\n",
+		static_cast<unsigned int>(uxTaskGetStackHighWaterMark(nullptr)));
+}
+
+char *getTaskState(eTaskState state)
+{
+	char *name = NULL;
+	static const char *s[] = {"RUN", "READY", "BLOCK", "SUSP", "DEL", "INV"};
+
+	name = (char *)(s[state]);
+
+	return name;
+}
+void printTasksInfo()
+{
+	UBaseType_t taskCount = uxTaskGetNumberOfTasks();
+
+	Serial.printf("--- %u tasks executing ---\n", static_cast<unsigned int>(taskCount));
+	Serial.println("Name                 State  Prio  Stack");
+	Serial.println("----------------------------------------");
+
+#if defined(configENABLE_TASK_SNAPSHOT) && (configENABLE_TASK_SNAPSHOT == 1)
+	TaskSnapshot_t snapshots[kMaxTasks];
+	UBaseType_t tcbSize = 0;
+	UBaseType_t listed = uxTaskGetSnapshotAll(snapshots, kMaxTasks, &tcbSize);
+	(void)tcbSize;
+
+	for (UBaseType_t index = 0; index < listed; ++index)
 	{
-		Serial.println("Unable to allocate task statistics buffer.");
-		return;
+		TaskHandle_t handle = static_cast<TaskHandle_t>(snapshots[index].pxTCB);
+		eTaskState state = eTaskGetState(handle);
+		UBaseType_t highWaterMark = uxTaskGetStackHighWaterMark(handle);
+
+		Serial.printf("%-20s %-6s %4u %6u\n",
+			pcTaskGetName(handle),
+			getTaskState(state),
+			static_cast<unsigned int>(uxTaskPriorityGet(handle)),
+			static_cast<unsigned int>(highWaterMark));
 	}
 
-	configRUN_TIME_COUNTER_TYPE totalRunTime = 0;
-	const UBaseType_t taskCount = uxTaskGetSystemState(
-		taskStatus, kMaxTasks, &totalRunTime);
-
-	Serial.println("Name                 State  Prio  Stack  Runtime");
-	Serial.println("--------------------------------------------------");
-	for (UBaseType_t index = 0; index < taskCount; ++index)
+	if (listed < taskCount)
 	{
-		const uint32_t runtimePercent = totalRunTime == 0
-			? 0
-			: static_cast<uint32_t>((100ULL * taskStatus[index].ulRunTimeCounter) / totalRunTime);
-
-		Serial.printf("%-20s %-6c %4u %6u %6lu%%\n",
-			taskStatus[index].pcTaskName,
-			taskStatus[index].eCurrentState == eRunning ? 'R' :
-				taskStatus[index].eCurrentState == eReady ? 'Y' :
-				taskStatus[index].eCurrentState == eBlocked ? 'B' :
-				taskStatus[index].eCurrentState == eSuspended ? 'S' : 'D',
-			static_cast<unsigned int>(taskStatus[index].uxCurrentPriority),
-			static_cast<unsigned int>(taskStatus[index].usStackHighWaterMark),
-			runtimePercent);
+		Serial.printf("(truncated: %u task(s) not shown; increase kMaxTasks)\n",
+			static_cast<unsigned int>(taskCount - listed));
 	}
+#else
+	TaskHandle_t handle = xTaskGetCurrentTaskHandle();
+	eTaskState state = eTaskGetState(handle);
+	UBaseType_t highWaterMark = uxTaskGetStackHighWaterMark(handle);
 
-	free(taskStatus);
+	Serial.printf("%-20s %-6s %4u %6u\n",
+		pcTaskGetName(handle),
+		getTaskState(state),
+		static_cast<unsigned int>(uxTaskPriorityGet(handle)),
+		static_cast<unsigned int>(highWaterMark));
+	Serial.println("(full task listing unavailable in this FreeRTOS build)");
+#endif
+}
+
+
+
+
+void printCPUInfo(void)
+{
+	uint32_t cpuFreq = getCpuFrequencyMhz();
+	uint8_t nCores = ESP.getChipCores();
+	BaseType_t coreId = xPortGetCoreID();
+	uint64_t usSinceBoot = esp_timer_get_time();
+
+	uint32_t freeheap = ESP.getFreeHeap();
+	uint32_t freesketchspace = ESP.getFreeSketchSpace();
+	uint32_t sketchsize = ESP.getSketchSize();
+	uint8_t revision = ESP.getChipRevision();
+
+	const char *model = ESP.getChipModel();
+
+	Serial.printf("------------------------------------------\n");
+	Serial.printf("> chip model:         %s\n", model);
+	Serial.printf("> chip revision:      %d\n", revision);
+	Serial.printf("> number of cores:    %d\n", nCores);
+	Serial.printf("> CPU frequency:      %lu MHz\n", cpuFreq);
+	Serial.printf("> ESP32 core id:      %d\n", coreId);
+	Serial.printf("> time since boot:    %llu us\n", usSinceBoot);
+	Serial.printf("> free heap:          %lu bytes\n", freeheap);
+	Serial.printf("> sketch size:        %lu\n", sketchsize);
+	Serial.printf("> free sketch space:  %lu\n", freesketchspace);
+	Serial.printf("------------------------------------------\n");
+}
+
+void printVersion(void)
+{
+	const char *version = ESP.getSdkVersion();
+
+	Serial.printf("------------------------------------------\n");
+	Serial.printf("> Build:     %s\n", __TIMESTAMP__);
+	Serial.printf("> ESP32 SDK: %s\n", version);
+	Serial.printf("> FreeRTOS:  %s\n", tskKERNEL_VERSION_NUMBER);
+	Serial.printf("------------------------------------------\n");
 }
 
 void processCommand(const char *command)
@@ -85,7 +164,13 @@ void processCommand(const char *command)
 		return;
 	}
 
-	if (strcmp(command, "tasks") == 0 || strcmp(command, "taskstats") == 0)
+	if (strcmp(command, "taskstats") == 0)
+	{
+		printTasksInfo();
+		return;
+	}
+
+	if (strcmp(command, "tasks") == 0)
 	{
 		printTaskStats();
 		return;
@@ -99,8 +184,13 @@ void processCommand(const char *command)
 
 	if (strcmp(command, "version") == 0)
 	{
-		Serial.println("ControlLoop ESP32");
-		Serial.println(__DATE__ " " __TIME__);
+		printVersion();
+		return;
+	}
+
+	if (strcmp(command, "cpuinfo") == 0)
+	{
+		printCPUInfo();
 		return;
 	}
 

@@ -72,24 +72,14 @@ void StartHartbeatTask(void)
 
 
 ///////////////////////////////////////////////////////////////////////////////
-// void vApplicationIdleHook( void )
-
-void vApplicationIdleHook( void )
-{
-	//vPrintString("> idle task\n");
-	//vTaskDelay((portTickType)(configTICK_RATE_HZ * 1.0));
-}
-
-
-///////////////////////////////////////////////////////////////////////////////
-// void vApplicationIdleHook( void )
+// Stack overflow hook
 
 void vApplicationStackOverflowHook(TaskHandle_t xTask, char * pcTaskName)
 {
   Serial.printf("Stack overflow in task %s\n", pcTaskName);
 	while (true)
 	{
-    myLed.set(LED_IO15, ledOn);
+    myLed.set(LED_BLUE, ledOn);
     ledOn = !ledOn;
     delay(50);
 	}
@@ -104,7 +94,7 @@ void vApplicationMallocFailedHook(void)
   Serial.printf("Malloc failed!\n");
 	while (true)
 	{
-    myLed.set(LED_IO15, ledOn);
+    myLed.set(LED_BLUE, ledOn);
     ledOn = !ledOn;
     delay(50);
 	}
@@ -120,7 +110,7 @@ void HartbeatTask(void *pvParameters)
 	
 	while (true)
 	{
-    myLed.set(LED_IO15, ledOn);
+    myLed.set(LED_BLUE, ledOn);
     ledOn = !ledOn;
     delay(500);
 	}

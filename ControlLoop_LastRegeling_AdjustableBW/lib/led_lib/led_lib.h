@@ -16,8 +16,13 @@
 ///////////////////////////////////////////////////////////////////////////////
 // defines
 
-#define N_LEDS		2 				
-#define LED_PCB		GPIO_NUM_15     // IO pin number on ESP32
+#define N_LEDS		2 		
+
+#ifndef LED_PIN_ESP32_BOARD
+#define LED_PCB		GPIO_NUM_2     // IO pin number on ESP32
+#else
+#define LED_PCB		LED_PIN_ESP32_BOARD
+#endif
 
 // LED numbers to use in led_Set(...)
 
