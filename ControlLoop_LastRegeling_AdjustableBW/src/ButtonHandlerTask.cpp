@@ -28,17 +28,17 @@
 #include "vprintf.h"
 
 
-button buttonDevice;
+button restartButton;
 
 ///////////////////////////////////////////////////////////////////////////////
 // void ButtonHandlerTask(void *pvParameters)
 
 void ButtonHandlerTask(void *pvParameters)
 {
-	uint8_t buttonNumber = 0;	// 0 == SW1
+	uint8_t restartButtonIndex = 0;	// 0 == SW1
 	
 	//vPrint("> starting ButtonHandlerTask\n");
-	buttonDevice.init();
+	restartButton.init();
 
 	// signal to control thread that ButtonHandlerTask is up and running:
 //	xEventGroupSetBits( handle_ThreadEventGroup, BIT_0 );
@@ -46,13 +46,13 @@ void ButtonHandlerTask(void *pvParameters)
 	while(true)
 	{
 #if 0
-		if (buttonDevice.isPressed(buttonNumber))
+		if (restartButton.isPressed(restartButtonIndex))
 		{
 			// wait until button released:
-			while (buttonDevice.isPressed(buttonNumber))
+			while (restartButton.isPressed(restartButtonIndex))
 			{
 			}
-			Serial.printf("> restart button SW%d pressed!\n", buttonNumber + 1);
+			Serial.printf("> restart button SW%d pressed!\n", restartButtonIndex + 1);
 			xSemaphoreGive(handle_RestartSemaphore);
 		}
 #endif

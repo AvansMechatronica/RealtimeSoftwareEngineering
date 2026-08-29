@@ -34,15 +34,15 @@ portMUX_TYPE printfMux = portMUX_INITIALIZER_UNLOCKED;
 
 void PrintfTask(void *pvParameters)
 {
-	char *p	= NULL;
-	int text_length = 0;
-	portTickType max_block_time_ticks = 200UL / portTICK_RATE_MS;
+	char *messageBuffer = NULL;
+	int textLength = 0;
+	portTickType maxBlockTimeTicks = 200UL / portTICK_RATE_MS;
 
 	while(true)
 	{
-		xQueueReceive(printfQueue, &p, portMAX_DELAY);
-		Serial.printf("%s", p);
-		vPortFree(p);
+		xQueueReceive(printfQueue, &messageBuffer, portMAX_DELAY);
+		Serial.printf("%s", messageBuffer);
+		vPortFree(messageBuffer);
 	}
 	
 	/* Should never go there */
@@ -54,9 +54,9 @@ void PrintfTask(void *pvParameters)
 
 void Start_vPrintTask(void *pvParameters)
 {
-	char *p = NULL;
+	char *messageBuffer = NULL;
 		
-	printfQueue = xQueueCreate(PRINTF_QUEUE_SIZE, sizeof(p));
+	printfQueue = xQueueCreate(PRINTF_QUEUE_SIZE, sizeof(messageBuffer));
 	
 	xTaskCreate(PrintfTask, "tsk_Printf", 
 				(configMINIMAL_STACK_SIZE * 2), 
@@ -71,27 +71,27 @@ void Start_vPrintTask(void *pvParameters)
 void vPrint(const char *format, ...)
 {
 	va_list ap;
-	char *p = NULL;
-	int text_length = 0;
+	char *messageBuffer = NULL;
+	int textLength = 0;
 
 	taskENTER_CRITICAL(&printfMux);
 
-	p = static_cast<char *>(pvPortMalloc(MAX_PRINT_STRING_LENGTH));
-	if (p == NULL)
+	messageBuffer = static_cast<char *>(pvPortMalloc(MAX_PRINT_STRING_LENGTH));
+	if (messageBuffer == NULL)
 	{
 		taskEXIT_CRITICAL(&printfMux);
 		return;
 	}
-	p[0] = '\0';
+	messageBuffer[0] = '\0';
 	
 	// Add this line to show Taskname before printed text on console
 	// Add #define INCLUDE_pcTaskGetTaskName		1 in freeRTOSConfig.h
 	// sprintf(p,"[%s]: ", pcTaskGetTaskName(NULL));
 
-	text_length = strlen(p);
+	textLength = strlen(messageBuffer);
 	
 	va_start(ap, format);
-	vsprintf(p + text_length, format, ap);
+	vsprintf(messageBuffer + textLength, format, ap);
 	va_end(ap);
 
 #if 1
@@ -99,15 +99,15 @@ void vPrint(const char *format, ...)
 	{
 		// queue the POINTER to the text buffer if room available, 
 		// free the buffer after printing in PrintfTask()
-		if(xQueueSend(printfQueue, &p, 0) == errQUEUE_FULL)
+		if(xQueueSend(printfQueue, &messageBuffer, 0) == errQUEUE_FULL)
 		{
-			vPortFree(p);	// no room in queue, free text buffer
+			vPortFree(messageBuffer);	// no room in queue, free text buffer
 		}
 	}
 #else
-	portTickType max_block_time_ticks = 200UL / portTICK_RATE_MS;
-	Serial.printf("%s", p);
-	vPortFree(p);
+	portTickType maxBlockTimeTicks = 200UL / portTICK_RATE_MS;
+	Serial.printf("%s", messageBuffer);
+	vPortFree(messageBuffer);
 #endif
 
 	taskEXIT_CRITICAL(&printfMux);

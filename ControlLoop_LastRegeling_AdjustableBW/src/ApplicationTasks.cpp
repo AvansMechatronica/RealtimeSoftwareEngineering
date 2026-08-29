@@ -23,9 +23,9 @@
 ///////////////////////////////////////////////////////////////////////////////
 // application tasks handler declarations
 
-static TaskHandle_t handle_ControlTask			= NULL;
-static TaskHandle_t handle_ButtonHandlerTask	= NULL;
-static TaskHandle_t handle_ParameterSettingTask	= NULL;
+static TaskHandle_t controlTaskHandle = NULL;
+static TaskHandle_t buttonHandlerTaskHandle = NULL;
+static TaskHandle_t parameterSettingTaskHandle = NULL;
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -63,19 +63,19 @@ void StartApplicationTasks(void)
 	}
 
 #if 0
-	result = xTaskCreate(ControlTask, "tsk_Control", (configMINIMAL_STACK_SIZE), NULL, 0, &handle_ControlTask);
+	result = xTaskCreate(ControlTask, "tsk_Control", (configMINIMAL_STACK_SIZE), NULL, 0, &controlTaskHandle);
 	if (result == pdPASS )
 	{
 	}
 #endif
 #if 1
-	result = xTaskCreate(ButtonHandlerTask, "tsk_Button", (configMINIMAL_STACK_SIZE), NULL, 0, &handle_ButtonHandlerTask);
+	result = xTaskCreate(ButtonHandlerTask, "tsk_Button", (configMINIMAL_STACK_SIZE), NULL, 0, &buttonHandlerTaskHandle);
 	if (result == pdPASS )
 	{
 	}
 #endif
 #if 0
-	result = xTaskCreate(ParameterSettingTask, "tsk_ParamHandler", (configMINIMAL_STACK_SIZE), NULL, 0, &handle_ParameterSettingTask);
+	result = xTaskCreate(ParameterSettingTask, "tsk_ParamHandler", (configMINIMAL_STACK_SIZE), NULL, 0, &parameterSettingTaskHandle);
 	if (result == pdPASS )
 	{
 	}

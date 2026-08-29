@@ -28,8 +28,8 @@
 ///////////////////////////////////////////////////////////////////////////////
 // Function prototypes
 
-void HartbeatTask(void *pvParameters);
-void StartHartbeatTask(void);
+void HeartbeatTask(void *pvParameters);
+void StartHeartbeatTask(void);
 
 //void vApplicationIdleHook( void );
 //void vApplicationMallocFailedHook(void);
@@ -38,19 +38,19 @@ void StartHartbeatTask(void);
 ///////////////////////////////////////////////////////////////////////////////
 // file globals
 
-static TaskHandle_t handle_HartbeatTask = NULL;
-led myLed;
-bool ledOn = true;
-oledDisplay myOled;
+static TaskHandle_t heartbeatTaskHandle = NULL;
+led statusLed;
+bool isLedOn = true;
+oledDisplay statusOled;
 
 ///////////////////////////////////////////////////////////////////////////////
-// void StartHartbeatTask(void)
+// void StartHeartbeatTask(void)
 
-void StartHartbeatTask(void)
+void StartHeartbeatTask(void)
 {
 	BaseType_t result = pdFAIL;
 
-	result = xTaskCreate(HartbeatTask, "tsk_Hartbeat", (configMINIMAL_STACK_SIZE * 2), NULL, 1, &handle_HartbeatTask);
+	result = xTaskCreate(HeartbeatTask, "tsk_Heartbeat", (configMINIMAL_STACK_SIZE * 2), NULL, 1, &heartbeatTaskHandle);
 	if (result == pdPASS)
 	{
 	}
@@ -65,8 +65,8 @@ void vApplicationStackOverflowHook(TaskHandle_t xTask, char * pcTaskName)
   Serial.printf("Stack overflow in task %s\n", pcTaskName);
 	while (true)
 	{
-    myLed.set(LED_BLUE, ledOn);
-    ledOn = !ledOn;
+		statusLed.set(LED_BLUE, isLedOn);
+		isLedOn = !isLedOn;
     delay(50);
 	}
 }
@@ -80,24 +80,24 @@ void vApplicationMallocFailedHook(void)
   Serial.printf("Malloc failed!\n");
 	while (true)
 	{
-    myLed.set(LED_BLUE, ledOn);
-    ledOn = !ledOn;
+		statusLed.set(LED_BLUE, isLedOn);
+		isLedOn = !isLedOn;
     delay(50);
 	}
 }
 
 
 ///////////////////////////////////////////////////////////////////////////////
-// void HartbeatTask(void *pvParameters)
+// void HeartbeatTask(void *pvParameters)
 
-void HartbeatTask(void *pvParameters)
+void HeartbeatTask(void *pvParameters)
 {
-	Serial.printf("> Hartbeat should be running, flashing onboard LED...\n");
+	Serial.printf("> Heartbeat should be running, flashing onboard LED...\n");
 	
 	while (true)
 	{
-    myLed.set(LED_BLUE, ledOn);
-    ledOn = !ledOn;
+    statusLed.set(LED_BLUE, isLedOn);
+    isLedOn = !isLedOn;
     delay(500);
 	}
 	
@@ -143,18 +143,18 @@ void setup (void)
 
 
   // Initialize the LED before starting the heartbeat task
-	myLed.init();
-	bool oledOK  = myOled.init();
-	if(!oledOK) {
+	statusLed.init();
+	bool isOledOk  = statusOled.init();
+	if(!isOledOk) {
 		Serial.println("OLED Init failed!");
 	}
-	myOled.clear();
-	myOled.writeLine(0, "System Initialized", ALIGN_CENTER);
-	myOled.writeLine(1, "System Initialized", ALIGN_CENTER);
-	myOled.writeLine(2, "System Initialized", ALIGN_CENTER);
-	myOled.writeLine(3, "System Initialized", ALIGN_CENTER);
+	statusOled.clear();
+	statusOled.writeLine(0, "System Initialized", ALIGN_CENTER);
+	statusOled.writeLine(1, "System Initialized", ALIGN_CENTER);
+	statusOled.writeLine(2, "System Initialized", ALIGN_CENTER);
+	statusOled.writeLine(3, "System Initialized", ALIGN_CENTER);
 
-	StartHartbeatTask();
+	StartHeartbeatTask();
 	delay(500);
 
 	StartCommandConsoleTask(NULL);
