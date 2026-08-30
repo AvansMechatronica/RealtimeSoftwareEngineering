@@ -24,6 +24,7 @@
 #include "oled_lib.h"
 #include "ApplicationTasks.h"
 #include "vprintf.h"
+#include "system_info.h"
 
 ///////////////////////////////////////////////////////////////////////////////
 // Function prototypes
@@ -134,6 +135,7 @@ void setup (void)
 	delay(500);
 
 	StartCommandConsoleTask(NULL);
+	RegisterSystemInfoCommands();
 	StartApplicationTasks();
 
 	delay(500);

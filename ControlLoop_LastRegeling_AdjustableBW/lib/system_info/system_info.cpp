@@ -5,11 +5,48 @@
 #include <freertos/FreeRTOS.h>
 #include <freertos/task.h>
 //#include <esp_additions/freertos/task_snapshot.h>
+#include "system_info.h"
 #include "vprintf.h"
+#include "command_console.h"
+using command_console::RegisterCommand;
 
 #define MAX_TASKS kMaxTasks
 constexpr size_t kMaxInputSize = 1000;
 constexpr UBaseType_t kMaxTasks = 32;
+
+
+void RegisterSystemInfoCommands()
+{
+	RegisterCommand("taskstats", [](const char *args) {
+		(void)args;
+		printTaskStats();
+	}, "Show command console task details");
+
+	RegisterCommand("tasks", [](const char *args) {
+		(void)args;
+		printTasksInfo();
+	}, "Show current task snapshot");
+
+	RegisterCommand("memory", [](const char *args) {
+		(void)args;
+		printMemoryInfo();
+	}, "Show ESP32 heap memory information");
+
+	RegisterCommand("heap", [](const char *args) {
+		(void)args;
+		printMemoryInfo();
+	}, "Alias for memory");
+
+	RegisterCommand("version", [](const char *args) {
+		(void)args;
+		printVersion();
+	}, "Show firmware information");
+
+	RegisterCommand("cpuinfo", [](const char *args) {
+		(void)args;
+		printCPUInfo();
+	}, "Show ESP32 CPU/chip information");
+}
 
 void printMemoryInfo()
 {

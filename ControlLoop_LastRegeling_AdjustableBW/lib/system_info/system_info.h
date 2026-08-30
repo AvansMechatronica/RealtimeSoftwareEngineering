@@ -1,6 +1,7 @@
 #ifndef SYSTEM_INFO_H
 #define SYSTEM_INFO_H
 
+void RegisterSystemInfoCommands();
 void printMemoryInfo();
 void printTaskStats();
 void printTasksInfo();
