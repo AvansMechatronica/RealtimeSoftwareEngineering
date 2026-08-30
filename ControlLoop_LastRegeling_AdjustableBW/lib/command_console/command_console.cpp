@@ -4,13 +4,15 @@
 
 #include <freertos/FreeRTOS.h>
 #include <freertos/task.h>
-#include <esp_additions/freertos/task_snapshot.h>
+//#include <esp_additions/freertos/task_snapshot.h>
 
 #include "command_console.h"
 #include "vprintf.h"
 
 namespace
 {
+
+#define MAX_TASKS kMaxTasks
 constexpr size_t kMaxInputSize = 1000;
 constexpr UBaseType_t kMaxTasks = 32;
 
@@ -67,11 +69,11 @@ char *getTaskState(eTaskState state)
 }
 void printTasksInfo()
 {
-	UBaseType_t taskCount = uxTaskGetNumberOfTasks();
+	const UBaseType_t taskCount = uxTaskGetNumberOfTasks();
 
 	vPrint("--- %u tasks executing ---\n", static_cast<unsigned int>(taskCount));
-	vPrint("Name                 State  Prio  Stack");
-	vPrint("----------------------------------------");
+	vPrint("Name                 State  Prio  Stack\n");
+	vPrint("----------------------------------------\n");
 
 #if defined(configENABLE_TASK_SNAPSHOT) && (configENABLE_TASK_SNAPSHOT == 1)
 	TaskSnapshot_t snapshots[kMaxTasks];
@@ -97,17 +99,30 @@ void printTasksInfo()
 		vPrint("(truncated: %u task(s) not shown; increase kMaxTasks)\n",
 			static_cast<unsigned int>(taskCount - listed));
 	}
-#else
-	TaskHandle_t handle = xTaskGetCurrentTaskHandle();
-	eTaskState state = eTaskGetState(handle);
-	UBaseType_t highWaterMark = uxTaskGetStackHighWaterMark(handle);
+#elif defined(configUSE_TRACE_FACILITY) && (configUSE_TRACE_FACILITY == 1)
+	TaskStatus_t tasks[kMaxTasks];
+	const UBaseType_t listed = uxTaskGetSystemState(tasks, kMaxTasks, nullptr);
 
-	vPrint("%-20s %-6s %4u %6u\n",
-		pcTaskGetName(handle),
-		getTaskState(state),
-		static_cast<unsigned int>(uxTaskPriorityGet(handle)),
-		static_cast<unsigned int>(highWaterMark));
-	vPrint("(full task listing unavailable in this FreeRTOS build)");
+	for (UBaseType_t index = 0; index < listed; ++index)
+	{
+		const TaskStatus_t &status = tasks[index];
+		const eTaskState state = status.eCurrentState;
+		const UBaseType_t highWaterMark = status.usStackHighWaterMark;
+
+		vPrint("%-20s %-6s %4u %6u\n",
+			status.pcTaskName,
+			getTaskState(state),
+			static_cast<unsigned int>(status.uxCurrentPriority),
+			static_cast<unsigned int>(highWaterMark));
+	}
+
+	if (listed < taskCount)
+	{
+		vPrint("(truncated: %u task(s) not shown; increase kMaxTasks)\n",
+			static_cast<unsigned int>(taskCount - listed));
+	}
+#else
+	vPrint("Task diagnostics unavailable in this build (no task snapshot/trace support).\n");
 #endif
 }
 

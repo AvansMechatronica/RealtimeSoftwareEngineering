@@ -127,16 +127,20 @@ void setup (void)
 		Serial.println("OLED Init failed!");
 	}
 	statusOled.clear();
-	statusOled.writeLine(0, "System Initialized", ALIGN_CENTER);
-	statusOled.writeLine(1, "System Initialized", ALIGN_CENTER);
-	statusOled.writeLine(2, "System Initialized", ALIGN_CENTER);
-	statusOled.writeLine(3, "System Initialized", ALIGN_CENTER);
+	statusOled.writeLine(1, "System Initializing", ALIGN_CENTER);
+
 #endif
 	StartHeartbeatTask();
 	delay(500);
 
 	StartCommandConsoleTask(NULL);
 	StartApplicationTasks();
+
+	delay(500);
+#ifdef INCLUDE_OLED_DISPLAY
+	statusOled.clear();
+	statusOled.writeLine(1, "System Ready", ALIGN_CENTER);
+#endif
 }
 
 void loop(void)
