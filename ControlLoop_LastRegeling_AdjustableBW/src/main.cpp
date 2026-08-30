@@ -41,7 +41,9 @@ void StartHeartbeatTask(void);
 static TaskHandle_t heartbeatTaskHandle = NULL;
 led statusLed;
 bool isLedOn = true;
+#ifdef INCLUDE_OLED_DISPLAY
 oledDisplay statusOled;
+#endif
 
 ///////////////////////////////////////////////////////////////////////////////
 // void StartHeartbeatTask(void)
@@ -119,6 +121,7 @@ void setup (void)
 
   // Initialize the LED before starting the heartbeat task
 	statusLed.init();
+#ifdef INCLUDE_OLED_DISPLAY
 	bool isOledOk  = statusOled.init();
 	if(!isOledOk) {
 		Serial.println("OLED Init failed!");
@@ -128,7 +131,7 @@ void setup (void)
 	statusOled.writeLine(1, "System Initialized", ALIGN_CENTER);
 	statusOled.writeLine(2, "System Initialized", ALIGN_CENTER);
 	statusOled.writeLine(3, "System Initialized", ALIGN_CENTER);
-
+#endif
 	StartHeartbeatTask();
 	delay(500);
 

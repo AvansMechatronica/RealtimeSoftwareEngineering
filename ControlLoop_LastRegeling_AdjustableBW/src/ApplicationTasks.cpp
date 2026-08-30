@@ -18,6 +18,7 @@
 
 #include "ApplicationTasks.h"
 #include "ButtonHandlerTask.h"
+#include "ControlTask.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -62,7 +63,7 @@ void StartApplicationTasks(void)
 	{
 	}
 
-#if 0
+#if 1
 	result = xTaskCreate(ControlTask, "tsk_Control", (configMINIMAL_STACK_SIZE), NULL, 0, &controlTaskHandle);
 	if (result == pdPASS )
 	{
