@@ -141,7 +141,15 @@ void setup (void)
 	delay(500);
 #ifdef INCLUDE_OLED_DISPLAY
 	statusOled.clear();
-	statusOled.writeLine(1, "System Ready", ALIGN_CENTER);
+	char buffer[128];
+	statusOled.writeLine(0, "System Ready", ALIGN_CENTER);
+	sprintf(buffer, "Build: %s", __TIMESTAMP__);
+	statusOled.writeLine(1, buffer, ALIGN_CENTER);
+	const char *version = ESP.getSdkVersion();
+	sprintf(buffer, "ESP32 SDK: %s", version);
+	statusOled.writeLine(2, buffer, ALIGN_CENTER);
+	sprintf(buffer, "FreeRTOS: %s", tskKERNEL_VERSION_NUMBER);
+	statusOled.writeLine(3, buffer, ALIGN_CENTER);
 #endif
 }
 
