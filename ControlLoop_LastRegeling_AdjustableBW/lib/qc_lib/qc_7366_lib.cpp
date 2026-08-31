@@ -35,14 +35,14 @@ void qc7366::init(spi *spi)
 	defaultMode = MODE_QC_1 | MODE_FREERUNNING | INDEX_RESETCNTR | INDEX_ASYNC | FILTERCLOCK_DIV_2;
 	
 	spi_bus->init();
-	spi_bus->deselectDevice();
+	//spi_bus->deselectDevice();
 
 	QCSPISettings._bitOrder = SPI_MSBFIRST;
 	QCSPISettings._dataMode = SPI_MODE0;
 	QCSPISettings._clock 	= SPI_QC_SPEED;
 
-	spi_bus->beginTransaction(QCSPISettings);
-	spi_bus->endTransaction();
+	//spi_bus->beginTransaction(QCSPISettings);
+	//spi_bus->endTransaction();
 
 	for (channel = 0; channel <= QC_MAX_CHANNEL; channel++)
 	{
@@ -56,22 +56,22 @@ void qc7366::init(spi *spi)
 ///////////////////////////////////////////////////////////////////////////////
 // void qc7366::SelectSPIDevice(uint8_t qcChannel)
 
-void qc7366::selectSPIDevice(uint8_t qcChannel)
+uint8_t qc7366::getSPIDeviceNumber(uint8_t qcChannel)
 {
-	uint8_t spiDevice = 0;
+
 	
 	if (qcChannel <= QC_MAX_CHANNEL)
 	{
 		if (qcChannel == 0)
 		{
-			spiDevice = SPI_DEVICE_QC0;
+			return SPI_DEVICE_QC0;
 		}
 		else if (qcChannel == 1)
 		{
-			spiDevice = SPI_DEVICE_QC1;
+			return SPI_DEVICE_QC1;
 		}
-		spi_bus->selectDevice(spiDevice);
 	}
+	return SPI_DEVICE_QC0;
 }
 
 
@@ -93,13 +93,14 @@ uint8_t qc7366::readStatusRegister(uint8_t channel)
 	if (channel <= QC_MAX_CHANNEL)
 	{
 
-		spi_bus->beginTransaction(QCSPISettings);
-		selectSPIDevice(channel);
+		uint8_t spiDevice = getSPIDeviceNumber(channel);
+		spi_bus->beginTransaction(QCSPISettings, spiDevice);
+	
 	
 		spi_bus->writeByte(READ_STR);
 		spi_bus->readByte(&statusValue);
 
-		spi_bus->deselectDevice();
+
 		spi_bus->endTransaction();
 	}
 	
@@ -137,13 +138,13 @@ void qc7366::writeModeRegister(uint8_t channel, mode_register_t modeRegister, ui
 	{
 		writeMDRCommand = (modeRegister == QC_MODE_REGISTER_0) ? WRITE_MDR0 : WRITE_MDR1;
 		
-		spi_bus->beginTransaction(QCSPISettings);
-		selectSPIDevice(channel);
+		spi_bus->beginTransaction(QCSPISettings, getSPIDeviceNumber(channel));
+
 
 		spi_bus->writeByte(writeMDRCommand);
 		spi_bus->writeByte(valueMDR);
 
-		spi_bus->deselectDevice();
+	
 		spi_bus->endTransaction();
 	}
 }
@@ -160,13 +161,11 @@ uint8_t qc7366::readModeRegister(uint8_t channel, mode_register_t modeRegister)
 	{
 		readMDRCommand = (modeRegister == QC_MODE_REGISTER_0) ? READ_MDR0 : READ_MDR1;
 	
-		spi_bus->beginTransaction(QCSPISettings);
-		selectSPIDevice(channel);
+		spi_bus->beginTransaction(QCSPISettings, getSPIDeviceNumber(channel));
 
 		spi_bus->writeByte(readMDRCommand);
 		spi_bus->readByte(&mdrValue);
 
-		spi_bus->deselectDevice();
 		spi_bus->endTransaction();
 	}
 	
@@ -207,8 +206,7 @@ int32_t  qc7366::readCountRegister(uint8_t channel)
 	if (channel <= QC_MAX_CHANNEL)
 	{
 
-		spi_bus->beginTransaction(QCSPISettings);
-		selectSPIDevice(channel);
+		spi_bus->beginTransaction(QCSPISettings, getSPIDeviceNumber(channel));
 
 		spi_bus->writeByte(READ_CNTR);
 		for (ix = 0; ix < 4; ix++)
@@ -217,7 +215,7 @@ int32_t  qc7366::readCountRegister(uint8_t channel)
 			count = (count << 8) | val;
 		}
 
-		spi_bus->deselectDevice();
+		//spi_bus->deselectDevice();
 		spi_bus->endTransaction();
 	}
 	
@@ -242,8 +240,7 @@ void qc7366::writeDataRegister(uint8_t channel, int32_t dtrValue)
 	
 	if (channel <= QC_MAX_CHANNEL)
 	{
-		spi_bus->beginTransaction(QCSPISettings);
-		selectSPIDevice(channel);
+		spi_bus->beginTransaction(QCSPISettings, getSPIDeviceNumber(channel));
 
 		spi_bus->writeByte(WRITE_DTR);
 		for (ix = 0; ix < 4; ix++) // Most Significant byte first!
@@ -252,7 +249,7 @@ void qc7366::writeDataRegister(uint8_t channel, int32_t dtrValue)
 			spi_bus->writeByte(spiData);
 		}		
 
-		spi_bus->deselectDevice();
+		//spi_bus->deselectDevice();
 		spi_bus->endTransaction();
 	}
 }
@@ -268,8 +265,7 @@ int32_t qc7366::readOutputRegister(uint8_t channel)
 	
 	if (channel <= QC_MAX_CHANNEL)
 	{
-		spi_bus->beginTransaction(QCSPISettings);
-		selectSPIDevice(channel);
+		spi_bus->beginTransaction(QCSPISettings, getSPIDeviceNumber(channel));
 
 		spi_bus->writeByte(READ_OTR);
 		for (ix = 0; ix < 4; ix++)
@@ -278,7 +274,7 @@ int32_t qc7366::readOutputRegister(uint8_t channel)
 			count = (count << 8) | val;
 		}
 
-		spi_bus->deselectDevice();
+		//spi_bus->deselectDevice();
 		spi_bus->endTransaction();
 	}
 	
@@ -316,12 +312,10 @@ void qc7366::sendCommand(uint8_t channel, uint8_t commandByte)
 {
 	if (channel <= QC_MAX_CHANNEL)
 	{
-		spi_bus->beginTransaction(QCSPISettings);
-		selectSPIDevice(channel);
+		spi_bus->beginTransaction(QCSPISettings, channel);
 
 		spi_bus->writeByte(commandByte);
 
-		spi_bus->deselectDevice();
 		spi_bus->endTransaction();
 	}
 }

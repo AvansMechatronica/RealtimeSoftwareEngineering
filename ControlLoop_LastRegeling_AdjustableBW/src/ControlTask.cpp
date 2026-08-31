@@ -33,6 +33,7 @@
 #include "ControlTask.h"
 #include "ApplicationTasks.h"
 #include "command_console.h"
+#include "hardware_config.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -46,6 +47,7 @@ static volatile uint32_t missedTimerInterruptCount = 0;
 static volatile uint32_t loopCounter = 0;
 static uint32_t timerIntervalUs = 0;
 static uint32_t controlLoopStatsStartMs = 0;
+static HardwareConfig hardwareConfig;
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -131,6 +133,8 @@ void ControlTask(void *pvParameters)
 	BaseType_t clearAllbits	  = pdFALSE;
 	TickType_t ticksToWait	  = portMAX_DELAY;
 	
+	configureHardware(&hardwareConfig);
+
 	double wblFactor = 0.0;
 	command_console::RegisterCommand("controlloopstats", [](const char *args) {
 		(void)args;

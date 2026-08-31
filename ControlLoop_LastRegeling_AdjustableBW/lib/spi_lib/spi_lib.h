@@ -59,20 +59,21 @@ class spi{
 public:
 
     void init(void);
-    void beginTransaction(SPISettings settings);
+    void beginTransaction(SPISettings settings, uint8_t spiDeviceNumber);
     void endTransaction(void);
 
     void writeByte(const uint8_t data);
     void writeWord(const uint16_t data);
     void readByte(uint8_t *byteData);
     void readWord(uint16_t *wordData);
-
+    void selectDevice(uint8_t spiDeviceNumber);
+    void deselectDevice(void);
     uint8_t transferByte(uint8_t byteToSend);
     uint16_t transferWord(uint16_t wordToSend);
 
-    void selectDevice(uint8_t spiDeviceNumber);
-    void deselectDevice(void);
 protected:
+
+
     bool g_IsSPIInitialised = false;
     SPIClass vspi = SPIClass(VSPI); 		    // Use VSPI bus
     SPISettings Settings = SPISettings(SPI_DEFAULT_SPEED, MSBFIRST, SPI_MODE0); // default values
@@ -82,6 +83,7 @@ protected:
         SPI_SEL_1,
         SPI_SEL_2,		// MSB, bit 2
     };
+    SemaphoreHandle_t semaphore;
 
 };
 

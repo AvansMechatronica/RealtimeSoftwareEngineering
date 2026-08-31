@@ -41,6 +41,14 @@ void spi::init(void)
 		vspi.begin(VSPI_SCLK, VSPI_MISO, VSPI_MOSI, VSPI_SS);
 		vspi.setHwCs(false);  // false = disable VSPI_SS, Default = disabled!
 
+		semaphore = xSemaphoreCreateBinary();
+		if (semaphore == NULL)
+		{
+			// handle error, e.g., print an error message or halt execution
+			//Serial.println("Failed to create semaphore for SPI");
+			//while (1); // halt execution
+		}
+
 		g_IsSPIInitialised = true;
 	}
 }
@@ -48,8 +56,10 @@ void spi::init(void)
 ///////////////////////////////////////////////////////////////////////////////
 // void spi::beginTransaction(SPISettings settings)
 
-void spi::beginTransaction(SPISettings settings)
+void spi::beginTransaction(SPISettings settings, uint8_t spiDeviceNumber)
 {
+	xSemaphoreTake(semaphore, portMAX_DELAY);
+    selectDevice(spiDeviceNumber);
     vspi.beginTransaction(settings);
 }
 
@@ -58,7 +68,9 @@ void spi::beginTransaction(SPISettings settings)
 
 void spi::endTransaction(void)
 {
+    deselectDevice();
     vspi.endTransaction();
+	xSemaphoreGive(semaphore);
 }
 
 ///////////////////////////////////////////////////////////////////////////////

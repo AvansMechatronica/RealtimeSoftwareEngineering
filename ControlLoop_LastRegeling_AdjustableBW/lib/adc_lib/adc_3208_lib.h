@@ -12,9 +12,41 @@
 
 #include <SPI.h>
 #include "spi_lib.h"
-#include "../config.h"
 #include "fmap.h"
-#include "../bits.h"
+#include "bits.h"
+
+
+///////////////////////////////////////////////////////////////////////////////
+// ADC constants & definitions for MCP3208 8 channel ADC
+
+#define N_ADC_CHANNELS      8
+#define N_ADC_BITS		    12
+
+#define ADC_MIN_CHANNEL		0
+#define ADC_MAX_CHANNEL		(N_ADC_CHANNELS - 1)
+
+#define ADC_MIN_VALUE 	    0
+#define ADC_MAX_VALUE       ((1 << N_ADC_BITS) - 1)
+
+#define ADC_REFERENCE_VOLTAGE   2.5
+
+// definitions for channels 0..3 with input range from -10 .. +10 volt
+
+#define ADC03_MIN_VOLTAGE       -10.0
+#define ADC03_RESOLUTION        ((8.0 * ADC_REFERENCE_VOLTAGE) / (ADC_MAX_VALUE + 1))
+#define ADC03_MAX_VOLTAGE		(ADC03_MIN_VOLTAGE + ((ADC_MAX_VALUE) * (ADC03_RESOLUTION)))
+
+// definitions for channels 4..7 with input range from 0 .. +2.5 volt
+
+#define ADC47_RESOLUTION        (ADC_REFERENCE_VOLTAGE / (ADC_MAX_VALUE + 1))
+#define ADC47_MIN_VOLTAGE	    0.0
+#define ADC47_MAX_VOLTAGE		((ADC_MAX_VALUE) * (ADC47_RESOLUTION))
+
+///////////////////////////////////////////////////////////////////////////////
+// conversion factors
+
+#define VOLT_TO_MV			(1e3)
+#define MV_TO_VOLT			(1e-3)
 
 ///////////////////////////////////////////////////////////////////////////////
 // bit defines for ADC MCP3208

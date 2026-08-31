@@ -65,7 +65,7 @@ uint16_t adc3208::readRaw(uint8_t channel, uint8_t averageCount)
     {
         adcCommand = ADC_STR | ADC_SINGLE | (channel << 6);
         
-        spi_bus->beginTransaction(ADCSPISettings);
+        spi_bus->beginTransaction(ADCSPISettings, 0);
 
 		raw = 0;
 
@@ -104,7 +104,7 @@ void adc3208::readRawMultiple(uint8_t channelList[], uint8_t numChannels, uint16
 
     numChannels = constrain(numChannels, 0, N_ADC_CHANNELS);
 
-    spi_bus->beginTransaction(ADCSPISettings);
+    spi_bus->beginTransaction(ADCSPISettings, 0);
 
     for (ix = 0; ix < numChannels; ix++)
     {
@@ -123,7 +123,7 @@ void adc3208::readRawMultiple(uint8_t channelList[], uint8_t numChannels, uint16
             adcValue = ((msb & 0x0f) << 8) | lsb;
             rawValues[ix] = adcValue;
 
-            spi_bus->deselectDevice();
+            //spi_bus->deselectDevice();
         }
     }
 

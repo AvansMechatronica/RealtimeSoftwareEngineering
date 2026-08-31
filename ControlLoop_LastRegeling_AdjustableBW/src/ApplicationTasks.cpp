@@ -64,23 +64,17 @@ void StartApplicationTasks(void)
 	{
 	}
 
-#if 1
 	result = xTaskCreate(ControlTask, "tsk_Control", (configMINIMAL_STACK_SIZE), NULL, 0, &controlTaskHandle);
 	if (result == pdPASS )
 	{
 	}
-#endif
-#if 1
 	result = xTaskCreate(ButtonHandlerTask, "tsk_Button", (configMINIMAL_STACK_SIZE), NULL, 0, &buttonHandlerTaskHandle);
 	if (result == pdPASS )
 	{
 	}
-#endif
-#if 1
 	result = xTaskCreate(ParameterSettingTask, "tsk_ParamHandler", (configMINIMAL_STACK_SIZE), NULL, 0, &parameterSettingTaskHandle);
 	if (result == pdPASS )
 	{
 	}
-#endif
 }
 

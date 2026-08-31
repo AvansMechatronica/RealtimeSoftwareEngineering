@@ -43,19 +43,20 @@ void dac4922::init(spi *spi_bus)
 ///////////////////////////////////////////////////////////////////////////////
 // void dac4922::SelectSPIDevice(uint8_t dacChannel)
 
-void dac4922::selectSPIDevice(uint8_t dacChannel)
+uint8_t dac4922::getSPIDeviceNumber(uint8_t dacChannel)
 {
 	if (dacChannel < N_DAC_CHANNELS)
 	{
 		if ((dacChannel == 0) || (dacChannel == 1))
 		{
-			spi_bus->selectDevice(SPI_DEVICE_DAC01);
+			return SPI_DEVICE_DAC01;
 		}
 		else if ((dacChannel == 2) || (dacChannel == 3))
 		{
-			spi_bus->selectDevice(SPI_DEVICE_DAC23);
+			return SPI_DEVICE_DAC23;
 		}
 	}
+	return 0xff; // invalid device
 }
 
 
@@ -76,12 +77,12 @@ void dac4922::write(uint8_t dacChannel, uint16_t dacValue)
 			dacCommand = dacCommand | DAC_SELECT_B;
 		}
 
-		spi_bus->beginTransaction(DACSPISettings);
-		dac4922::selectSPIDevice(dacChannel);
+		spi_bus->beginTransaction(DACSPISettings, getSPIDeviceNumber(dacChannel));
+	
 
 		spi_bus->writeWord(dacCommand);
 
-		spi_bus->deselectDevice(); // DEselect DAC channel: cause CSDAC* to go high!!
+		//spi_bus->deselectDevice(); // DEselect DAC channel: cause CSDAC* to go high!!
 		spi_bus->endTransaction();
 	}
 }

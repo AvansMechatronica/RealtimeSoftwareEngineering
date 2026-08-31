@@ -18,9 +18,9 @@
 
 #include <SPI.h>
 #include "spi_lib.h"
-#include "../config.h"
+//#include "../config.h"
 #include "fmap.h"
-#include "../bits.h"
+#include "bits.h"
 
 ///////////////////////////////////////////////////////////////////////////////
 // SPI speed settings for LS7366R
@@ -174,7 +174,7 @@ public:
 
 	bool	isIndexSet(uint8_t channel);
 private:
-    void selectSPIDevice(uint8_t dacChannel);
+    uint8_t getSPIDeviceNumber(uint8_t qcChannel);
 	void sendCommand(uint8_t channel, uint8_t commandByte);
 
 	spi *spi_bus;

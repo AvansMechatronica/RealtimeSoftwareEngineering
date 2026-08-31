@@ -12,9 +12,27 @@
 
 #include <SPI.h>
 #include "spi_lib.h"
-#include "../config.h"
+//#include "../config.h"
 #include "fmap.h"
-#include "../bits.h"
+#include "bits.h"
+
+///////////////////////////////////////////////////////////////////////////////
+// DAC constants for MCP4922 & output stage
+
+#define N_DAC_BITS			12
+#define N_DAC_CHANNELS		4
+
+#define DAC_MIN_CHANNEL		0 
+#define DAC_MAX_CHANNEL		(N_DAC_CHANNELS - 1)
+
+#define DAC_MIN_VALUE 		0
+#define DAC_MAX_VALUE 		((1 << N_DAC_BITS) - 1)
+
+#define DAC_SPAN            20.0    // -10 .. + 10 volt
+#define DAC_RESOLUTION	    (DAC_SPAN / (DAC_MAX_VALUE + 1))
+
+#define DAC_MIN_VOLTAGE 	-10.0
+#define DAC_MAX_VOLTAGE 	(DAC_MIN_VOLTAGE + ((DAC_MAX_VALUE) * (DAC_RESOLUTION)))
 
 ///////////////////////////////////////////////////////////////////////////////
 // defines for DAC MCP4922
@@ -47,7 +65,7 @@ public:
     void setOutputVoltage(uint8_t dacChannel, float outputVoltage);
     void setOutputVoltageAll(float outputVoltage);
 private:
-    void selectSPIDevice(uint8_t dacChannel);
+    uint8_t getSPIDeviceNumber(uint8_t dacChannel);
     spi *spi_bus;
     SPISettings DACSPISettings = SPISettings(SPI_DAC_SPEED, MSBFIRST, SPI_MODE0);
 };
