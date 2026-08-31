@@ -134,9 +134,12 @@ void setup (void)
 	StartHeartbeatTask();
 	delay(500);
 
-	StartCommandConsoleTask(NULL);
 	RegisterSystemInfoCommands();
 	StartApplicationTasks();
+
+	delay(500);
+
+	StartCommandConsoleTask(NULL);
 
 	delay(500);
 #ifdef INCLUDE_OLED_DISPLAY

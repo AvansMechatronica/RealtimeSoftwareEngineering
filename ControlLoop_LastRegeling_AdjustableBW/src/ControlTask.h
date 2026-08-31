@@ -9,10 +9,13 @@
 #ifndef CONTROLTASK_H_
 #define CONTROLTASK_H_
 
+#include <stdint.h>
+
 ///////////////////////////////////////////////////////////////////////////////
 // function prototypes
 
-void ClockInterruptHandler(uint32_t id, uint32_t mask);
+void ClockInterruptHandler(void);
+bool InitializePeriodicTimer(uint32_t intervalUs);
 void ControlLoop(void);
 void ControlTask(void *pvParameters);
 

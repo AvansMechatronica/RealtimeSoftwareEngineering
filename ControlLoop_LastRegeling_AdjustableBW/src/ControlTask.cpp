@@ -8,6 +8,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 // system includes
 
+#include <Arduino.h>
 #include <string.h>
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -31,27 +32,90 @@
 #include "ButtonHandlerTask.h"
 #include "ControlTask.h"
 #include "ApplicationTasks.h"
+#include "command_console.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
 // file globals
 
 static SemaphoreHandle_t TimerInterruptSemaphore = NULL;
+static hw_timer_t *periodicTimer = NULL;
+static portMUX_TYPE controlLoopStatsLock = portMUX_INITIALIZER_UNLOCKED;
+static volatile uint32_t timerInterruptCount = 0;
+static volatile uint32_t missedTimerInterruptCount = 0;
+static volatile uint32_t loopCounter = 0;
+static uint32_t timerIntervalUs = 0;
+static uint32_t controlLoopStatsStartMs = 0;
 
 
 ///////////////////////////////////////////////////////////////////////////////
-// void ClockInterruptHandler(uint32_t id, uint32_t mask)
+// void ClockInterruptHandler(void)
 //
-// invoked on every clock tick (1 ms) of the external hardware clock
+// invoked on every hardware timer alarm
 
-void ClockInterruptHandler(uint32_t id, uint32_t mask)
+void IRAM_ATTR ClockInterruptHandler(void)
 {
+	portENTER_CRITICAL_ISR(&controlLoopStatsLock);
+	++timerInterruptCount;
+	portEXIT_CRITICAL_ISR(&controlLoopStatsLock);
+
 	if (TimerInterruptSemaphore != NULL)
 	{
-		xSemaphoreGiveFromISR(TimerInterruptSemaphore, NULL);
+		BaseType_t higherPriorityTaskWoken = pdFALSE;
+		if (xSemaphoreGiveFromISR(TimerInterruptSemaphore, &higherPriorityTaskWoken) != pdTRUE)
+		{
+			portENTER_CRITICAL_ISR(&controlLoopStatsLock);
+			++missedTimerInterruptCount;
+			portEXIT_CRITICAL_ISR(&controlLoopStatsLock);
+		}
+		if (higherPriorityTaskWoken == pdTRUE)
+		{
+			portYIELD_FROM_ISR();
+		}
 	}
 }
 
+
+///////////////////////////////////////////////////////////////////////////////
+// bool InitializePeriodicTimer(uint32_t intervalUs)
+//
+// starts a hardware timer that calls ClockInterruptHandler every intervalUs
+
+bool InitializePeriodicTimer(uint32_t intervalUs)
+{
+	if ((intervalUs == 0) || (periodicTimer != NULL))
+	{
+		return false;
+	}
+
+	if (TimerInterruptSemaphore == NULL)
+	{
+		TimerInterruptSemaphore = xSemaphoreCreateBinary();
+		if (TimerInterruptSemaphore == NULL)
+		{
+			return false;
+		}
+	}
+
+	// Run the timer at 1 MHz so that each alarm tick represents one microsecond.
+	periodicTimer = timerBegin(1000000);
+	if (periodicTimer == NULL)
+	{
+		vSemaphoreDelete(TimerInterruptSemaphore);
+		TimerInterruptSemaphore = NULL;
+		return false;
+	}
+
+	timerAttachInterrupt(periodicTimer, &ClockInterruptHandler);
+	timerAlarm(periodicTimer, intervalUs, true, 0);
+	timerIntervalUs = intervalUs;
+	controlLoopStatsStartMs = millis();
+
+	return true;
+}
+
+
+void printControlLoopStats(void);
 
 ///////////////////////////////////////////////////////////////////////////////
 // void ControlTask(void *pvParameters)
@@ -68,26 +132,27 @@ void ControlTask(void *pvParameters)
 	TickType_t ticksToWait	  = portMAX_DELAY;
 	
 	double wblFactor = 0.0;
-	
+	command_console::RegisterCommand("controlloopstats", [](const char *args) {
+		(void)args;
+		printControlLoopStats();
+	}, "Prints the current control loop statistics");
 	vPrint("> starting ControlTask (load)\n");
 
 #if 0
 	motor_DisableESCONController();
-
-	// setup external 1 ms timer tick handler:
-	
-	TimerInterruptSemaphore = xSemaphoreCreateCounting(maxSemCount, initialSemCount);
-	flags = PIO_IT_RISE_EDGE;
-	interrupt_AttachHandler(ClockInterruptHandler, PIN_30, flags);
 #endif
+
+	InitializePeriodicTimer(1000);	// 1 ms interval
+
 	vPrint("> ControlTask waiting for helper tasks...\n");
-#if 0
 	// wait for ButtonHandlerTask and ParameterSettingTask to get up and running:
+	#if 0
 	uxBits = xEventGroupWaitBits(handle_ThreadEventGroup, BIT_1 | BIT_0,
 								 clearAllbits, waitForAllbits, ticksToWait);	
-
+	#endif
 	vPrint("> helper tasks running, ControlTask started, event group = 0x%04x\n", uxBits);
 	
+#if 0
 	QCEncodersSetup();
 	
 	motor_EnableESCONController(); 
@@ -125,7 +190,6 @@ void ControlTask(void *pvParameters)
 	vTaskDelete(NULL);
 }
 
-
 ///////////////////////////////////////////////////////////////////////////////
 //  void ControlLoop(void)
 
@@ -139,10 +203,10 @@ void ControlLoop(void)
 	
 	while (continueControlLoop)
 	{
-		#if 0
 		// wait for periodic 1 ms timer tick to unblock this thread and
 		// run the motion controller:
 		xSemaphoreTake(TimerInterruptSemaphore, portMAX_DELAY);
+		#if 0
 		posctrlLoad_RunController();
 		
 		// check restart semaphore here, invoked by button press
@@ -152,8 +216,39 @@ void ControlLoop(void)
 			continueControlLoop = false;
 		}
 		#endif
+		portENTER_CRITICAL(&controlLoopStatsLock);
+		++loopCounter;
+		portEXIT_CRITICAL(&controlLoopStatsLock);
 		vTaskDelay(0);
 	}
 
 	vPrint("> exit Control Loop (load)\n");
+}
+
+void printControlLoopStats(void)
+{
+	uint32_t timerInterrupts = 0;
+	uint32_t missedTimerInterrupts = 0;
+	uint32_t completedLoops = 0;
+	uint32_t intervalUs = 0;
+	uint32_t startMs = 0;
+
+	portENTER_CRITICAL(&controlLoopStatsLock);
+	timerInterrupts = timerInterruptCount;
+	missedTimerInterrupts = missedTimerInterruptCount;
+	completedLoops = loopCounter;
+	intervalUs = timerIntervalUs;
+	startMs = controlLoopStatsStartMs;
+	portEXIT_CRITICAL(&controlLoopStatsLock);
+
+	uint32_t elapsedMs = millis() - startMs;
+	uint32_t loopRateHz = elapsedMs == 0 ? 0 : static_cast<uint32_t>((static_cast<uint64_t>(completedLoops) * 1000U) / elapsedMs);
+
+	vPrint("> Control loop statistics:\n");
+	vPrint("  Timer interval: %lu us\n", static_cast<unsigned long>(intervalUs));
+	vPrint("  Timer interrupts: %lu\n", static_cast<unsigned long>(timerInterrupts));
+	vPrint("  Completed loops: %lu\n", static_cast<unsigned long>(completedLoops));
+	vPrint("  Coalesced interrupts: %lu\n", static_cast<unsigned long>(missedTimerInterrupts));
+	vPrint("  Elapsed time: %lu ms\n", static_cast<unsigned long>(elapsedMs));
+	vPrint("  Observed loop rate: %lu Hz\n", static_cast<unsigned long>(loopRateHz));
 }

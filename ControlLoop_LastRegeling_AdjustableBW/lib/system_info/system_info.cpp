@@ -32,11 +32,6 @@ void RegisterSystemInfoCommands()
 		printMemoryInfo();
 	}, "Show ESP32 heap memory information");
 
-	RegisterCommand("heap", [](const char *args) {
-		(void)args;
-		printMemoryInfo();
-	}, "Alias for memory");
-
 	RegisterCommand("version", [](const char *args) {
 		(void)args;
 		printVersion();

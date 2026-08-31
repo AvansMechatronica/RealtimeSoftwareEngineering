@@ -19,6 +19,7 @@
 #include "ApplicationTasks.h"
 #include "ButtonHandlerTask.h"
 #include "ControlTask.h"
+#include "ParameterSettingTask.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -75,7 +76,7 @@ void StartApplicationTasks(void)
 	{
 	}
 #endif
-#if 0
+#if 1
 	result = xTaskCreate(ParameterSettingTask, "tsk_ParamHandler", (configMINIMAL_STACK_SIZE), NULL, 0, &parameterSettingTaskHandle);
 	if (result == pdPASS )
 	{
