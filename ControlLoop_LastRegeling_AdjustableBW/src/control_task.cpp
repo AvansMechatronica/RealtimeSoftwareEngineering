@@ -27,7 +27,7 @@
 // position controller & application includes
 
 //#include "PositionControllerLoad.h"
-//#include "MotorControl.h"
+#include "motor_control.h"
 //#include "QuadratureCounters.h"
 #include "button_handler_task.h"
 #include "control_task.h"
@@ -116,7 +116,6 @@ bool InitializePeriodicTimer(uint32_t intervalUs)
 	return true;
 }
 
-
 void printControlLoopStats(void);
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -133,8 +132,6 @@ void ControlTask(void *pvParameters)
 	BaseType_t waitForAllbits = pdTRUE;
 	BaseType_t clearAllbits	  = pdFALSE;
 	TickType_t ticksToWait	  = portMAX_DELAY;
-	
-
 
 	double wblFactor = 0.0;
 	command_console::RegisterCommand("controlloopstats", [](const char *args) {
@@ -143,9 +140,9 @@ void ControlTask(void *pvParameters)
 	}, "Prints the current control loop statistics");
 	vPrint("> starting ControlTask (load)\n");
 
-#if 0
+	motor_initialize(hardwareConfig);
 	motor_DisableESCONController();
-#endif
+
 
 	InitializePeriodicTimer(1000);	// 1 ms interval
 
@@ -157,35 +154,32 @@ void ControlTask(void *pvParameters)
 	#endif
 	vPrint("> helper tasks running, ControlTask started, event group = 0x%04x\n", uxBits);
 	
-#if 0
-	QCEncodersSetup();
 	
 	motor_EnableESCONController(); 
 	motor_GotoHomePosition(MOVE_LEFT); 
 
-	QCEncodersClearCount();
-	QCEncodersShowCount("> Initial home");
+	hardwareConfig->qc.clearCountRegister(QC_CHANNEL_0);
+	hardwareConfig->qc.clearCountRegister(QC_CHANNEL_1);
 
 	vPrint("> ready\n");
 	vPrint("> press button SW1 to start (watch your fingers...)\n");
 	
 	ticksToWait = portMAX_DELAY;
 	xSemaphoreTake(handle_RestartSemaphore, ticksToWait);	// wait for SW1 first button press
-#endif
 
 	while (true)
 	{
-#if 0
 		motor_GotoHomePosition(MOVE_LEFT);
 
-		QCEncodersClearCount();
-		QCEncodersShowCount("> HOME");
+		hardwareConfig->qc.clearCountRegister(QC_CHANNEL_0);
+		hardwareConfig->qc.clearCountRegister(QC_CHANNEL_1);
+		vPrint("> HOME");
 		
 		// always leave parameter value in queue! So use xQueuePeek
 		ticksToWait = 0;
 		xQueuePeek(handle_ParameterQueue, &wblFactor, ticksToWait);
 		vPrint("> running with wblFactor: %.3f\n", wblFactor);
-		
+#if 0
 		posctrlLoad_InitParameters(wblFactor);
 #endif
 		ControlLoop();	// this loop exits by pressing button SW1

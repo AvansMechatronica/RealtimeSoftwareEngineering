@@ -34,7 +34,7 @@ void qc7366::init(spi *spi)
 	// mode depends on quadrature pulse definitions of the encoder used!!
 	defaultMode = MODE_QC_1 | MODE_FREERUNNING | INDEX_RESETCNTR | INDEX_ASYNC | FILTERCLOCK_DIV_2;
 	
-	spi_bus->init();
+	//spi_bus->init();
 	//spi_bus->deselectDevice();
 
 	QCSPISettings._bitOrder = SPI_MSBFIRST;

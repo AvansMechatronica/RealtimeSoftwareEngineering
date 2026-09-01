@@ -6,7 +6,7 @@ bool configureHardware(HardwareConfig *config) {
     if (!config) {
         return false;
     }
-    config->dio_device.init();
+    config->dio.init();
     config->spi_bus.init();
     config->qc.init(&config->spi_bus);
     config->dac.init(&config->spi_bus);

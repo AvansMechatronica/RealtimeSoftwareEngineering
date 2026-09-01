@@ -26,7 +26,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 // function prototypes
 
-class dio{
+class dio_device{
 public:
     void init(void);
     uint8_t getInput(void);

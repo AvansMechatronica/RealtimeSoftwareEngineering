@@ -10,7 +10,7 @@
 
 
 typedef struct {
-    dio dio_device;
+    dio_device dio;
     spi spi_bus;
     qc7366 qc;
     dac4922 dac;

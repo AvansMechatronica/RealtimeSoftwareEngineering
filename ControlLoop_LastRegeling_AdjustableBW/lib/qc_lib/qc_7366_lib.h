@@ -147,6 +147,11 @@ typedef enum
 	QC_MODE_REGISTER_1,
 } mode_register_t;
 
+enum qc_channel_t
+{
+	QC_CHANNEL_0 = 0,
+	QC_CHANNEL_1,
+};
 
 ///////////////////////////////////////////////////////////////////////////////
 // function prototypes

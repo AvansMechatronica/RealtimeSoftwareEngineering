@@ -66,7 +66,7 @@ void Start_vPrintTask(void *pvParameters)
 
 
 ///////////////////////////////////////////////////////////////////////////////
-// void vPrintString(const char *format, ...)
+// void vPrint(const char *format, ...)
 
 void vPrint(const char *format, ...)
 {
