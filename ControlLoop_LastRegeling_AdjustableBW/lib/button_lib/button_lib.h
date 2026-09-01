@@ -12,17 +12,7 @@
 
 #include <stdint.h>
 
-#ifdef __cplusplus
-extern "C" {
-#else
-#include <stdbool.h>
-#endif
-
-void switch_Init(void);
-bool switch_IsPressed(uint8_t buttonNumber);
-
-#ifdef __cplusplus
-}
+#include "adc_3208_lib.h"
 
 ///////////////////////////////////////////////////////////////////////////////
 // #defines
@@ -36,11 +26,10 @@ bool switch_IsPressed(uint8_t buttonNumber);
 class button {
 public:
     button();
-    void init();
+    void init(adc3208 *adc);
     bool isPressed(uint8_t buttonNumber);
+private:
+    adc3208 *adc;
 };
-
-#endif
-
 
 #endif /* BUTTONLIB_H_ */

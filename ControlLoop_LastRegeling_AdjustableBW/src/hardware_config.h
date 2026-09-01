@@ -6,6 +6,7 @@
 #include "qc_7366_lib.h"
 #include "dac_4922_lib.h"
 #include "adc_3208_lib.h"
+#include "button_lib.h"
 
 
 typedef struct {
@@ -14,6 +15,7 @@ typedef struct {
     qc7366 qc;
     dac4922 dac;
     adc3208 adc;
+    button buttons;
 } HardwareConfig;
 
 

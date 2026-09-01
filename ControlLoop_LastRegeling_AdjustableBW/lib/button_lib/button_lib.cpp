@@ -17,18 +17,6 @@
 
 #include "button_lib.h"
 
-static button buttonDevice;
-
-extern "C" void switch_Init(void)
-{
-	buttonDevice.init();
-}
-
-extern "C" bool switch_IsPressed(uint8_t buttonNumber)
-{
-	return buttonDevice.isPressed(buttonNumber);
-}
-
 
 ///////////////////////////////////////////////////////////////////////////////
 // void button_Init(void)
@@ -38,8 +26,9 @@ button::button()
     // Constructor can be used to initialize any member variables if needed
 }
 
-void button::init(void)
+void button::init(adc3208 *adc)
 {
+    this->adc = adc;
 	pinMode(BUTTON_PIN, INPUT_PULLUP); 
 }
 
@@ -58,7 +47,7 @@ bool button::isPressed(uint8_t buttonNumber)
 	else if ((buttonNumber == 1) || (buttonNumber == 2))
 	{
 		// TODO: Implement ADC button reading for buttonNumber 1 and 2
-		//isPressed = adc_IsButtonPressed(buttonNumber);
+		isPressed = adc->isButtonPressed(buttonNumber);
 	}
 	
 	return isPressed;

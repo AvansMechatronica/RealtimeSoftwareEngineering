@@ -20,6 +20,7 @@
 #include "ButtonHandlerTask.h"
 #include "ControlTask.h"
 #include "ParameterSettingTask.h"
+#include "hardware_config.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -39,6 +40,7 @@ QueueHandle_t		handle_ParameterQueue	= NULL;
 
 ///////////////////////////////////////////////////////////////////////////////
 // void StartApplicationTasks(void)
+HardwareConfig *hardwareConfig;
 
 void StartApplicationTasks(void)
 {
@@ -64,15 +66,16 @@ void StartApplicationTasks(void)
 	{
 	}
 
-	result = xTaskCreate(ControlTask, "tsk_Control", (configMINIMAL_STACK_SIZE), NULL, 0, &controlTaskHandle);
+	configureHardware(hardwareConfig);
+	result = xTaskCreate(ControlTask, "tsk_Control", (configMINIMAL_STACK_SIZE), hardwareConfig, 0, &controlTaskHandle);
 	if (result == pdPASS )
 	{
 	}
-	result = xTaskCreate(ButtonHandlerTask, "tsk_Button", (configMINIMAL_STACK_SIZE), NULL, 0, &buttonHandlerTaskHandle);
+	result = xTaskCreate(ButtonHandlerTask, "tsk_Button", (configMINIMAL_STACK_SIZE), hardwareConfig, 0, &buttonHandlerTaskHandle);
 	if (result == pdPASS )
 	{
 	}
-	result = xTaskCreate(ParameterSettingTask, "tsk_ParamHandler", (configMINIMAL_STACK_SIZE), NULL, 0, &parameterSettingTaskHandle);
+	result = xTaskCreate(ParameterSettingTask, "tsk_ParamHandler", (configMINIMAL_STACK_SIZE), hardwareConfig, 0, &parameterSettingTaskHandle);
 	if (result == pdPASS )
 	{
 	}

@@ -11,5 +11,6 @@ bool configureHardware(HardwareConfig *config) {
     config->qc.init(&config->spi_bus);
     config->dac.init(&config->spi_bus);
     config->adc.init(&config->spi_bus);
+    config->buttons.init(&config->adc);
     return true;
 }

@@ -124,6 +124,7 @@ void printControlLoopStats(void);
 
 void ControlTask(void *pvParameters)
 {
+	HardwareConfig *hardwareConfig = (HardwareConfig *)pvParameters;
 	uint32_t flags = 0;
 	uint32_t maxSemCount = 1;
 	uint32_t initialSemCount = 0;
@@ -133,7 +134,7 @@ void ControlTask(void *pvParameters)
 	BaseType_t clearAllbits	  = pdFALSE;
 	TickType_t ticksToWait	  = portMAX_DELAY;
 	
-	configureHardware(&hardwareConfig);
+
 
 	double wblFactor = 0.0;
 	command_console::RegisterCommand("controlloopstats", [](const char *args) {

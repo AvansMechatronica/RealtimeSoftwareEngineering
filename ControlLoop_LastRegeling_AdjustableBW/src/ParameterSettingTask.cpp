@@ -29,34 +29,29 @@
 #include "ApplicationTasks.h"
 #include "ParameterSettingTask.h"
 #include "bits.h"
+#include "hardware_config.h"
+
 
 ///////////////////////////////////////////////////////////////////////////////
 // void ParameterSettingTask(void *pvParameters)
 
 void ParameterSettingTask(void *pvParameters)
 {
+	HardwareConfig *hardwareConfig = (HardwareConfig *)pvParameters;
+	adc3208 *adc = &hardwareConfig->adc;
+
 	uint32_t adcData = 0;
 	uint8_t  adcChannel = 0;
-	uint8_t  buttonNumber = 3;
+	uint8_t  buttonNumber = 2;
 	
 	double   currentWblFactor  = -1.0;	// start with invalid value
 	double   previousWblFactor =  0.0;
 	
 	vPrint("> starting ParameterSettingTask\n");
-#if 0
-	adc_EnableChannel(adcChannel);
-#endif
 	
 	while(true)
 	{
-#if 0 
-		adc_StartConversion();
-		while(adc_IsConversionReady(adcChannel) == false)
-		{
-			taskSleep(0);
-		}
-
-		adcData = adc_ReadData(adcChannel);
+		adcData = adc->readRaw(adcChannel);
 		currentWblFactor = fmap(adcData, ADC_MIN_VALUE, ADC_MAX_VALUE, WBLFACTOR_MIN, WBLFACTOR_MAX);
 		if ( fabs(currentWblFactor - previousWblFactor) > WBLTHRESHOLD )
 		{
@@ -65,15 +60,15 @@ void ParameterSettingTask(void *pvParameters)
 			previousWblFactor = currentWblFactor;
 		}
 		
-		// pressing SW4 (buttonNumber == 3) shows the current value of the WblFactor, 
+		// pressing Button B2 (buttonNumber == 2) shows the current value of the WblFactor, 
 		// it does not update the queue.
 		// Show PREVIOUS value (previousWblFactor), as it might be not updated (yet)!!
 		
-		if (switch_IsPressed(buttonNumber))
+		if (hardwareConfig->buttons.isPressed(buttonNumber))
 		{
 			vPrint("> current wblFactor = %.3f\n", previousWblFactor); 
 			// wait until button released:
-			while (switch_IsPressed(buttonNumber))
+			while (hardwareConfig->buttons.isPressed(buttonNumber))
 			{
 			}
 		}
@@ -81,7 +76,6 @@ void ParameterSettingTask(void *pvParameters)
 		// after first pass: let control thread know that valid 
 		// data is available for use:
 		xEventGroupSetBits( handle_ThreadEventGroup, BIT_1 ); 
-#endif
 		vTaskDelay(pdMS_TO_TICKS(10));
 	}
 }

@@ -81,6 +81,6 @@ private:
 
 #endif  // ADC3208_H
 
-    uint16_t readRaw(uint8_t channel, uint8_t averageCount = 1);
-    double readVoltage(uint8_t channel, uint8_t averageCount = 1);
-    bool   isButtonPressed(uint8_t analogButton);
+//   uint16_t readRaw(uint8_t channel, uint8_t averageCount = 1);
+//    double readVoltage(uint8_t channel, uint8_t averageCount = 1);
+//    bool   isButtonPressed(uint8_t analogButton);

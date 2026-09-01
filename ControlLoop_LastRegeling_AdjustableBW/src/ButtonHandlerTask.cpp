@@ -26,6 +26,8 @@
 #include "bits.h"
 #include "ApplicationTasks.h"
 #include "vprintf.h"
+#include "hardware_config.h"
+
 
 
 button restartButton;
@@ -35,10 +37,11 @@ button restartButton;
 
 void ButtonHandlerTask(void *pvParameters)
 {
-	uint8_t restartButtonIndex = 0;	// 0 == SW1
+	HardwareConfig *hardwareConfig = (HardwareConfig *)pvParameters;
+	uint8_t restartButtonIndex = 0;	// 0 == Button 0
 	
 	vPrint("> starting ButtonHandlerTask\n");
-	restartButton.init();
+
 
 	// signal to control thread that ButtonHandlerTask is up and running:
 	// TODO: check if this is the right way to do it, or if we should use a semaphore instead of an event group
