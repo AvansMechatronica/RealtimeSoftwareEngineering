@@ -22,9 +22,9 @@
 
 #include "Arduino.h"
 #include "button_lib.h"
-#include "ButtonHandlerTask.h"
+#include "button_handler_task.h"
 #include "bits.h"
-#include "ApplicationTasks.h"
+#include "application_tasks.h"
 #include "vprintf.h"
 #include "hardware_config.h"
 

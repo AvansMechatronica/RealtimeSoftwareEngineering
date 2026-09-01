@@ -29,9 +29,9 @@
 //#include "PositionControllerLoad.h"
 //#include "MotorControl.h"
 //#include "QuadratureCounters.h"
-#include "ButtonHandlerTask.h"
-#include "ControlTask.h"
-#include "ApplicationTasks.h"
+#include "button_handler_task.h"
+#include "control_task.h"
+#include "application_tasks.h"
 #include "command_console.h"
 #include "hardware_config.h"
 

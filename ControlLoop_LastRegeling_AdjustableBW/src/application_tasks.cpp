@@ -16,10 +16,10 @@
 
 
 
-#include "ApplicationTasks.h"
-#include "ButtonHandlerTask.h"
-#include "ControlTask.h"
-#include "ParameterSettingTask.h"
+#include "application_tasks.h"
+#include "button_handler_task.h"
+#include "control_task.h"
+#include "parameter_setting_task.h"
 #include "hardware_config.h"
 
 

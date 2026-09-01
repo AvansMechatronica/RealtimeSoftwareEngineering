@@ -22,7 +22,7 @@
 #include "led_lib.h"
 #include "command_console.h"
 #include "oled_lib.h"
-#include "ApplicationTasks.h"
+#include "application_tasks.h"
 #include "vprintf.h"
 #include "system_info.h"
 

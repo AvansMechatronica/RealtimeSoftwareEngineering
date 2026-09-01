@@ -26,8 +26,8 @@
 ///////////////////////////////////////////////////////////////////////////////
 // application includes
 
-#include "ApplicationTasks.h"
-#include "ParameterSettingTask.h"
+#include "application_tasks.h"
+#include "parameter_setting_task.h"
 #include "bits.h"
 #include "hardware_config.h"
 
