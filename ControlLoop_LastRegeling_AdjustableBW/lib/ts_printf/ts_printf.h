@@ -1,5 +1,5 @@
 /*
- * vprintf.h
+ * ts_printf.h
  *
  * Created: 1-3-2016 20:39:37
  *  Author: Gerard Harkema
@@ -13,8 +13,8 @@
 extern "C" {
 #endif
 
-void Start_vPrintTask(void *pvParameters);
-void vPrint(const char *format, ...);
+void Start_ts_printfTask(void *pvParameters);
+void ts_printf(const char *format, ...);
 
 #ifdef __cplusplus
 }

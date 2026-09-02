@@ -1,11 +1,12 @@
 /*
- * vprintf.c
+ * tsprintf.c
  *
  * Created: 11-9-2022 22:43:20
  *  Author: Roel Smeets
  */ 
 
 ///////////////////////////////////////////////////////////////////////////////
+// threadsave printf functions
 // system includes
 
 #include <Arduino.h>
@@ -15,8 +16,7 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 // application includes
-
-#include "vprintf.h"
+#include "ts_printf.h"
 
 ///////////////////////////////////////////////////////////////////////////////
 // #define's
@@ -52,7 +52,7 @@ void PrintfTask(void *pvParameters)
 ///////////////////////////////////////////////////////////////////////////////
 // void StartPrintTask(void *pvParameters)
 
-void Start_vPrintTask(void *pvParameters)
+void Start_ts_printfTask(void *pvParameters)
 {
 	char *messageBuffer = NULL;
 		
@@ -66,9 +66,9 @@ void Start_vPrintTask(void *pvParameters)
 
 
 ///////////////////////////////////////////////////////////////////////////////
-// void vPrint(const char *format, ...)
+// void ts_printf(const char *format, ...)
 
-void vPrint(const char *format, ...)
+void ts_printf(const char *format, ...)
 {
 	va_list ap;
 	char *messageBuffer = NULL;

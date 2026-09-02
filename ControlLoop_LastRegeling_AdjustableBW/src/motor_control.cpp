@@ -15,7 +15,7 @@
 // application includes
 
 
-#include "vprintf.h"
+#include "ts_printf.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -44,25 +44,25 @@ void motor_DisplayStatus(void)
 	
 	//led_DisplayValue(portInValue >> 1);	// using bits 1..4
 
-	vPrint("digital input = 0x%02x\n", portInValue);
+	ts_printf("digital input = 0x%02x\n", portInValue);
 	
 	isSet = hardwareConfig->dio.isBitSet(BIT_LIMIT_LEFT);
 	bitVal = isSet? 1 : 0;
-	vPrint("Limit Left:     %d\n", bitVal);
+	ts_printf("Limit Left:     %d\n", bitVal);
 
 	isSet = hardwareConfig->dio.isBitSet(BIT_LIMIT_RIGHT);
 	bitVal = isSet? 1 : 0;
-	vPrint("Limit Right:    %d\n", bitVal);
+	ts_printf("Limit Right:    %d\n", bitVal);
 
 	isSet = hardwareConfig->dio.isBitSet(BIT_ATOM_ERROR);
 	bitVal = isSet? 1 : 0;
-	vPrint("Atom Error:     %d\n", bitVal);
+	ts_printf("Atom Error:     %d\n", bitVal);
 
 	isSet = hardwareConfig->dio.isBitSet(BIT_ESCON_OVERLOAD);
 	bitVal = isSet? 1 : 0;
-	vPrint("ESCON Overload: %d\n", bitVal);
+	ts_printf("ESCON Overload: %d\n", bitVal);
 	
-	vPrint("\n");
+	ts_printf("\n");
 }
 
 

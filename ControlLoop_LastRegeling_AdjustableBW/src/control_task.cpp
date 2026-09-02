@@ -14,7 +14,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 // application includes
 
-#include "vprintf.h"
+#include "ts_printf.h"
 
 ///////////////////////////////////////////////////////////////////////////////
 // HAL includes for RTSW board
@@ -34,6 +34,7 @@
 #include "application_tasks.h"
 #include "command_console.h"
 #include "hardware_config.h"
+#include "position_controller_motor.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -138,21 +139,21 @@ void ControlTask(void *pvParameters)
 		(void)args;
 		printControlLoopStats();
 	}, "Prints the current control loop statistics");
-	vPrint("> starting ControlTask (load)\n");
+	ts_printf("> starting ControlTask (load)\n");
 
 	motor_initialize(hardwareConfig);
 	motor_DisableESCONController();
 
+	posctrl_initialize(hardwareConfig);
+
 
 	InitializePeriodicTimer(1000);	// 1 ms interval
 
-	vPrint("> ControlTask waiting for helper tasks...\n");
+	ts_printf("> ControlTask waiting for helper tasks...\n");
 	// wait for ButtonHandlerTask and ParameterSettingTask to get up and running:
-	#if 0
 	uxBits = xEventGroupWaitBits(handle_ThreadEventGroup, BIT_1 | BIT_0,
 								 clearAllbits, waitForAllbits, ticksToWait);	
-	#endif
-	vPrint("> helper tasks running, ControlTask started, event group = 0x%04x\n", uxBits);
+	ts_printf("> helper tasks running, ControlTask started, event group = 0x%04x\n", uxBits);
 	
 	
 	motor_EnableESCONController(); 
@@ -161,8 +162,8 @@ void ControlTask(void *pvParameters)
 	hardwareConfig->qc.clearCountRegister(QC_CHANNEL_0);
 	hardwareConfig->qc.clearCountRegister(QC_CHANNEL_1);
 
-	vPrint("> ready\n");
-	vPrint("> press button SW1 to start (watch your fingers...)\n");
+	ts_printf("> ready\n");
+	ts_printf("> press button SW1 to start (watch your fingers...)\n");
 	
 	ticksToWait = portMAX_DELAY;
 	xSemaphoreTake(handle_RestartSemaphore, ticksToWait);	// wait for SW1 first button press
@@ -173,15 +174,13 @@ void ControlTask(void *pvParameters)
 
 		hardwareConfig->qc.clearCountRegister(QC_CHANNEL_0);
 		hardwareConfig->qc.clearCountRegister(QC_CHANNEL_1);
-		vPrint("> HOME");
+		ts_printf("> HOME");
 		
 		// always leave parameter value in queue! So use xQueuePeek
 		ticksToWait = 0;
 		xQueuePeek(handle_ParameterQueue, &wblFactor, ticksToWait);
-		vPrint("> running with wblFactor: %.3f\n", wblFactor);
-#if 0
-		posctrlLoad_InitParameters(wblFactor);
-#endif
+		ts_printf("> running with wblFactor: %.3f\n", wblFactor);
+		posctrl_InitParameters(wblFactor);
 		ControlLoop();	// this loop exits by pressing button SW1
 	}
 	
@@ -194,7 +193,7 @@ void ControlTask(void *pvParameters)
 
 void ControlLoop(void)
 {
-	vPrint("> enter Control Loop (load)\n");
+	ts_printf("> enter Control Loop (load)\n");
 
 	BaseType_t restart = pdFALSE;
 	BaseType_t ticksToWait = 0;
@@ -205,8 +204,7 @@ void ControlLoop(void)
 		// wait for periodic 1 ms timer tick to unblock this thread and
 		// run the motion controller:
 		xSemaphoreTake(TimerInterruptSemaphore, portMAX_DELAY);
-		#if 0
-		posctrlLoad_RunController();
+		posctrl_RunController_MotorSide();
 		
 		// check restart semaphore here, invoked by button press
 		restart = xSemaphoreTake(handle_RestartSemaphore, ticksToWait);
@@ -214,14 +212,13 @@ void ControlLoop(void)
 		{
 			continueControlLoop = false;
 		}
-		#endif
 		portENTER_CRITICAL(&controlLoopStatsLock);
 		++loopCounter;
 		portEXIT_CRITICAL(&controlLoopStatsLock);
 		vTaskDelay(0);
 	}
 
-	vPrint("> exit Control Loop (load)\n");
+	ts_printf("> exit Control Loop (load)\n");
 }
 
 void printControlLoopStats(void)
@@ -243,11 +240,11 @@ void printControlLoopStats(void)
 	uint32_t elapsedMs = millis() - startMs;
 	uint32_t loopRateHz = elapsedMs == 0 ? 0 : static_cast<uint32_t>((static_cast<uint64_t>(completedLoops) * 1000U) / elapsedMs);
 
-	vPrint("> Control loop statistics:\n");
-	vPrint("  Timer interval: %lu us\n", static_cast<unsigned long>(intervalUs));
-	vPrint("  Timer interrupts: %lu\n", static_cast<unsigned long>(timerInterrupts));
-	vPrint("  Completed loops: %lu\n", static_cast<unsigned long>(completedLoops));
-	vPrint("  Coalesced interrupts: %lu\n", static_cast<unsigned long>(missedTimerInterrupts));
-	vPrint("  Elapsed time: %lu ms\n", static_cast<unsigned long>(elapsedMs));
-	vPrint("  Observed loop rate: %lu Hz\n", static_cast<unsigned long>(loopRateHz));
+	ts_printf("> Control loop statistics:\n");
+	ts_printf("  Timer interval: %lu us\n", static_cast<unsigned long>(intervalUs));
+	ts_printf("  Timer interrupts: %lu\n", static_cast<unsigned long>(timerInterrupts));
+	ts_printf("  Completed loops: %lu\n", static_cast<unsigned long>(completedLoops));
+	ts_printf("  Coalesced interrupts: %lu\n", static_cast<unsigned long>(missedTimerInterrupts));
+	ts_printf("  Elapsed time: %lu ms\n", static_cast<unsigned long>(elapsedMs));
+	ts_printf("  Observed loop rate: %lu Hz\n", static_cast<unsigned long>(loopRateHz));
 }

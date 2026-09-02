@@ -25,10 +25,8 @@
 #include "button_handler_task.h"
 #include "bits.h"
 #include "application_tasks.h"
-#include "vprintf.h"
+#include "ts_printf.h"
 #include "hardware_config.h"
-
-
 
 button restartButton;
 
@@ -40,16 +38,14 @@ void ButtonHandlerTask(void *pvParameters)
 	HardwareConfig *hardwareConfig = (HardwareConfig *)pvParameters;
 	uint8_t restartButtonIndex = 0;	// 0 == Button 0
 	
-	vPrint("> starting ButtonHandlerTask\n");
+	ts_printf("> starting ButtonHandlerTask\n");
 
 
 	// signal to control thread that ButtonHandlerTask is up and running:
-	// TODO: check if this is the right way to do it, or if we should use a semaphore instead of an event group
-//	xEventGroupSetBits( handle_ThreadEventGroup, BIT_0 );
+	xEventGroupSetBits( handle_ThreadEventGroup, BIT_0 );
 	
 	while(true)
 	{
-#if 1
 		if (restartButton.isPressed(restartButtonIndex))
 		{
 			// wait until button released:
@@ -57,10 +53,8 @@ void ButtonHandlerTask(void *pvParameters)
 			{
 			}
 			Serial.printf("> restart button SW%d pressed!\n", restartButtonIndex + 1);
-			// TODO: check if this is the right way to do it, or if we should use a semaphore instead of an event group
-			//xSemaphoreGive(handle_RestartSemaphore);
+			xSemaphoreGive(handle_RestartSemaphore);
 		}
-#endif
 		vTaskDelay(pdMS_TO_TICKS(10));
 	}
 }

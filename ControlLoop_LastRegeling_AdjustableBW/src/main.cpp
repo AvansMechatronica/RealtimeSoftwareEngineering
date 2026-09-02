@@ -23,7 +23,7 @@
 #include "command_console.h"
 #include "oled_lib.h"
 #include "application_tasks.h"
-#include "vprintf.h"
+#include "ts_printf.h"
 #include "system_info.h"
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -117,7 +117,7 @@ void setup (void)
 	Serial.begin(115200);
 	delay(1000);
 	Serial.println("System initializing");
-	Start_vPrintTask(NULL);
+	Start_ts_printfTask(NULL);
 
 
   // Initialize the LED before starting the heartbeat task

@@ -7,7 +7,7 @@
 //#include <esp_additions/freertos/task_snapshot.h>
 
 #include "command_console.h"
-#include "vprintf.h"
+#include "ts_printf.h"
 #include "system_info.h"
 
 constexpr size_t kMaxInputSize = 1000;
@@ -27,12 +27,12 @@ size_t g_commandCount = 0;
 
 void PrintPrompt()
 {
-	vPrint("> ");
+	ts_printf("> ");
 }
 
 void PrintBuiltInHelp()
 {
-	vPrint("Available commands:\n");
+	ts_printf("Available commands:\n");
 	command_console::PrintRegisteredCommands();
 }
 
@@ -45,8 +45,8 @@ void HandleHelp(const char *args)
 
 void HandleEcho(const char *args)
 {
-	vPrint("%s", args);
-	vPrint("\n");
+	ts_printf("%s", args);
+	ts_printf("\n");
 }
 
 void RegisterDefaultCommands()
@@ -152,20 +152,20 @@ void PrintRegisteredCommands()
 {
 	if (g_commandCount == 0)
 	{
-		vPrint("  (no custom commands registered)\n");
+		ts_printf("  (no custom commands registered)\n");
 		return;
 	}
 
-	vPrint("Registered commands:\n");
+	ts_printf("Registered commands:\n");
 	for (size_t index = 0; index < g_commandCount; ++index)
 	{
 		if (g_commands[index].helpText != nullptr)
 		{
-			vPrint("  %-10s %s\n", g_commands[index].name, g_commands[index].helpText);
+			ts_printf("  %-10s %s\n", g_commands[index].name, g_commands[index].helpText);
 		}
 		else
 		{
-			vPrint("  %s\n", g_commands[index].name);
+			ts_printf("  %s\n", g_commands[index].name);
 		}
 	}
 }
@@ -193,8 +193,8 @@ void ProcessCommandLine(const char *commandLine)
 		}
 	}
 
-	vPrint("Unknown command: %s\n", commandName);
-	vPrint("Type 'help' for a list of commands.\n");
+	ts_printf("Unknown command: %s\n", commandName);
+	ts_printf("Type 'help' for a list of commands.\n");
 }
 }
 
@@ -231,7 +231,7 @@ extern "C" void StartCommandConsoleTask(void *pvParameters)
 
 	if (result != pdPASS)
 	{
-		vPrint("Unable to start command console task.");
+		ts_printf("Unable to start command console task.");
 	}
 }
 
@@ -249,10 +249,10 @@ extern "C" void CommandConsoleTask(void *pvParameters)
 	size_t inputIndex = 0;
 	bool ignoreLineFeed = false;
 
-	//vPrint();
-	vPrint("FreeRTOS command server");
+	//ts_printf();
+	ts_printf("FreeRTOS command server");
 	printCommandList();
-	//vPrint();
+	//ts_printf();
 	printPrompt();
 
 	while (true)
@@ -273,7 +273,7 @@ extern "C" void CommandConsoleTask(void *pvParameters)
 		if (character == '\r' || (character == '\n' && !ignoreLineFeed))
 		{
 			ignoreLineFeed = character == '\r';
-//			vPrint();
+//			ts_printf();
 			if (inputIndex == 0)
 			{
 				strncpy(input, lastInput, kMaxInputSize);
@@ -284,7 +284,7 @@ extern "C" void CommandConsoleTask(void *pvParameters)
 			lastInput[kMaxInputSize - 1] = '\0';
 			inputIndex = 0;
 			input[0] = '\0';
-//			vPrint();
+//			ts_printf();
 			printPrompt();
 		}
 		else if (character == '\n')
@@ -297,14 +297,14 @@ extern "C" void CommandConsoleTask(void *pvParameters)
 			{
 				--inputIndex;
 				input[inputIndex] = '\0';
-				vPrint("\b \b");
+				ts_printf("\b \b");
 			}
 		}
 		else if (inputIndex < kMaxInputSize - 1)
 		{
 			input[inputIndex++] = character;
 			input[inputIndex] = '\0';
-			vPrint("%c", character);
+			ts_printf("%c", character);
 			//Serial.write(static_cast<uint8_t>(character));
 		}
 	}

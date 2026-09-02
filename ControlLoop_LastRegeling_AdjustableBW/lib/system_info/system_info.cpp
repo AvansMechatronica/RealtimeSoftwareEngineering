@@ -6,7 +6,7 @@
 #include <freertos/task.h>
 //#include <esp_additions/freertos/task_snapshot.h>
 #include "system_info.h"
-#include "vprintf.h"
+#include "ts_printf.h"
 #include "command_console.h"
 using command_console::RegisterCommand;
 
@@ -45,11 +45,11 @@ void RegisterSystemInfoCommands()
 
 void printMemoryInfo()
 {
-	vPrint("ESP32 heap memory:");
-	vPrint("  Total heap:       %lu bytes\n", ESP.getHeapSize());
-	vPrint("  Free heap:        %lu bytes\n", ESP.getFreeHeap());
-	vPrint("  Minimum free:     %lu bytes\n", ESP.getMinFreeHeap());
-	vPrint("  Largest block:    %lu bytes\n", ESP.getMaxAllocHeap());
+	ts_printf("ESP32 heap memory:");
+	ts_printf("  Total heap:       %lu bytes\n", ESP.getHeapSize());
+	ts_printf("  Free heap:        %lu bytes\n", ESP.getFreeHeap());
+	ts_printf("  Minimum free:     %lu bytes\n", ESP.getMinFreeHeap());
+	ts_printf("  Largest block:    %lu bytes\n", ESP.getMaxAllocHeap());
 }
 
 void printTaskStats()
@@ -58,12 +58,12 @@ void printTaskStats()
 	const TickType_t tickCount = xTaskGetTickCount();
 	const TickType_t msSinceBoot = pdTICKS_TO_MS(tickCount);
 
-	vPrint("FreeRTOS task snapshot:");
-	vPrint("  Number of tasks:   %u\n", static_cast<unsigned int>(taskCount));
-	vPrint("  Uptime (ms):       %lu\n", static_cast<unsigned long>(msSinceBoot));
-	vPrint("  Current task:      %s\n", pcTaskGetName(nullptr));
-	vPrint("  Current priority:  %u\n", static_cast<unsigned int>(uxTaskPriorityGet(nullptr)));
-	vPrint("  Current stack HWM: %u words\n",
+	ts_printf("FreeRTOS task snapshot:");
+	ts_printf("  Number of tasks:   %u\n", static_cast<unsigned int>(taskCount));
+	ts_printf("  Uptime (ms):       %lu\n", static_cast<unsigned long>(msSinceBoot));
+	ts_printf("  Current task:      %s\n", pcTaskGetName(nullptr));
+	ts_printf("  Current priority:  %u\n", static_cast<unsigned int>(uxTaskPriorityGet(nullptr)));
+	ts_printf("  Current stack HWM: %u words\n",
 		static_cast<unsigned int>(uxTaskGetStackHighWaterMark(nullptr)));
 }
 
@@ -80,9 +80,9 @@ void printTasksInfo()
 {
 	const UBaseType_t taskCount = uxTaskGetNumberOfTasks();
 
-	vPrint("--- %u tasks executing ---\n", static_cast<unsigned int>(taskCount));
-	vPrint("Name                 State  Prio  Stack\n");
-	vPrint("----------------------------------------\n");
+	ts_printf("--- %u tasks executing ---\n", static_cast<unsigned int>(taskCount));
+	ts_printf("Name                 State  Prio  Stack\n");
+	ts_printf("----------------------------------------\n");
 
 #if defined(configENABLE_TASK_SNAPSHOT) && (configENABLE_TASK_SNAPSHOT == 1)
 	TaskSnapshot_t snapshots[kMaxTasks];
@@ -96,7 +96,7 @@ void printTasksInfo()
 		eTaskState state = eTaskGetState(handle);
 		UBaseType_t highWaterMark = uxTaskGetStackHighWaterMark(handle);
 
-		vPrint("%-20s %-6s %4u %6u\n",
+		ts_printf("%-20s %-6s %4u %6u\n",
 			pcTaskGetName(handle),
 			getTaskState(state),
 			static_cast<unsigned int>(uxTaskPriorityGet(handle)),
@@ -105,7 +105,7 @@ void printTasksInfo()
 
 	if (listed < taskCount)
 	{
-		vPrint("(truncated: %u task(s) not shown; increase kMaxTasks)\n",
+		ts_printf("(truncated: %u task(s) not shown; increase kMaxTasks)\n",
 			static_cast<unsigned int>(taskCount - listed));
 	}
 #elif defined(configUSE_TRACE_FACILITY) && (configUSE_TRACE_FACILITY == 1)
@@ -118,7 +118,7 @@ void printTasksInfo()
 		const eTaskState state = status.eCurrentState;
 		const UBaseType_t highWaterMark = status.usStackHighWaterMark;
 
-		vPrint("%-20s %-6s %4u %6u\n",
+		ts_printf("%-20s %-6s %4u %6u\n",
 			status.pcTaskName,
 			getTaskState(state),
 			static_cast<unsigned int>(status.uxCurrentPriority),
@@ -127,11 +127,11 @@ void printTasksInfo()
 
 	if (listed < taskCount)
 	{
-		vPrint("(truncated: %u task(s) not shown; increase kMaxTasks)\n",
+		ts_printf("(truncated: %u task(s) not shown; increase kMaxTasks)\n",
 			static_cast<unsigned int>(taskCount - listed));
 	}
 #else
-	vPrint("Task diagnostics unavailable in this build (no task snapshot/trace support).\n");
+	ts_printf("Task diagnostics unavailable in this build (no task snapshot/trace support).\n");
 #endif
 }
 
@@ -152,26 +152,26 @@ void printCPUInfo(void)
 
 	const char *model = ESP.getChipModel();
 
-	vPrint("------------------------------------------\n");
-	vPrint("> chip model:         %s\n", model);
-	vPrint("> chip revision:      %d\n", revision);
-	vPrint("> number of cores:    %d\n", nCores);
-	vPrint("> CPU frequency:      %lu MHz\n", cpuFreq);
-	vPrint("> ESP32 core id:      %d\n", coreId);
-	vPrint("> time since boot:    %llu us\n", usSinceBoot);
-	vPrint("> free heap:          %lu bytes\n", freeheap);
-	vPrint("> sketch size:        %lu\n", sketchsize);
-	vPrint("> free sketch space:  %lu\n", freesketchspace);
-	vPrint("------------------------------------------\n");
+	ts_printf("------------------------------------------\n");
+	ts_printf("> chip model:         %s\n", model);
+	ts_printf("> chip revision:      %d\n", revision);
+	ts_printf("> number of cores:    %d\n", nCores);
+	ts_printf("> CPU frequency:      %lu MHz\n", cpuFreq);
+	ts_printf("> ESP32 core id:      %d\n", coreId);
+	ts_printf("> time since boot:    %llu us\n", usSinceBoot);
+	ts_printf("> free heap:          %lu bytes\n", freeheap);
+	ts_printf("> sketch size:        %lu\n", sketchsize);
+	ts_printf("> free sketch space:  %lu\n", freesketchspace);
+	ts_printf("------------------------------------------\n");
 }
 
 void printVersion(void)
 {
 	const char *version = ESP.getSdkVersion();
 
-	vPrint("------------------------------------------\n");
-	vPrint("> Build:     %s\n", __TIMESTAMP__);
-	vPrint("> ESP32 SDK: %s\n", version);
-	vPrint("> FreeRTOS:  %s\n", tskKERNEL_VERSION_NUMBER);
-	vPrint("------------------------------------------\n");
+	ts_printf("------------------------------------------\n");
+	ts_printf("> Build:     %s\n", __TIMESTAMP__);
+	ts_printf("> ESP32 SDK: %s\n", version);
+	ts_printf("> FreeRTOS:  %s\n", tskKERNEL_VERSION_NUMBER);
+	ts_printf("------------------------------------------\n");
 }

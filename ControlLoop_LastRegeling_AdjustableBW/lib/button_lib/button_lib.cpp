@@ -46,7 +46,6 @@ bool button::isPressed(uint8_t buttonNumber)
 	}
 	else if ((buttonNumber == 1) || (buttonNumber == 2))
 	{
-		// TODO: Implement ADC button reading for buttonNumber 1 and 2
 		isPressed = adc->isButtonPressed(buttonNumber);
 	}
 	

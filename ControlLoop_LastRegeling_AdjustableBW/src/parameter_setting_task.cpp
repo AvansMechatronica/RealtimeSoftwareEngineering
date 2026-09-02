@@ -17,7 +17,7 @@
 // library & HAL includes
 
 //#include "CommandConsole.h"
-#include "vprintf.h"
+#include "ts_printf.h"
 //#include "TaskSleep.h"
 //#include "ADCLib.h"
 //#include "SwitchLib.h"
@@ -47,7 +47,7 @@ void ParameterSettingTask(void *pvParameters)
 	double   currentWblFactor  = -1.0;	// start with invalid value
 	double   previousWblFactor =  0.0;
 	
-	vPrint("> starting ParameterSettingTask\n");
+	ts_printf("> starting ParameterSettingTask\n");
 	
 	while(true)
 	{
@@ -56,7 +56,7 @@ void ParameterSettingTask(void *pvParameters)
 		if ( fabs(currentWblFactor - previousWblFactor) > WBLTHRESHOLD )
 		{
 			xQueueOverwrite(handle_ParameterQueue, &currentWblFactor);
-			vPrint("> wblFactor set to %.3f\n", currentWblFactor);
+			ts_printf("> wblFactor set to %.3f\n", currentWblFactor);
 			previousWblFactor = currentWblFactor;
 		}
 		
@@ -66,7 +66,7 @@ void ParameterSettingTask(void *pvParameters)
 		
 		if (hardwareConfig->buttons.isPressed(buttonNumber))
 		{
-			vPrint("> current wblFactor = %.3f\n", previousWblFactor); 
+			ts_printf("> current wblFactor = %.3f\n", previousWblFactor); 
 			// wait until button released:
 			while (hardwareConfig->buttons.isPressed(buttonNumber))
 			{
