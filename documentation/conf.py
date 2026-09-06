@@ -6,9 +6,9 @@
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
-project = 'Microcontrllers Workshop'
-copyright = 'Gerard Harkema & Vincent Teuben'
-author = 'Gerard Harkema & Vincent Teuben'
+project = 'Realtime Software Engineering Workshop'
+copyright = 'Gerard Harkema'
+author = 'Gerard Harkema'
 release = '0.1'
 
 
