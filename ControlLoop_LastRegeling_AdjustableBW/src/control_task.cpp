@@ -100,8 +100,8 @@ bool InitializePeriodicTimer(uint32_t intervalUs)
 		}
 	}
 
-	// Divide the 80 MHz APB clock to 1 MHz so each alarm tick is one microsecond.
-	periodicTimer = timerBegin(0, 80, true);
+	// 1 MHz timer clock so each alarm tick is one microsecond.
+	periodicTimer = timerBegin(1000000);
 	if (periodicTimer == NULL)
 	{
 		vSemaphoreDelete(TimerInterruptSemaphore);
@@ -109,9 +109,8 @@ bool InitializePeriodicTimer(uint32_t intervalUs)
 		return false;
 	}
 
-	timerAttachInterrupt(periodicTimer, &ClockInterruptHandler, true);
-	timerAlarmWrite(periodicTimer, intervalUs, true);
-	timerAlarmEnable(periodicTimer);
+	timerAttachInterrupt(periodicTimer, &ClockInterruptHandler);
+	timerAlarm(periodicTimer, intervalUs, true, 0);
 	timerIntervalUs = intervalUs;
 	controlLoopStatsStartMs = millis();
 
