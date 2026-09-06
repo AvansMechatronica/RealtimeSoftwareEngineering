@@ -3,10 +3,10 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Workshop Programmeren in C voor Microcontrollers
+Workshop Realtime Software Engineering
 ====================================
 
-**Welkom bij de Avans Workshop Programmeren in C voor Microcontrollers** 
+**Welkom bij de Avans Workshop Realtime Software Engineering** 
 
 .. note::
    This project is under active development.

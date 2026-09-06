@@ -30,7 +30,7 @@ Om te starten heb je de workshopbestanden nodig met code, schema's en opdrachtin
 
 :::{tab-item} Download ZIP
 Download de bestanden als ZIP via:
-[Download Workshop Bestanden](https://github.com/AvansMechatronica/Microcontrollers_workshop/archive/refs/heads/main.zip)
+[Download Workshop Bestanden](https://github.com/AvansMechatronica/RealtimeSoftwareEngineering/archive/refs/heads/main.zip)
 
 Pak het ZIP-bestand uit in een map die je makkelijk terugvindt.
 
@@ -42,7 +42,7 @@ Als je al bekend bent met Git en github, kun je de bestanden ook via Github verk
 
 * Maak een account aan bij [Github](https://github.com/) en login op dit account
 
-* Open de [Microcontrollers_workshop](https://github.com/AvansMechatronica/Microcontrollers_workshop) repository
+* Open de [RealtimeSoftwareEngineering](https://github.com/AvansMechatronica/RealtimeSoftwareEngineering) repository
 
 * Maak een Fork van de repository naar je eigen Github account door op het **Fork icoon**  te klikken:
 
@@ -53,7 +53,7 @@ Als je al bekend bent met Git en github, kun je de bestanden ook via Github verk
 * Nu kun je de workshop clonen naar je lokale machine:
 
 ```bash
-git clone https://github.com/<jouw_account_naam>/Microcontrollers_workshop.git
+git clone https://github.com/<jouw_account_naam>/RealtimeSoftwareEngineering.git
 ```
 
 :::
