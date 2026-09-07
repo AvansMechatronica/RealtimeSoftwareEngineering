@@ -1,8 +1,10 @@
 /*
- * ParameterSettingTask.c
+ * parameter_setting_task.cpp
  *
  * Created: 23-11-2023 13:20:17
- *  Author: rasmsmee
+ *  Authors: 	Roel Smeets & Gerard Harkema
+ *  Revision: V2.0
+ *  Modified: 07-09-2026
  */ 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -51,7 +53,7 @@ void ParameterSettingTask(void *pvParameters)
 	
 	while(true)
 	{
-		adcData = adc->readRaw(adcChannel);
+		adcData = adc->ReadRaw(adcChannel);
 		currentWblFactor = fmap(adcData, ADC_MIN_VALUE, ADC_MAX_VALUE, WBLFACTOR_MIN, WBLFACTOR_MAX);
 		if ( fabs(currentWblFactor - previousWblFactor) > WBLTHRESHOLD )
 		{
@@ -64,11 +66,11 @@ void ParameterSettingTask(void *pvParameters)
 		// it does not update the queue.
 		// Show PREVIOUS value (previousWblFactor), as it might be not updated (yet)!!
 		
-		if (hardwareConfig->buttons.isPressed(buttonNumber))
+		if (hardwareConfig->buttons.IsPressed(buttonNumber))
 		{
 			ts_printf("> current wblFactor = %.3f\n", previousWblFactor); 
 			// wait until button released:
-			while (hardwareConfig->buttons.isPressed(buttonNumber))
+			while (hardwareConfig->buttons.IsPressed(buttonNumber))
 			{
 			}
 		}

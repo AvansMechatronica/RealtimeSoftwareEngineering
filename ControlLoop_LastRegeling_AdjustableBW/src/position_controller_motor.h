@@ -1,8 +1,10 @@
 /*
- * PositionController.h
+ * position_controller_motor.h
  *
  * Created: 18-9-2023 10:52:38
- *  Author: rasmsmee
+ *  Authors: 	Roel Smeets & Gerard Harkema
+ *  Revision: V2.0
+ *  Modified: 07-09-2026
  */ 
 
 
@@ -12,8 +14,8 @@
 ///////////////////////////////////////////////////////////////////////////////
 // function prototypes
 
-void posctrl_initialize(HardwareConfig *hardwareConfig);
-void posctrl_InitParameters(double wbmFactor);
-void posctrl_RunController_MotorSide(void);
+void PosctrlInitialize(HardwareConfig *hardwareConfig);
+void PosctrlInitParameters(double wbmFactor);
+void PosctrlRunControllerMotorSide(void);
 
 #endif /* POSITIONCONTROLLER_H_ */

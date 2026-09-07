@@ -1,9 +1,11 @@
 ///////////////////////////////////////////////////////////////////////////////
 //
-// LEDLib.cpp
+// led_lib.cpp
 //
-// Authors: 	Roel Smeets
+// Authors: 	Roel Smeets & Gerard Harkema
 // Edit date: 	28-06-2025
+// Revision: 	V2.0
+// Modified: 	07-09-2026
 //
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -31,9 +33,10 @@ led::led()
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-// void led_Init(void)
+// void led::Init(void)
+// configures the GPIO pins of all LEDs as outputs and turns them off
 
-void led::init(void) 
+void led::Init(void) 
 {
 	for (uint8_t led = 0; led < N_LEDS; led++)
 	{
@@ -43,19 +46,19 @@ void led::init(void)
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-// bool led_IsValidNumber(uint8_t ledNumber)
+// bool led::IsValidNumber(uint8_t ledNumber)
 
-bool led::led_IsValidNumber(uint8_t ledNumber)
+bool led::IsValidNumber(uint8_t ledNumber)
 {
 	return (ledNumber < N_LEDS);	
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-// void led_Set(uint8_t ledNumber, bool ledOn)
+// void led::Set(uint8_t ledNumber, bool ledOn)
 
-void led::set(uint8_t ledNumber, bool ledOn)
+void led::Set(uint8_t ledNumber, bool ledOn)
 {
-	if (led_IsValidNumber(ledNumber))
+	if (IsValidNumber(ledNumber))
 	{
 		digitalWrite(G_LEDPins[ledNumber], ledOn ? HIGH : LOW);
 	}

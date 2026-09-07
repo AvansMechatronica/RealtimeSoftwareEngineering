@@ -1,9 +1,11 @@
 ///////////////////////////////////////////////////////////////////////////////
 //
-// LEDLib.h
+// led_lib.h
 //
-// Authors: 	Roel Smeets
+// Authors: 	Roel Smeets & Gerard Harkema
 // Edit date: 	28-06-2025
+// Revision: 	V2.0
+// Modified: 	07-09-2026
 //
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -24,7 +26,7 @@
 #define LED_PCB		LED_PIN_ESP32_BOARD
 #endif
 
-// LED numbers to use in led_Set(...)
+// LED numbers to use in led::Set(...)
 
 #define LED_BLUE		0 	// use this one for blue LED on
 #define LED_IO15		1 	// use this one for red LED on PCB
@@ -37,10 +39,10 @@ class led
 {
 public:
     led();
-    void init(void);
-    void set(uint8_t ledNumber, bool ledOn);
+    void Init(void);
+    void Set(uint8_t ledNumber, bool ledOn);
 private:
-    bool led_IsValidNumber(uint8_t ledNumber);
+    bool IsValidNumber(uint8_t ledNumber);
 };
 
 

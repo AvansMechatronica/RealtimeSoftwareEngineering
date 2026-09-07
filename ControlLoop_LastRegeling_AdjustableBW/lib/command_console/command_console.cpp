@@ -1,3 +1,10 @@
+/*
+ * command_console.cpp
+ *
+ * Revision: V2.0
+ * Modified: 07-09-2026
+ */ 
+
 #include <Arduino.h>
 #include <cstring>
 #include <cstdlib>
@@ -22,20 +29,23 @@ struct CommandEntry
 	const char *helpText;
 };
 
-CommandEntry g_commands[kMaxCommands];
-size_t g_commandCount = 0;
+CommandEntry commands[kMaxCommands];
+size_t commandCount = 0;
 
+// prints the "> " input prompt
 void PrintPrompt()
 {
 	ts_printf("> ");
 }
 
+// prints the header line above the list of registered commands
 void PrintBuiltInHelp()
 {
 	ts_printf("Available commands:\n");
 	command_console::PrintRegisteredCommands();
 }
 
+// handler for the built-in "help" command
 void HandleHelp(const char *args)
 {
 	(void)args;
@@ -43,12 +53,14 @@ void HandleHelp(const char *args)
 	command_console::PrintRegisteredCommands();
 }
 
+// handler for the built-in "echo" command
 void HandleEcho(const char *args)
 {
 	ts_printf("%s", args);
 	ts_printf("\n");
 }
 
+// registers the built-in help/echo commands, only once
 void RegisterDefaultCommands()
 {
 	static bool initialized = false;
@@ -63,6 +75,7 @@ void RegisterDefaultCommands()
 	command_console::RegisterCommand("echo", &HandleEcho, "Echo text, for example: echo hello");
 }
 
+// splits a raw input line into a command name and its remaining argument text
 bool ParseCommandLine(const char *commandLine, char *commandName, size_t commandNameSize, const char **args)
 {
 	if (commandLine == nullptr || commandName == nullptr || args == nullptr)
@@ -98,6 +111,7 @@ bool ParseCommandLine(const char *commandLine, char *commandName, size_t command
 
 namespace command_console
 {
+// adds a command, or replaces the handler/help text if the name is already registered
 bool RegisterCommand(const char *name, CommandHandler handler, const char *helpText)
 {
 	if (name == nullptr || handler == nullptr)
@@ -105,28 +119,29 @@ bool RegisterCommand(const char *name, CommandHandler handler, const char *helpT
 		return false;
 	}
 
-	for (size_t index = 0; index < g_commandCount; ++index)
+	for (size_t index = 0; index < commandCount; ++index)
 	{
-		if (strcmp(g_commands[index].name, name) == 0)
+		if (strcmp(commands[index].name, name) == 0)
 		{
-			g_commands[index].handler = handler;
-			g_commands[index].helpText = helpText != nullptr ? helpText : g_commands[index].helpText;
+			commands[index].handler = handler;
+			commands[index].helpText = helpText != nullptr ? helpText : commands[index].helpText;
 			return true;
 		}
 	}
 
-	if (g_commandCount >= kMaxCommands)
+	if (commandCount >= kMaxCommands)
 	{
 		return false;
 	}
 
-	g_commands[g_commandCount].name = name;
-	g_commands[g_commandCount].handler = handler;
-	g_commands[g_commandCount].helpText = helpText;
-	++g_commandCount;
+	commands[commandCount].name = name;
+	commands[commandCount].handler = handler;
+	commands[commandCount].helpText = helpText;
+	++commandCount;
 	return true;
 }
 
+// removes a previously registered command by name
 void UnregisterCommand(const char *name)
 {
 	if (name == nullptr)
@@ -134,42 +149,44 @@ void UnregisterCommand(const char *name)
 		return;
 	}
 
-	for (size_t index = 0; index < g_commandCount; ++index)
+	for (size_t index = 0; index < commandCount; ++index)
 	{
-		if (strcmp(g_commands[index].name, name) == 0)
+		if (strcmp(commands[index].name, name) == 0)
 		{
-			for (size_t move = index + 1; move < g_commandCount; ++move)
+			for (size_t move = index + 1; move < commandCount; ++move)
 			{
-				g_commands[move - 1] = g_commands[move];
+				commands[move - 1] = commands[move];
 			}
-			--g_commandCount;
+			--commandCount;
 			return;
 		}
 	}
 }
 
+// prints all registered commands with their help text
 void PrintRegisteredCommands()
 {
-	if (g_commandCount == 0)
+	if (commandCount == 0)
 	{
 		ts_printf("  (no custom commands registered)\n");
 		return;
 	}
 
 	ts_printf("Registered commands:\n");
-	for (size_t index = 0; index < g_commandCount; ++index)
+	for (size_t index = 0; index < commandCount; ++index)
 	{
-		if (g_commands[index].helpText != nullptr)
+		if (commands[index].helpText != nullptr)
 		{
-			ts_printf("  %-10s %s\n", g_commands[index].name, g_commands[index].helpText);
+			ts_printf("  %-10s %s\n", commands[index].name, commands[index].helpText);
 		}
 		else
 		{
-			ts_printf("  %s\n", g_commands[index].name);
+			ts_printf("  %s\n", commands[index].name);
 		}
 	}
 }
 
+// parses commandLine and dispatches it to the matching registered handler
 void ProcessCommandLine(const char *commandLine)
 {
 	if (commandLine == nullptr)
@@ -184,11 +201,11 @@ void ProcessCommandLine(const char *commandLine)
 		return;
 	}
 
-	for (size_t index = 0; index < g_commandCount; ++index)
+	for (size_t index = 0; index < commandCount; ++index)
 	{
-		if (strcmp(g_commands[index].name, commandName) == 0)
+		if (strcmp(commands[index].name, commandName) == 0)
 		{
-			g_commands[index].handler(args);
+			commands[index].handler(args);
 			return;
 		}
 	}
@@ -198,23 +215,27 @@ void ProcessCommandLine(const char *commandLine)
 }
 }
 
+// thin wrapper so file-scope code can call the namespaced PrintPrompt
 void printPrompt()
 {
 	PrintPrompt();
 }
 
+// thin wrapper so file-scope code can call the namespaced help/command list printers
 void printCommandList()
 {
 	PrintBuiltInHelp();
 	command_console::PrintRegisteredCommands();
 }
 
+// thin wrapper so file-scope code can call the namespaced command processor
 void processCommand(const char *command)
 {
 	command_console::ProcessCommandLine(command);
 }
 
 
+// creates the CommandConsoleTask FreeRTOS task
 extern "C" void StartCommandConsoleTask(void *pvParameters)
 {
 	(void)pvParameters;
@@ -235,12 +256,14 @@ extern "C" void StartCommandConsoleTask(void *pvParameters)
 	}
 }
 
+// unused placeholder task, kept only to satisfy legacy extern "C" linkage
 extern "C" void PrintfTask(void *pvParameters)
 {
 	(void)pvParameters;
 	vTaskDelete(nullptr);
 }
 
+// reads Serial input line by line and processes each line as a console command
 extern "C" void CommandConsoleTask(void *pvParameters)
 {
 	(void)pvParameters;

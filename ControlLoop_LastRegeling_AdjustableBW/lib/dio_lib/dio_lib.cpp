@@ -1,9 +1,11 @@
 ///////////////////////////////////////////////////////////////////////////////
 //
-// IOLib.cpp
+// dio_lib.cpp
 //
-// Authors: 	Roel Smeets
+// Authors: 	Roel Smeets & Gerard Harkema
 // Edit date: 	02-06-2025
+// Revision: 	V2.0
+// Modified: 	07-09-2026
 //
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -22,7 +24,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 // void dio_device::Init(void)
 
-void dio_device::init(void)
+void dio_device::Init(void)
 {
 	uint8_t pin = 0;
 
@@ -40,7 +42,7 @@ void dio_device::init(void)
 ///////////////////////////////////////////////////////////////////////////////
 // uint8_t dio_device::GetInput(void)
 
-uint8_t dio_device::getInput(void)
+uint8_t dio_device::GetInput(void)
 {
 	uint8_t value = 0;
 	uint8_t bitNr = 0;
@@ -57,9 +59,9 @@ uint8_t dio_device::getInput(void)
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-// bool dio_device::isValidBitNumber(uint8_t bitNumber)
+// bool dio_device::IsValidBitNumber(uint8_t bitNumber)
 
-bool dio_device::isValidBitNumber(uint8_t bitNumber)
+bool dio_device::IsValidBitNumber(uint8_t bitNumber)
 {
 	bool isValid = false;
 
@@ -71,22 +73,22 @@ bool dio_device::isValidBitNumber(uint8_t bitNumber)
 ///////////////////////////////////////////////////////////////////////////////
 // bool dio_device::IsBitSet(uint8_t bitNumber)
 
-bool dio_device::isBitSet(uint8_t bitNumber)
+bool dio_device::IsBitSet(uint8_t bitNumber)
 {
-	bool isBitSet = false;
+	bool isSet = false;
 
-	if (isValidBitNumber(bitNumber))
+	if (IsValidBitNumber(bitNumber))
 	{
-		isBitSet = (digitalRead(bitNumber) == HIGH);
+		isSet = (digitalRead(bitNumber) == HIGH);
 	}
 	
-	return isBitSet;
+	return isSet;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 // void dio_device::SetOutput(uint8_t value)
 
-void dio_device::setOutput(uint8_t value)
+void dio_device::SetOutput(uint8_t value)
 {
 	uint8_t bitNr = 0;
 	uint8_t bitOn = LOW;
@@ -106,44 +108,44 @@ void dio_device::setOutput(uint8_t value)
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-// void dio_device::setBit(uint8_t bitNumber)
+// void dio_device::SetBit(uint8_t bitNumber)
 
-void dio_device::setBit(uint8_t bitNumber)
+void dio_device::SetBit(uint8_t bitNumber)
 {
 
 
-	if (isValidBitNumber(bitNumber))
+	if (IsValidBitNumber(bitNumber))
 	{
 		digitalWrite(OutputPins[bitNumber], HIGH);
 	}
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-// void dio_device::clearBit(uint8_t bitNumber)
+// void dio_device::ClearBit(uint8_t bitNumber)
 
-void dio_device::clearBit(uint8_t bitNumber)
+void dio_device::ClearBit(uint8_t bitNumber)
 {
-	if (isValidBitNumber(bitNumber))
+	if (IsValidBitNumber(bitNumber))
 	{
 		digitalWrite(OutputPins[bitNumber], LOW);
 	}
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-// void dio_device::toggleBit(uint8_t bitNumber)
+// void dio_device::ToggleBit(uint8_t bitNumber)
 
-void dio_device::toggleBit(uint8_t bitNumber)
+void dio_device::ToggleBit(uint8_t bitNumber)
 {
-	if (isValidBitNumber(bitNumber))
+	if (IsValidBitNumber(bitNumber))
 	{
 		digitalWrite(OutputPins[bitNumber], !digitalRead(OutputPins[bitNumber]));
 	}
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-// int16_t dio_device::getGpioNumberInput(uint8_t inputBitNumber)
+// int16_t dio_device::GetGPIONumberInput(uint8_t inputBitNumber)
 
-int16_t dio_device::getGPIONumberInput(uint8_t inputBitNumber)
+int16_t dio_device::GetGPIONumberInput(uint8_t inputBitNumber)
 {
 	int16_t gpioNumber = -1;
 

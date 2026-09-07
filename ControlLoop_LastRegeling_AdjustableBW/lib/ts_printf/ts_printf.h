@@ -3,6 +3,8 @@
  *
  * Created: 1-3-2016 20:39:37
  *  Author: Gerard Harkema
+ *  Revision: V2.0
+ *  Modified: 07-09-2026
  */ 
 
 
@@ -13,7 +15,7 @@
 extern "C" {
 #endif
 
-void Start_ts_printfTask(void *pvParameters);
+void StartTsPrintfTask(void *pvParameters);
 void ts_printf(const char *format, ...);
 
 #ifdef __cplusplus

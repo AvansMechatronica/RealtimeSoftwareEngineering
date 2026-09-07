@@ -1,8 +1,10 @@
 /*
- *  PositionController.c
+ *  position_controller_motor.cpp
  *
  *  Created: 14-9-2023 11:42:11
  *  Authors: Raoul Smeets / Hans Langen
+ *  Revision: V2.0
+ *  Modified: 07-09-2026
  */ 
 
 
@@ -33,9 +35,9 @@
 ///////////////////////////////////////////////////////////////////////////////
 // globals
 
-double g_time = 0.0;				// time in seconds
-uint64_t g_tickCount = 0;			// clock tick count from 1 ms hardware clock
-uint16_t g_TicksPerSecond = 0;
+double elapsedTimeSec = 0.0;				// time in seconds
+uint64_t tickCount = 0;			// clock tick count from 1 ms hardware clock
+uint16_t ticksPerSecond = 0;
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -179,26 +181,26 @@ double ffdM		=	0.0;	// feed forward
 static HardwareConfig *hardwareConfig;
 
 ///////////////////////////////////////////////////////////////////////////////
-// void motor_DisplayStatus(void)
+// void PosctrlInitialize(HardwareConfig *hardwareConfig)
 
-void posctrl_initialize(HardwareConfig *hardwareConfig)
+void PosctrlInitialize(HardwareConfig *hardwareConfig)
 {
     ::hardwareConfig = hardwareConfig;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-// void posctrl_InitParameters(double wbmFactor)
+// void PosctrlInitParameters(double wbmFactor)
 
-void posctrl_InitParameters(double wbmFactor)
+void PosctrlInitParameters(double wbmFactor)
 {
-	g_TicksPerSecond = 1.0/Ts;
+	ticksPerSecond = 1.0/Ts;
 
 	// ******
 	// IMPORTANT: after each restart, the time for the controller must be reset
-	// by setting g_tickCount to zero !!! See next line.
+	// by setting tickCount to zero !!! See next line.
 	// ******
 	
-	g_tickCount = 0;	// reset the time
+	tickCount = 0;	// reset the time
 
 	Lac = sqrt( pow(Ltr, 2) + pow(R2-R1, 2) );
 	ktr = kspec/Lac;
@@ -278,45 +280,45 @@ void posctrl_InitParameters(double wbmFactor)
 
 
 ///////////////////////////////////////////////////////////////////////////////
-// void posctrl_RunController_MotorSide(void)
+// void PosctrlRunControllerMotorSide(void)
 
-void posctrl_RunController_MotorSide(void)
+void PosctrlRunControllerMotorSide(void)
 {
 	uint8_t qcChannel  = 1;		// werkend op regeling MOTORKANT = QC kanaal 1 !!
 	uint8_t dacChannel = 0;
 	int32_t qcCount	   = 0;
 	double  dacOutputVoltage = 0.0;
 	
-	if (g_time <= tstart)		// 1
+	if (elapsedTimeSec <= tstart)		// 1
 	{
 		alfag  = 0.0;
 		omegag = 0.0;
 		thetag = 0.0;
 	}
-	else if ( g_time <= (tmax/4.0) + tstart )		//	2
+	else if ( elapsedTimeSec <= (tmax/4.0) + tstart )		//	2
 	{
-		alfag	= (4.0 * alfamax/tmax) * (g_time-tstart);			// feed forward
-		omegag	= 2.0 * (alfamax/tmax) * pow(g_time-tstart, 2.0);	// feed forward
-		thetag	= (2.0/3.0) * (alfamax/tmax) * pow(g_time-tstart, 3.0);
+		alfag	= (4.0 * alfamax/tmax) * (elapsedTimeSec-tstart);			// feed forward
+		omegag	= 2.0 * (alfamax/tmax) * pow(elapsedTimeSec-tstart, 2.0);	// feed forward
+		thetag	= (2.0/3.0) * (alfamax/tmax) * pow(elapsedTimeSec-tstart, 3.0);
 		
 	}
-	else if ( g_time <= (3.0*tmax/4.0) + tstart )	//	3
+	else if ( elapsedTimeSec <= (3.0*tmax/4.0) + tstart )	//	3
 	{
-		alfag	=	alfamax - 4.0*(alfamax/tmax)*(g_time-(t1+tstart));
-		omegag	=	alfamax * (g_time-(t1+tstart))
-					-2.0 * (alfamax/tmax) * pow((g_time-(t1+tstart)), 2.0) + (1.0/8.0)*alfamax*tmax;
-		thetag	=	0.5 * alfamax * pow( (g_time-(t1+tstart)), 2.0)
-					- (2.0/3.0) * (alfamax/tmax) * pow( (g_time-(t1+tstart)), 3.0)
-					+ (1.0/8.0)*alfamax*tmax*(g_time-(t1+tstart)) + (2.0/(3.0*64.0))*alfamax*pow(tmax, 2.0);
+		alfag	=	alfamax - 4.0*(alfamax/tmax)*(elapsedTimeSec-(t1+tstart));
+		omegag	=	alfamax * (elapsedTimeSec-(t1+tstart))
+					-2.0 * (alfamax/tmax) * pow((elapsedTimeSec-(t1+tstart)), 2.0) + (1.0/8.0)*alfamax*tmax;
+		thetag	=	0.5 * alfamax * pow( (elapsedTimeSec-(t1+tstart)), 2.0)
+					- (2.0/3.0) * (alfamax/tmax) * pow( (elapsedTimeSec-(t1+tstart)), 3.0)
+					+ (1.0/8.0)*alfamax*tmax*(elapsedTimeSec-(t1+tstart)) + (2.0/(3.0*64.0))*alfamax*pow(tmax, 2.0);
 	}
-	else if ( g_time <= (tmax + tstart) )			//	4
+	else if ( elapsedTimeSec <= (tmax + tstart) )			//	4
 	{
-		alfag	=	-alfamax + 4.0*(alfamax/tmax)*(g_time-(t2+tstart));
-		omegag	=	-alfamax * (g_time-(t2+tstart))
-					+ 2.0*(alfamax/tmax) * pow((g_time-(t2+tstart)), 2.0) + (1.0/8.0)*alfamax*tmax;
-		thetag	=	-(alfamax/2.0) * pow((g_time-(t2+tstart)), 2.0)
-					+ (2.0/3.0) * (alfamax/tmax) * pow( (g_time-(t2+tstart)), 3.0 )
-					+ (1.0/8.0) * alfamax*tmax*(g_time-(t2+tstart)) + (22.0/(3.0*64.0))*alfamax*pow(tmax, 2.0);
+		alfag	=	-alfamax + 4.0*(alfamax/tmax)*(elapsedTimeSec-(t2+tstart));
+		omegag	=	-alfamax * (elapsedTimeSec-(t2+tstart))
+					+ 2.0*(alfamax/tmax) * pow((elapsedTimeSec-(t2+tstart)), 2.0) + (1.0/8.0)*alfamax*tmax;
+		thetag	=	-(alfamax/2.0) * pow((elapsedTimeSec-(t2+tstart)), 2.0)
+					+ (2.0/3.0) * (alfamax/tmax) * pow( (elapsedTimeSec-(t2+tstart)), 3.0 )
+					+ (1.0/8.0) * alfamax*tmax*(elapsedTimeSec-(t2+tstart)) + (22.0/(3.0*64.0))*alfamax*pow(tmax, 2.0);
 	}
 	else	//	5
 	{
@@ -328,7 +330,7 @@ void posctrl_RunController_MotorSide(void)
 	//------ inlezen encoder (hoekpositie motor)-------------------------
 	// theta1 =(getencoder(motor, ...)/4096)*0.0314; //in meters
 	
-	qcCount = hardwareConfig->qc.readCountRegister(qcChannel);
+	qcCount = hardwareConfig->qc.ReadCountRegister(qcChannel);
 	qcCount = -qcCount;
 	theta1	= (qcCount / 4096.0) * 2.0 * pi;
 	
@@ -348,13 +350,13 @@ void posctrl_RunController_MotorSide(void)
 	// bewegingsprofiel op DAC channel 2
 	uDac = fmap(thetag, 0.0, xmax*itot,  0.0, DAC_MAX_VOLTAGE);
 	dacChannel = 2;
-	hardwareConfig->dac.setOutputVoltage(dacChannel, uDac);
+	hardwareConfig->dac.SetOutputVoltage(dacChannel, uDac);
 
 	
 	// error signaal op DAC channel 3
 	uDac = fmap(error_th1_window[1], -xmax*itot, xmax*itot,  DAC_MIN_VOLTAGE, DAC_MAX_VOLTAGE);
 	dacChannel = 3;
-	hardwareConfig->dac.setOutputVoltage(dacChannel, uDac);
+	hardwareConfig->dac.SetOutputVoltage(dacChannel, uDac);
 	
 	//--- motorregeling met feedforward, uth1=(motor)spanning [V]
 	
@@ -367,12 +369,12 @@ void posctrl_RunController_MotorSide(void)
 	// motorspanning op DAC channel 0
 	dacOutputVoltage = uth1_window[1] + ffdM;
 	dacChannel = 0;
-	hardwareConfig->dac.setOutputVoltage(dacChannel, dacOutputVoltage);
+	hardwareConfig->dac.SetOutputVoltage(dacChannel, dacOutputVoltage);
 	
-	g_tickCount++;
-	g_time = ((double)g_tickCount) / g_TicksPerSecond;
+	tickCount++;
+	elapsedTimeSec = ((double)tickCount) / ticksPerSecond;
 	
-	if ((g_tickCount % 1000) == 0)
+	if ((tickCount % 1000) == 0)
 	{
 		ts_printf(".");
 	}

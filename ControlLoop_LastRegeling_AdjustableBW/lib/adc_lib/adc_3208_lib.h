@@ -1,9 +1,11 @@
 //////////////////////////////////////////////////////////////////////////////
 //
-// ADC3208Lib.h
+// adc_3208_lib.h
 //
-// Authors: 	Roel Smeets
+// Authors: 	Roel Smeets & Gerard Harkema
 // Edit date: 	21-07-2025
+// Revision: 	V2.0
+// Modified: 	07-09-2026
 //
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -65,22 +67,22 @@
 class adc3208{
 public:
 
-    void init(spi *spi_bus);
+    void Init(spi *spi_bus);
 
-    uint16_t readRaw(uint8_t channel, uint8_t averageCount = 1);
-    void readRawMultiple(uint8_t channelList[], uint8_t numChannels, uint16_t rawValues[]);
-    void readVoltageMultiple(uint8_t channelList[], uint8_t numChannels, double voltages[]);
+    uint16_t ReadRaw(uint8_t channel, uint8_t averageCount = 1);
+    void ReadRawMultiple(uint8_t channelList[], uint8_t numChannels, uint16_t rawValues[]);
+    void ReadVoltageMultiple(uint8_t channelList[], uint8_t numChannels, double voltages[]);
 
-    double readVoltage(uint8_t channel, uint8_t averageCount = 1);
-    bool   isButtonPressed(uint8_t analogButton);
+    double ReadVoltage(uint8_t channel, uint8_t averageCount = 1);
+    bool   IsButtonPressed(uint8_t analogButton);
 private:
     spi *spi_bus;
     SPISettings ADCSPISettings = SPISettings(SPI_ADC_SPEED, MSBFIRST, SPI_MODE0);
-    double rawToVoltage(uint16_t adcRaw, uint8_t channel);
+    double RawToVoltage(uint16_t adcRaw, uint8_t channel);
 };
 
 #endif  // ADC3208_H
 
-//   uint16_t readRaw(uint8_t channel, uint8_t averageCount = 1);
-//    double readVoltage(uint8_t channel, uint8_t averageCount = 1);
-//    bool   isButtonPressed(uint8_t analogButton);
+//   uint16_t ReadRaw(uint8_t channel, uint8_t averageCount = 1);
+//    double ReadVoltage(uint8_t channel, uint8_t averageCount = 1);
+//    bool   IsButtonPressed(uint8_t analogButton);

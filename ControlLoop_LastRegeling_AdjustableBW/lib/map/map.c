@@ -1,10 +1,12 @@
 /*
-*  Map.c
+*  map.c
 *
 *  Copyright (c) 2016 by Avans Hogeschool.
 * 
 *  Date:    16-may-2016
 *  Author:  Roel Smeets
+*  Revision: V2.0
+*  Modified: 07-09-2026
 *
 */
 

@@ -1,9 +1,11 @@
 /*
-*  Map.c
+*  fmap.cpp
 *
 *  Copyright (c) 2016 by Avans Hogeschool.
 * 
 *  Date:    16-may-2016
+*  Revision: V2.0
+*  Modified: 07-09-2026
 *
 *  copied from Arduino source code library,
 *  see: https://www.arduino.cc/en/Reference/Map

@@ -1,8 +1,10 @@
 /*
- * motorControl.c
+ * motor_control.cpp
  *
  * Created: 28-9-2023 15:37:48
- *  Author: rasmsmee
+ *  Authors: 	Roel Smeets & Gerard Harkema
+ *  Revision: V2.0
+ *  Modified: 07-09-2026
  */ 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -25,14 +27,14 @@
 static HardwareConfig *hardwareConfig;
 
 ///////////////////////////////////////////////////////////////////////////////
-// void motor_DisplayStatus(void)
+// void MotorDisplayStatus(void)
 
-void motor_initialize(HardwareConfig *hardwareConfig)
+void MotorInitialize(HardwareConfig *hardwareConfig)
 {
     ::hardwareConfig = hardwareConfig;
 }
 
-void motor_DisplayStatus(void)
+void MotorDisplayStatus(void)
 {
 	uint8_t portInValue = 0;
 	uint8_t bitVal		= 0;
@@ -40,25 +42,25 @@ void motor_DisplayStatus(void)
 	
 	// non-inverting input port, pull-up resistors
 	
-	portInValue = hardwareConfig->dio.getInput();
+	portInValue = hardwareConfig->dio.GetInput();
 	
 	//led_DisplayValue(portInValue >> 1);	// using bits 1..4
 
 	ts_printf("digital input = 0x%02x\n", portInValue);
 	
-	isSet = hardwareConfig->dio.isBitSet(BIT_LIMIT_LEFT);
+	isSet = hardwareConfig->dio.IsBitSet(BIT_LIMIT_LEFT);
 	bitVal = isSet? 1 : 0;
 	ts_printf("Limit Left:     %d\n", bitVal);
 
-	isSet = hardwareConfig->dio.isBitSet(BIT_LIMIT_RIGHT);
+	isSet = hardwareConfig->dio.IsBitSet(BIT_LIMIT_RIGHT);
 	bitVal = isSet? 1 : 0;
 	ts_printf("Limit Right:    %d\n", bitVal);
 
-	isSet = hardwareConfig->dio.isBitSet(BIT_ATOM_ERROR);
+	isSet = hardwareConfig->dio.IsBitSet(BIT_ATOM_ERROR);
 	bitVal = isSet? 1 : 0;
 	ts_printf("Atom Error:     %d\n", bitVal);
 
-	isSet = hardwareConfig->dio.isBitSet(BIT_ESCON_OVERLOAD);
+	isSet = hardwareConfig->dio.IsBitSet(BIT_ESCON_OVERLOAD);
 	bitVal = isSet? 1 : 0;
 	ts_printf("ESCON Overload: %d\n", bitVal);
 	
@@ -67,32 +69,32 @@ void motor_DisplayStatus(void)
 
 
 ///////////////////////////////////////////////////////////////////////////////
-// bool motor_HasOverload(void)
+// bool MotorHasOverload(void)
 
-bool motor_HasOverload(void)
+bool MotorHasOverload(void)
 {
 	bool overload = true;
 
-	overload = hardwareConfig->dio.isBitSet(BIT_ESCON_OVERLOAD);
+	overload = hardwareConfig->dio.IsBitSet(BIT_ESCON_OVERLOAD);
 	
 	return overload;
 }
 
 
 ///////////////////////////////////////////////////////////////////////////////
-// bool motor_IsAtLimit(motor_direction_t direction)
+// bool MotorIsAtLimit(motor_direction_t direction)
 
-bool motor_IsAtLimit(motor_direction_t direction)
+bool MotorIsAtLimit(motor_direction_t direction)
 {
 	bool atLimit = true;	// safe: assume at limit
 	
 	if (direction == MOVE_LEFT)
 	{
-		atLimit = hardwareConfig->dio.isBitSet(BIT_LIMIT_LEFT);
+		atLimit = hardwareConfig->dio.IsBitSet(BIT_LIMIT_LEFT);
 	}
 	else if (direction == MOVE_RIGHT)
 	{
-		atLimit = hardwareConfig->dio.isBitSet(BIT_LIMIT_RIGHT);
+		atLimit = hardwareConfig->dio.IsBitSet(BIT_LIMIT_RIGHT);
 	}
 	
 	if (atLimit)
@@ -105,19 +107,19 @@ bool motor_IsAtLimit(motor_direction_t direction)
 
 
 ///////////////////////////////////////////////////////////////////////////////
-// bool motor_Move(motor_direction_t direction)
+// bool MotorMove(motor_direction_t direction)
 //
 // returns false if motor already at limit: movement NOT allowed
 // returns true if motor not at limit: movement IS allowed
 
-bool motor_Move(motor_direction_t direction)
+bool MotorMove(motor_direction_t direction)
 {
 	bool alreadyAtLimit = true;
 	uint8_t dacChannel  = 0;
 	float dacOutputVoltageLeft  =  -4.0;
 	float dacOutputVoltageRight =   6.0;
 	
-	alreadyAtLimit = motor_IsAtLimit(direction);
+	alreadyAtLimit = MotorIsAtLimit(direction);
 	
 	// only move motor if NOT at limit:
 	if (alreadyAtLimit == false)
@@ -125,18 +127,18 @@ bool motor_Move(motor_direction_t direction)
 		if (direction == MOVE_LEFT)
 		{
 			//led_DisplayValue(0x08);	// left LED on
-			hardwareConfig->dac.setOutputVoltage(dacChannel, dacOutputVoltageLeft);
+			hardwareConfig->dac.SetOutputVoltage(dacChannel, dacOutputVoltageLeft);
 		}
 		else if (direction == MOVE_RIGHT)
 		{
 			//led_DisplayValue(0x01);	// right LED on
-			hardwareConfig->dac.setOutputVoltage(dacChannel, dacOutputVoltageRight);
+			hardwareConfig->dac.SetOutputVoltage(dacChannel, dacOutputVoltageRight);
 		}
 	}
 	else	// safe default action if already at limit: stop
 	{
 		//led_DisplayValue(0x00);
-		motor_Stop();
+		MotorStop();
 	}
 	
 	return alreadyAtLimit;
@@ -147,50 +149,50 @@ bool motor_Move(motor_direction_t direction)
 //
 // go to home position, either left or right
 
-void motor_GotoHomePosition(motor_direction_t direction)
+void MotorGotoHomePosition(motor_direction_t direction)
 {
-	motor_Move(direction);
-	while (motor_IsAtLimit(direction) == false)
+	MotorMove(direction);
+	while (MotorIsAtLimit(direction) == false)
 	{
 		// do nothing, just keep going...
 	}
-	motor_Stop();
+	MotorStop();
 	vTaskDelay(1000);	// allow for mechanical debounce...
 }
 
 
 ///////////////////////////////////////////////////////////////////////////////
-// void motor_Stop(void)
+// void MotorStop(void)
 //
 // stop motor, set DAC output channel 0 to 0 Volt
 
-void motor_Stop(void)
+void MotorStop(void)
 {
 	uint8_t dacChannel  = 0;
 	float	dacValue	= 0.0;
 	
-	hardwareConfig->dac.setOutputVoltage(dacChannel, dacValue);
+	hardwareConfig->dac.SetOutputVoltage(dacChannel, dacValue);
 	
 	//led_DisplayValue(0x00);
 }
 
 
 ///////////////////////////////////////////////////////////////////////////////
-// void motor_EnableESCONController(void)
+// void MotorEnableESCONController(void)
 //
 //enable ESCON controller via output port bit 0
 
-void motor_EnableESCONController(void)
+void MotorEnableESCONController(void)
 {
-	hardwareConfig->dio.setBit(BIT_ESCON_ENABLE);
+	hardwareConfig->dio.SetBit(BIT_ESCON_ENABLE);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-// void motor_DisableESCONController(void)
+// void MotorDisableESCONController(void)
 //
 // disable ESCON controller via output port bit 0
 
-void motor_DisableESCONController(void)
+void MotorDisableESCONController(void)
 {
-	hardwareConfig->dio.clearBit(BIT_ESCON_ENABLE);
+	hardwareConfig->dio.ClearBit(BIT_ESCON_ENABLE);
 }

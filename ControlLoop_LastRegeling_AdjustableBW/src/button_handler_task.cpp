@@ -1,8 +1,10 @@
 /*
- * ButtonHandlerTask.cpp
+ * button_handler_task.cpp
  *
  * Created: 23-11-2023 13:11:18
- *  Author: rasmsmee
+ *  Authors: 	Roel Smeets & Gerard Harkema
+ *  Revision: V2.0
+ *  Modified: 07-09-2026
  */ 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -46,10 +48,10 @@ void ButtonHandlerTask(void *pvParameters)
 	
 	while(true)
 	{
-		if (restartButton.isPressed(restartButtonIndex))
+		if (restartButton.IsPressed(restartButtonIndex))
 		{
 			// wait until button released:
-			while (restartButton.isPressed(restartButtonIndex))
+			while (restartButton.IsPressed(restartButtonIndex))
 			{
 			}
 			Serial.printf("> restart button SW%d pressed!\n", restartButtonIndex + 1);

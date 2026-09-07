@@ -1,11 +1,13 @@
 ///////////////////////////////////////////////////////////////////////////////
 //
-// oled.cpp
+// oled_lib.cpp
 //
 // Author:	 	Roel Smeets
 // Edit date: 	13-03-2023
 //				25-06-2025
 // Adapted for ESP32 RPC Server project by Gerard Harkema
+// Revision: 	V2.0
+// Modified: 	07-09-2026
 //
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -31,9 +33,9 @@
 
 
 ///////////////////////////////////////////////////////////////////////////////
-// bool oled_Init(void)
+// bool oledDisplay::Init(void)
 
-bool oledDisplay::init(void)
+bool oledDisplay::Init(void)
 {
 	bool result = false;
 	
@@ -51,18 +53,18 @@ bool oledDisplay::init(void)
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-// void oled_Clear(void)
+// void oledDisplay::Clear(void)
 
-void oledDisplay::clear(void)
+void oledDisplay::Clear(void)
 {
 	display->clear();
 	display->display();
 }
 
 //////////////////////////////////////////////////////////////////////////////
-// oled_writeLine(uint8_t row, const char *message, uint8_t align)
+// void oledDisplay::WriteLine(uint8_t line, const char *message, uint8_t align)
 
-void oledDisplay::writeLine(uint8_t line, const char *message, uint8_t align)
+void oledDisplay::WriteLine(uint8_t line, const char *message, uint8_t align)
 {
 	uint8_t startCol = 0;
 	

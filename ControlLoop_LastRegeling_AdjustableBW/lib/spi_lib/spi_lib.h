@@ -1,9 +1,11 @@
 ///////////////////////////////////////////////////////////////////////////////
 //
-// SPILib.h
+// spi_lib.h
 //
-// Authors: 	Roel Smeets
+// Authors: 	Roel Smeets & Gerard Harkema
 // Edit date: 	25-06-2025
+// Revision: 	V2.0
+// Modified: 	07-09-2026
 //
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -58,23 +60,23 @@
 class spi{
 public:
 
-    void init(void);
-    void beginTransaction(SPISettings settings, uint8_t spiDeviceNumber);
-    void endTransaction(void);
+    void Init(void);
+    void BeginTransaction(SPISettings settings, uint8_t spiDeviceNumber);
+    void EndTransaction(void);
 
-    void writeByte(const uint8_t data);
-    void writeWord(const uint16_t data);
-    void readByte(uint8_t *byteData);
-    void readWord(uint16_t *wordData);
-    void selectDevice(uint8_t spiDeviceNumber);
-    void deselectDevice(void);
-    uint8_t transferByte(uint8_t byteToSend);
-    uint16_t transferWord(uint16_t wordToSend);
+    void WriteByte(const uint8_t data);
+    void WriteWord(const uint16_t data);
+    void ReadByte(uint8_t *byteData);
+    void ReadWord(uint16_t *wordData);
+    void SelectDevice(uint8_t spiDeviceNumber);
+    void DeselectDevice(void);
+    uint8_t TransferByte(uint8_t byteToSend);
+    uint16_t TransferWord(uint16_t wordToSend);
 
 protected:
 
 
-    bool g_IsSPIInitialised = false;
+    bool isSPIInitialised = false;
     SPIClass vspi = SPIClass(VSPI); 		    // Use VSPI bus
     SPISettings Settings = SPISettings(SPI_DEFAULT_SPEED, MSBFIRST, SPI_MODE0); // default values
     const uint8_t SelectPins[SPI_N_SELECTBITS] =

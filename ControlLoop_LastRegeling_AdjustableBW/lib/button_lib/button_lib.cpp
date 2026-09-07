@@ -1,9 +1,11 @@
 ///////////////////////////////////////////////////////////////////////////////
 //
-// ButtonLib.cpp
+// button_lib.cpp
 //
-// Authors: 	Roel Smeets (Avans)
+// Authors: 	Roel Smeets & Gerard Harkema (Avans)
 // Edit date: 	25-06-2025
+// Revision: 	V2.0
+// Modified: 	07-09-2026
 //
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -19,24 +21,24 @@
 
 
 ///////////////////////////////////////////////////////////////////////////////
-// void button_Init(void)
+// void button::Init(adc3208 *adc)
 
 button::button()
 {
     // Constructor can be used to initialize any member variables if needed
 }
 
-void button::init(adc3208 *adc)
+void button::Init(adc3208 *adc)
 {
-    this->adc = adc;
+    this->m_adc = adc;
 	pinMode(BUTTON_PIN, INPUT_PULLUP); 
 }
 
 
 ///////////////////////////////////////////////////////////////////////////////
-// bool button_IsPressed(uint8_t buttonNumber)
+// bool button::IsPressed(uint8_t buttonNumber)
 
-bool button::isPressed(uint8_t buttonNumber)
+bool button::IsPressed(uint8_t buttonNumber)
 {
 	bool isPressed = false;
 
@@ -46,7 +48,7 @@ bool button::isPressed(uint8_t buttonNumber)
 	}
 	else if ((buttonNumber == 1) || (buttonNumber == 2))
 	{
-		isPressed = adc->isButtonPressed(buttonNumber);
+		isPressed = m_adc->IsButtonPressed(buttonNumber);
 	}
 	
 	return isPressed;

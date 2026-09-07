@@ -1,9 +1,11 @@
 //////////////////////////////////////////////////////////////////////////////
 //
-// DAC4922Lib.h
+// dac_4922_lib.h
 //
-// Authors: 	Roel Smeets
+// Authors: 	Roel Smeets & Gerard Harkema
 // Edit date: 	21-07-2025
+// Revision: 	V2.0
+// Modified: 	07-09-2026
 //
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -60,12 +62,12 @@
 
 class dac4922{
 public:
-    void init(spi *spi_bus);
-    void write(uint8_t dacChannel, uint16_t dacValue);
-    void setOutputVoltage(uint8_t dacChannel, float outputVoltage);
-    void setOutputVoltageAll(float outputVoltage);
+    void Init(spi *spi_bus);
+    void Write(uint8_t dacChannel, uint16_t dacValue);
+    void SetOutputVoltage(uint8_t dacChannel, float outputVoltage);
+    void SetOutputVoltageAll(float outputVoltage);
 private:
-    uint8_t getSPIDeviceNumber(uint8_t dacChannel);
+    uint8_t GetSPIDeviceNumber(uint8_t dacChannel);
     spi *spi_bus;
     SPISettings DACSPISettings = SPISettings(SPI_DAC_SPEED, MSBFIRST, SPI_MODE0);
 };

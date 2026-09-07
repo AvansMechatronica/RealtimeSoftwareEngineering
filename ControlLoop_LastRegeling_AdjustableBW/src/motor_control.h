@@ -1,8 +1,10 @@
 /*
- * MotorControl.h
+ * motor_control.h
  *
  * Created: 28-9-2023 15:39:41
- *  Author: rasmsmee
+ *  Authors: 	Roel Smeets & Gerard Harkema
+ *  Revision: V2.0
+ *  Modified: 07-09-2026
  */ 
 
 
@@ -34,14 +36,14 @@ typedef enum
 ///////////////////////////////////////////////////////////////////////////////
 // function prototypes
 
-void motor_initialize(HardwareConfig *hardwareConfig);
-void motor_DisplayStatus(void);
-bool motor_HasOverload(void);
-bool motor_IsAtLimit(motor_direction_t direction);
-bool motor_Move(motor_direction_t direction);
-void motor_Stop(void);
-void motor_GotoHomePosition(motor_direction_t direction);
-void motor_EnableESCONController(void);
-void motor_DisableESCONController(void);
+void MotorInitialize(HardwareConfig *hardwareConfig);
+void MotorDisplayStatus(void);
+bool MotorHasOverload(void);
+bool MotorIsAtLimit(motor_direction_t direction);
+bool MotorMove(motor_direction_t direction);
+void MotorStop(void);
+void MotorGotoHomePosition(motor_direction_t direction);
+void MotorEnableESCONController(void);
+void MotorDisableESCONController(void);
 
 #endif /* MOTORCONTROL_H_ */

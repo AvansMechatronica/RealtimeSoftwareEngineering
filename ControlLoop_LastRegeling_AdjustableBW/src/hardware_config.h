@@ -1,3 +1,10 @@
+/*
+ * hardware_config.h
+ *
+ * Revision: V2.0
+ * Modified: 07-09-2026
+ */ 
+
 #ifndef HARDWARE_CONFIG_H_
 #define HARDWARE_CONFIG_H_
 
@@ -19,6 +26,6 @@ typedef struct {
 } HardwareConfig;
 
 
-bool configureHardware(HardwareConfig *config);
+bool ConfigureHardware(HardwareConfig *config);
 
 #endif  // HARDWARE_CONFIG_H_   

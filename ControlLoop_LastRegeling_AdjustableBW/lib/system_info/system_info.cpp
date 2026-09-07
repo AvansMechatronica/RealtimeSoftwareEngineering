@@ -1,3 +1,10 @@
+/*
+ * system_info.cpp
+ *
+ * Revision: V2.0
+ * Modified: 07-09-2026
+ */ 
+
 #include <Arduino.h>
 #include <cstring>
 #include <cstdlib>
@@ -15,35 +22,37 @@ constexpr size_t kMaxInputSize = 1000;
 constexpr UBaseType_t kMaxTasks = 32;
 
 
+// registers the taskstats/tasks/memory/version/cpuinfo console commands
 void RegisterSystemInfoCommands()
 {
 	RegisterCommand("taskstats", [](const char *args) {
 		(void)args;
-		printTaskStats();
+		PrintTaskStats();
 	}, "Show command console task details");
 
 	RegisterCommand("tasks", [](const char *args) {
 		(void)args;
-		printTasksInfo();
+		PrintTasksInfo();
 	}, "Show current task snapshot");
 
 	RegisterCommand("memory", [](const char *args) {
 		(void)args;
-		printMemoryInfo();
+		PrintMemoryInfo();
 	}, "Show ESP32 heap memory information");
 
 	RegisterCommand("version", [](const char *args) {
 		(void)args;
-		printVersion();
+		PrintVersion();
 	}, "Show firmware information");
 
 	RegisterCommand("cpuinfo", [](const char *args) {
 		(void)args;
-		printCPUInfo();
+		PrintCPUInfo();
 	}, "Show ESP32 CPU/chip information");
 }
 
-void printMemoryInfo()
+// prints ESP32 heap usage figures
+void PrintMemoryInfo()
 {
 	ts_printf("ESP32 heap memory:");
 	ts_printf("  Total heap:       %lu bytes\n", ESP.getHeapSize());
@@ -52,7 +61,8 @@ void printMemoryInfo()
 	ts_printf("  Largest block:    %lu bytes\n", ESP.getMaxAllocHeap());
 }
 
-void printTaskStats()
+// prints a snapshot of the calling task's own FreeRTOS statistics
+void PrintTaskStats()
 {
 	const UBaseType_t taskCount = uxTaskGetNumberOfTasks();
 	const TickType_t tickCount = xTaskGetTickCount();
@@ -67,7 +77,8 @@ void printTaskStats()
 		static_cast<unsigned int>(uxTaskGetStackHighWaterMark(nullptr)));
 }
 
-char *getTaskState(eTaskState state)
+// maps a FreeRTOS eTaskState value to a short display string
+char *GetTaskState(eTaskState state)
 {
 	char *name = NULL;
 	static const char *s[] = {"RUN", "READY", "BLOCK", "SUSP", "DEL", "INV"};
@@ -76,7 +87,8 @@ char *getTaskState(eTaskState state)
 
 	return name;
 }
-void printTasksInfo()
+// prints a table of all FreeRTOS tasks with state/priority/stack headroom
+void PrintTasksInfo()
 {
 	const UBaseType_t taskCount = uxTaskGetNumberOfTasks();
 
@@ -98,7 +110,7 @@ void printTasksInfo()
 
 		ts_printf("%-20s %-6s %4u %6u\n",
 			pcTaskGetName(handle),
-			getTaskState(state),
+			GetTaskState(state),
 			static_cast<unsigned int>(uxTaskPriorityGet(handle)),
 			static_cast<unsigned int>(highWaterMark));
 	}
@@ -120,7 +132,7 @@ void printTasksInfo()
 
 		ts_printf("%-20s %-6s %4u %6u\n",
 			status.pcTaskName,
-			getTaskState(state),
+			GetTaskState(state),
 			static_cast<unsigned int>(status.uxCurrentPriority),
 			static_cast<unsigned int>(highWaterMark));
 	}
@@ -138,7 +150,8 @@ void printTasksInfo()
 
 
 
-void printCPUInfo(void)
+// prints ESP32 chip/CPU identification and clock information
+void PrintCPUInfo(void)
 {
 	uint32_t cpuFreq = getCpuFrequencyMhz();
 	uint8_t nCores = ESP.getChipCores();
@@ -165,7 +178,8 @@ void printCPUInfo(void)
 	ts_printf("------------------------------------------\n");
 }
 
-void printVersion(void)
+// prints firmware build timestamp and SDK/FreeRTOS version information
+void PrintVersion(void)
 {
 	const char *version = ESP.getSdkVersion();
 

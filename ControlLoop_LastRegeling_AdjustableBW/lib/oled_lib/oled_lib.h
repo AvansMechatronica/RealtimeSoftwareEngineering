@@ -1,9 +1,11 @@
 /*
- * oled.h
+ * oled_lib.h
  *
  * Created: 14-3-2023 06:24:46
  *  Author: Roel Smeets
  *  Adapted for ESP32 RPC Server project by Gerard Harkema
+ *  Revision: V2.0
+ *  Modified: 07-09-2026
  */ 
 
 
@@ -30,9 +32,9 @@
 
 class oledDisplay {
 public:
-  bool init(void);
-  void clear(void);
-  void writeLine(uint8_t line, const char *message, uint8_t align);
+  bool Init(void);
+  void Clear(void);
+  void WriteLine(uint8_t line, const char *message, uint8_t align);
 protected:
   SSD1306Wire *display;
 };

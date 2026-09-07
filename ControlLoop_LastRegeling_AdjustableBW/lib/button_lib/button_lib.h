@@ -2,8 +2,10 @@
 //
 // button_lib.h
 //
-// Authors: 	Roel Smeets (Avans)
+// Authors: 	Roel Smeets & Gerard Harkema (Avans)
 // Edit date: 	28-06-2025
+// Revision: 	V2.0
+// Modified: 	07-09-2026
 //
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -26,10 +28,10 @@
 class button {
 public:
     button();
-    void init(adc3208 *adc);
-    bool isPressed(uint8_t buttonNumber);
+    void Init(adc3208 *adc);
+    bool IsPressed(uint8_t buttonNumber);
 private:
-    adc3208 *adc;
+    adc3208 *m_adc;
 };
 
 #endif /* BUTTONLIB_H_ */

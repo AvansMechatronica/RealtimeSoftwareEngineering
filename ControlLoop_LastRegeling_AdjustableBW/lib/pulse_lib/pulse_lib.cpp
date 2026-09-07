@@ -1,3 +1,10 @@
+/*
+ * pulse_lib.cpp
+ *
+ * Revision: V2.0
+ * Modified: 07-09-2026
+ */ 
+
 #include "pulse_lib.h"
 
 PulseLib::PulseLib()
@@ -5,7 +12,8 @@ PulseLib::PulseLib()
 			_pulseWidthMs(0), _pauseWidthMs(0), _pulseCount(0), _currentPulse(0),
 			_lastToggle(0) {}
 
-void PulseLib::begin(int pin) {
+// configures pin as output, driven LOW, ready for pulsing
+void PulseLib::Begin(int pin) {
 	_pin = pin;
 	_pulsing = false;
 	_asyncActive = false;
@@ -13,7 +21,8 @@ void PulseLib::begin(int pin) {
 	digitalWrite(_pin, LOW);
 }
 
-void PulseLib::pulse(int duration_ms) {
+// blocking: drives a single HIGH pulse of duration_ms then returns to LOW
+void PulseLib::Pulse(int duration_ms) {
 	if (_pin < 0) {
 		return;
 	}
@@ -24,7 +33,8 @@ void PulseLib::pulse(int duration_ms) {
 	_pulsing = false;
 }
 
-void PulseLib::pulseAsync(int duration_ms) {
+// non-blocking: starts a single HIGH pulse, completion is driven by Tick()
+void PulseLib::PulseAsync(int duration_ms) {
 	if (_pin < 0 || duration_ms < 0) {
 		return;
 	}
@@ -37,18 +47,20 @@ void PulseLib::pulseAsync(int duration_ms) {
 	_pulsing = true;
 	_lastToggle = millis();
 
-	// Start the pulse
+	// Start the Pulse
 	digitalWrite(_pin, HIGH);
 	_outputHigh = true;
 	_lastToggle = millis();
 	++_currentPulse;
 }
 
-bool PulseLib::isPulsing() {
+// true while a blocking or async pulse sequence is in progress
+bool PulseLib::IsPulsing() {
 	return _pulsing;
 }
 
-void PulseLib::stopPulse() {
+// immediately forces the pin LOW and cancels any active pulse sequence
+void PulseLib::StopPulse() {
 	if (_pin >= 0) {
 		digitalWrite(_pin, LOW);
 	}
@@ -56,21 +68,23 @@ void PulseLib::stopPulse() {
 	_asyncActive = false;
 }
 
-void PulseLib::generetePulses(int pulseWidthMs, int pauseWidthMs, int pulseCount) {
+// blocking: generates pulseCount HIGH/LOW pulses separated by pauseWidthMs
+void PulseLib::GeneratePulses(int pulseWidthMs, int pauseWidthMs, int pulseCount) {
 	if (pulseCount <= 0 || pulseWidthMs < 0 || pauseWidthMs < 0) {
 		return;
 	}
 
 
 	for (int i = 0; i < pulseCount; ++i) {
-		pulse(pulseWidthMs);
+		Pulse(pulseWidthMs);
 		if (i < pulseCount - 1) {
 			delay(pauseWidthMs);
 		}
 	}
 }
 
-void PulseLib::generetePulsesAsync(int pulseWidthMs, int pauseWidthMs, int pulseCount) {
+// non-blocking: arms a pulse train, timing is advanced by repeated Tick() calls
+void PulseLib::GeneratePulsesAsync(int pulseWidthMs, int pauseWidthMs, int pulseCount) {
 	if (pulseCount <= 0 || pulseWidthMs < 0 || pauseWidthMs < 0) {
 		return;
 	}
@@ -89,7 +103,8 @@ void PulseLib::generetePulsesAsync(int pulseWidthMs, int pauseWidthMs, int pulse
 	digitalWrite(_pin, LOW);
 }
 
-void PulseLib::tick() {
+// call repeatedly (e.g. from loop()) to advance an async pulse train without blocking
+void PulseLib::Tick() {
 	if (!_asyncActive) {
 		return;
 	}
@@ -119,7 +134,8 @@ void PulseLib::tick() {
 	}
 }
 
-int PulseLib::getRemainingPulses() {
+// number of pulses left to emit in the current async pulse train
+int PulseLib::GetRemainingPulses() {
 	if (!_asyncActive) {
 		return 0;
 	}

@@ -1,8 +1,10 @@
 /*
- * ControlTask.c
+ * control_task.cpp
  *
  * Created: 10-9-2023 09:48:15
- *  Author: rasmsmee
+ *  Authors: 	Roel Smeets & Gerard Harkema
+ *  Revision: V2.0
+ *  Modified: 07-09-2026
  */ 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -141,10 +143,10 @@ void ControlTask(void *pvParameters)
 	}, "Prints the current control loop statistics");
 	ts_printf("> starting ControlTask (load)\n");
 
-	motor_initialize(hardwareConfig);
-	motor_DisableESCONController();
+	MotorInitialize(hardwareConfig);
+	MotorDisableESCONController();
 
-	posctrl_initialize(hardwareConfig);
+	PosctrlInitialize(hardwareConfig);
 
 
 	InitializePeriodicTimer(1000);	// 1 ms interval
@@ -156,11 +158,11 @@ void ControlTask(void *pvParameters)
 	ts_printf("> helper tasks running, ControlTask started, event group = 0x%04x\n", uxBits);
 	
 	
-	motor_EnableESCONController(); 
-	motor_GotoHomePosition(MOVE_LEFT); 
+	MotorEnableESCONController(); 
+	MotorGotoHomePosition(MOVE_LEFT); 
 
-	hardwareConfig->qc.clearCountRegister(QC_CHANNEL_0);
-	hardwareConfig->qc.clearCountRegister(QC_CHANNEL_1);
+	hardwareConfig->qc.ClearCountRegister(QC_CHANNEL_0);
+	hardwareConfig->qc.ClearCountRegister(QC_CHANNEL_1);
 
 	ts_printf("> ready\n");
 	ts_printf("> press button SW1 to start (watch your fingers...)\n");
@@ -170,17 +172,17 @@ void ControlTask(void *pvParameters)
 
 	while (true)
 	{
-		motor_GotoHomePosition(MOVE_LEFT);
+		MotorGotoHomePosition(MOVE_LEFT);
 
-		hardwareConfig->qc.clearCountRegister(QC_CHANNEL_0);
-		hardwareConfig->qc.clearCountRegister(QC_CHANNEL_1);
+		hardwareConfig->qc.ClearCountRegister(QC_CHANNEL_0);
+		hardwareConfig->qc.ClearCountRegister(QC_CHANNEL_1);
 		ts_printf("> HOME");
 		
 		// always leave parameter value in queue! So use xQueuePeek
 		ticksToWait = 0;
 		xQueuePeek(handle_ParameterQueue, &wblFactor, ticksToWait);
 		ts_printf("> running with wblFactor: %.3f\n", wblFactor);
-		posctrl_InitParameters(wblFactor);
+		PosctrlInitParameters(wblFactor);
 		ControlLoop();	// this loop exits by pressing button SW1
 	}
 	
@@ -204,7 +206,7 @@ void ControlLoop(void)
 		// wait for periodic 1 ms timer tick to unblock this thread and
 		// run the motion controller:
 		xSemaphoreTake(TimerInterruptSemaphore, portMAX_DELAY);
-		posctrl_RunController_MotorSide();
+		PosctrlRunControllerMotorSide();
 		
 		// check restart semaphore here, invoked by button press
 		restart = xSemaphoreTake(handle_RestartSemaphore, ticksToWait);
@@ -220,6 +222,11 @@ void ControlLoop(void)
 
 	ts_printf("> exit Control Loop (load)\n");
 }
+
+///////////////////////////////////////////////////////////////////////////////
+// void printControlLoopStats(void)
+//
+// prints timer/loop rate diagnostics, registered as the "controlloopstats" command
 
 void printControlLoopStats(void)
 {

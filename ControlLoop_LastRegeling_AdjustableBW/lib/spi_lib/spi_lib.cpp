@@ -1,9 +1,11 @@
 ///////////////////////////////////////////////////////////////////////////////
 //
-// SPILib.cpp
+// spi_lib.cpp
 //
-// Authors: 	Roel Smeets
+// Authors: 	Roel Smeets & Gerard Harkema
 // Edit date: 	02-06-2025
+// Revision: 	V2.0
+// Modified: 	07-09-2026
 //
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -20,18 +22,18 @@
 
 
 ///////////////////////////////////////////////////////////////////////////////
-// void spi_Init(void)
+// void spi::Init(void)
 
-void spi::init(void)
+void spi::Init(void)
 {
-	if (g_IsSPIInitialised == false)	// prevents multiple inits
+	if (isSPIInitialised == false)	// prevents multiple inits
 	{
 		pinMode(SPI_SEL_2, OUTPUT);
 		pinMode(SPI_SEL_1, OUTPUT);
 		pinMode(SPI_SEL_0, OUTPUT);
 
         // deselects all SPI devices:
-        deselectDevice();
+        DeselectDevice();
 
         // same as in constructor
         Settings._clock    = SPI_DEFAULT_SPEED;
@@ -49,67 +51,69 @@ void spi::init(void)
 			//while (1); // halt execution
 		}
 
-		g_IsSPIInitialised = true;
+		isSPIInitialised = true;
 	}
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-// void spi::beginTransaction(SPISettings settings)
+// void spi::BeginTransaction(SPISettings settings, uint8_t spiDeviceNumber)
+// selects the target device and starts an exclusive SPI transaction
 
-void spi::beginTransaction(SPISettings settings, uint8_t spiDeviceNumber)
+void spi::BeginTransaction(SPISettings settings, uint8_t spiDeviceNumber)
 {
 	xSemaphoreTake(semaphore, portMAX_DELAY);
-    selectDevice(spiDeviceNumber);
+    SelectDevice(spiDeviceNumber);
     vspi.beginTransaction(settings);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-// void spi::endTransaction(void)
+// void spi::EndTransaction(void)
+// deselects the device and releases the SPI bus for other tasks
 
-void spi::endTransaction(void)
+void spi::EndTransaction(void)
 {
-    deselectDevice();
+    DeselectDevice();
     vspi.endTransaction();
 	xSemaphoreGive(semaphore);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-// void spi::writeByte(const uint8_t data)
+// void spi::WriteByte(const uint8_t data)
 
-void spi::writeByte(const uint8_t data)
+void spi::WriteByte(const uint8_t data)
 {
 	vspi.write(data);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-// void spi::writeWord(const uint16_t data)
+// void spi::WriteWord(const uint16_t data)
 
-void spi::writeWord(const uint16_t data)
+void spi::WriteWord(const uint16_t data)
 {
 	vspi.write16(data);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-// void spi::readByte(uint8_t *byteData)
+// void spi::ReadByte(uint8_t *byteData)
 
-void spi::readByte(uint8_t *byteData)
+void spi::ReadByte(uint8_t *byteData)
 {
 	*byteData = vspi.transfer(0);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-// void spi::readWord(uint16_t *wordData)
+// void spi::ReadWord(uint16_t *wordData)
 
-void spi::readWord(uint16_t *wordData)
+void spi::ReadWord(uint16_t *wordData)
 {
 	*wordData = vspi.transfer16(0);
 }
 
 
 ///////////////////////////////////////////////////////////////////////////////
-// uint8_t spi::transferByte(uint8_t byteToSend)
+// uint8_t spi::TransferByte(uint8_t byteToSend)
 
-uint8_t spi::transferByte(uint8_t byteToSend)
+uint8_t spi::TransferByte(uint8_t byteToSend)
 {
 	uint8_t rcvByte = vspi.transfer(byteToSend);
  
@@ -117,9 +121,9 @@ uint8_t spi::transferByte(uint8_t byteToSend)
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-// uint16_t spi::transferWord(uint16_t wordToSend)
+// uint16_t spi::TransferWord(uint16_t wordToSend)
 
-uint16_t spi::transferWord(uint16_t wordToSend)
+uint16_t spi::TransferWord(uint16_t wordToSend)
 {
 	uint16_t rcvWord = vspi.transfer16(wordToSend);
  
@@ -127,9 +131,10 @@ uint16_t spi::transferWord(uint16_t wordToSend)
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-// void spi::selectDevice(uint8_t spiDeviceNumber)
+// void spi::SelectDevice(uint8_t spiDeviceNumber)
+// drives the MUX select lines to route the SPI bus to spiDeviceNumber
 
-void spi::selectDevice(uint8_t spiDeviceNumber)
+void spi::SelectDevice(uint8_t spiDeviceNumber)
 {
 	uint8_t gpioPinNumber = 0;
 	uint8_t bitValue = LOW;
@@ -151,9 +156,10 @@ void spi::selectDevice(uint8_t spiDeviceNumber)
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-// void spi::deselectDevice(void)
+// void spi::DeselectDevice(void)
+// routes the MUX to the unused device so no chip select is active
 
-void spi::deselectDevice(void)
+void spi::DeselectDevice(void)
 {
-	selectDevice(SPI_DEVICE_UNUSED);
+	SelectDevice(SPI_DEVICE_UNUSED);
 }

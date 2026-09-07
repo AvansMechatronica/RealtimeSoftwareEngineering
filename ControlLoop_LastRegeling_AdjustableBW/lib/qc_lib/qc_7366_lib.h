@@ -1,10 +1,12 @@
 ///////////////////////////////////////////////////////////////////////////////
 //
-// QC7366Lib.h
+// qc_7366_lib.h
 //
-// Authors: 	Roel Smeets
+// Authors: 	Roel Smeets & Gerard Harkema
 // Edit date: 	14-10-2022
 //				02-06-2025
+// Revision: 	V2.0
+// Modified: 	07-09-2026
 //
 // library & definitions for LS7366R quadrature counter
 ///////////////////////////////////////////////////////////////////////////////
@@ -49,7 +51,7 @@
 
 #define OP_CLR		(0x0 << 6)		// clear register
 #define OP_READ		(0x1 << 6)		// read register
-#define OP_WRITE	(0x2 << 6)		// write register
+#define OP_WRITE	(0x2 << 6)		// Write register
 #define OP_LOAD		(0x3 << 6)		// load register
 
 // clear registers
@@ -67,7 +69,7 @@
 #define READ_OTR	(OP_READ | REG_OTR)
 #define READ_STR	(OP_READ | REG_STR)
 
-// write registers
+// Write registers
 
 #define WRITE_MDR0	(OP_WRITE | REG_MDR0)
 #define WRITE_MDR1	(OP_WRITE | REG_MDR1)
@@ -158,29 +160,29 @@ enum qc_channel_t
 
 class qc7366 {
 public:
-	void init(spi *spi_bus);
-	void	writeModeRegister(uint8_t channel, mode_register_t modeRegister, uint8_t valueMDR);
-	void 	clearModeRegister(uint8_t channel, mode_register_t modeRegister);
-	uint8_t readModeRegister(uint8_t channel, mode_register_t modeRegister);
+	void Init(spi *spi_bus);
+	void	WriteModeRegister(uint8_t channel, mode_register_t modeRegister, uint8_t valueMDR);
+	void 	ClearModeRegister(uint8_t channel, mode_register_t modeRegister);
+	uint8_t ReadModeRegister(uint8_t channel, mode_register_t modeRegister);
 
-	void	clearCountRegister(uint8_t channel);
-	int32_t readCountRegister(uint8_t channel);
+	void	ClearCountRegister(uint8_t channel);
+	int32_t ReadCountRegister(uint8_t channel);
 
-	void	clearStatusRegister(uint8_t channel);
-	uint8_t readStatusRegister(uint8_t channel);
+	void	ClearStatusRegister(uint8_t channel);
+	uint8_t ReadStatusRegister(uint8_t channel);
 
-	void	writeDataRegister(uint8_t channel, int32_t dtrValue);
-	void	transferDataRegisterToCountRegister(uint8_t channel);
+	void	WriteDataRegister(uint8_t channel, int32_t dtrValue);
+	void	TransferDataRegisterToCountRegister(uint8_t channel);
 
-	int32_t readOutputRegister(uint8_t channel);
+	int32_t ReadOutputRegister(uint8_t channel);
 
-	void	enableCounter(uint8_t channel);
-	void	disableCounter(uint8_t channel);
+	void	EnableCounter(uint8_t channel);
+	void	DisableCounter(uint8_t channel);
 
-	bool	isIndexSet(uint8_t channel);
+	bool	IsIndexSet(uint8_t channel);
 private:
-    uint8_t getSPIDeviceNumber(uint8_t qcChannel);
-	void sendCommand(uint8_t channel, uint8_t commandByte);
+    uint8_t GetSPIDeviceNumber(uint8_t qcChannel);
+	void SendCommand(uint8_t channel, uint8_t commandByte);
 
 	spi *spi_bus;
     SPISettings QCSPISettings = SPISettings(SPI_QC_SPEED, SPI_MSBFIRST, SPI_MODE0);

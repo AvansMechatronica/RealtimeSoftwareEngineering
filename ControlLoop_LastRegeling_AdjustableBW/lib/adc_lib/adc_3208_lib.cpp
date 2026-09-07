@@ -1,9 +1,11 @@
 //////////////////////////////////////////////////////////////////////////////
 //
-// ADC3208Lib.cpp
+// adc_3208_lib.cpp
 //
-// Authors: 	Roel Smeets
+// Authors: 	Roel Smeets & Gerard Harkema
 // Edit date: 	23-07-2025
+// Revision: 	V2.0
+// Modified: 	07-09-2026
 //
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -20,17 +22,17 @@
 
 
 ///////////////////////////////////////////////////////////////////////////////
-// void adc3208::init(void)
+// void adc3208::Init(void)
 
-void adc3208::init(spi *spi_bus)
+void adc3208::Init(spi *spi_bus)
 {
     this->spi_bus = spi_bus;
 	ADCSPISettings._clock    = SPI_ADC_SPEED;
 	ADCSPISettings._bitOrder = MSBFIRST;
 	ADCSPISettings._dataMode = SPI_MODE0;
 
-    spi_bus->selectDevice(SPI_DEVICE_ADC);   // select
-    spi_bus->deselectDevice();   			// and deselect again
+    spi_bus->SelectDevice(SPI_DEVICE_ADC);   // select
+    spi_bus->DeselectDevice();   			// and deselect again
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -52,9 +54,9 @@ void adc3208::init(spi *spi_bus)
 
 
 ///////////////////////////////////////////////////////////////////////////////
-// uint16_t adc3208::readRaw(uint8_t channel, uint8_t averageCount)
+// uint16_t adc3208::ReadRaw(uint8_t channel, uint8_t averageCount)
 
-uint16_t adc3208::readRaw(uint8_t channel, uint8_t averageCount)
+uint16_t adc3208::ReadRaw(uint8_t channel, uint8_t averageCount)
 {
     uint16_t adcCommand = 0;
     uint16_t adcValue = 0;
@@ -65,37 +67,37 @@ uint16_t adc3208::readRaw(uint8_t channel, uint8_t averageCount)
     {
         adcCommand = ADC_STR | ADC_SINGLE | (channel << 6);
         
-        spi_bus->beginTransaction(ADCSPISettings, 0);
+        spi_bus->BeginTransaction(ADCSPISettings, 0);
 
 		raw = 0;
 
 		for (ix = 0; ix < averageCount; ix++)
 		{
-	        spi_bus->selectDevice(SPI_DEVICE_ADC);
+	        spi_bus->SelectDevice(SPI_DEVICE_ADC);
 
-			uint8_t b1  = spi_bus->transferByte(highByte(adcCommand));
-			uint8_t msb = spi_bus->transferByte(lowByte(adcCommand));
-			uint8_t lsb = spi_bus->transferByte(0);
+			uint8_t b1  = spi_bus->TransferByte(highByte(adcCommand));
+			uint8_t msb = spi_bus->TransferByte(lowByte(adcCommand));
+			uint8_t lsb = spi_bus->TransferByte(0);
 
 			adcValue = ((msb & 0x0f) << 8) | lsb;
 			raw += adcValue;
 
-			spi_bus->deselectDevice();
+			spi_bus->DeselectDevice();
 		}
 
 		raw /= averageCount;
 
-		spi_bus->endTransaction();
+		spi_bus->EndTransaction();
     }
 
     return raw;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-// void adc3208::readRawMultiple(uint8_t channelList[], uint8_t numChannels, 
+// void adc3208::ReadRawMultiple(uint8_t channelList[], uint8_t numChannels, 
 //                          uint16_t rawValues[])
 
-void adc3208::readRawMultiple(uint8_t channelList[], uint8_t numChannels, uint16_t rawValues[])
+void adc3208::ReadRawMultiple(uint8_t channelList[], uint8_t numChannels, uint16_t rawValues[])
 {
     uint16_t adcCommand = 0;
     uint16_t adcValue   = 0;
@@ -104,7 +106,7 @@ void adc3208::readRawMultiple(uint8_t channelList[], uint8_t numChannels, uint16
 
     numChannels = constrain(numChannels, 0, N_ADC_CHANNELS);
 
-    spi_bus->beginTransaction(ADCSPISettings, 0);
+    spi_bus->BeginTransaction(ADCSPISettings, 0);
 
     for (ix = 0; ix < numChannels; ix++)
     {
@@ -112,36 +114,36 @@ void adc3208::readRawMultiple(uint8_t channelList[], uint8_t numChannels, uint16
 
         if (channel < N_ADC_CHANNELS)
         {
-            spi_bus->selectDevice(SPI_DEVICE_ADC);
+            spi_bus->SelectDevice(SPI_DEVICE_ADC);
 
             adcCommand = ADC_STR | ADC_SINGLE | (channel << 6);
 
-            uint8_t b1  = spi_bus->transferByte(highByte(adcCommand));
-            uint8_t msb = spi_bus->transferByte(lowByte (adcCommand));
-            uint8_t lsb = spi_bus->transferByte(0);
+            uint8_t b1  = spi_bus->TransferByte(highByte(adcCommand));
+            uint8_t msb = spi_bus->TransferByte(lowByte (adcCommand));
+            uint8_t lsb = spi_bus->TransferByte(0);
 
             adcValue = ((msb & 0x0f) << 8) | lsb;
             rawValues[ix] = adcValue;
 
-            //spi_bus->deselectDevice();
+            //spi_bus->DeselectDevice();
         }
     }
 
-    spi_bus->endTransaction();
+    spi_bus->EndTransaction();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-// void adc3208::readVoltageMultiple(uint8_t channelList[], uint8_t numChannels, 
+// void adc3208::ReadVoltageMultiple(uint8_t channelList[], uint8_t numChannels, 
 //                              double voltages[])
 
-void adc3208::readVoltageMultiple(uint8_t channelList[], uint8_t numChannels, double voltages[])
+void adc3208::ReadVoltageMultiple(uint8_t channelList[], uint8_t numChannels, double voltages[])
 {
     uint16_t rawValues[N_ADC_CHANNELS];
     uint8_t ix = 0;
 
     numChannels = constrain(numChannels, 0, N_ADC_CHANNELS);
 
-    readRawMultiple(channelList, numChannels, rawValues);
+    ReadRawMultiple(channelList, numChannels, rawValues);
 
     // raw to voltage conversion is dependent on the channel range:
     // channel 0..3: -10 volt .. +10 volt
@@ -149,28 +151,28 @@ void adc3208::readVoltageMultiple(uint8_t channelList[], uint8_t numChannels, do
     
     for (ix = 0; ix < numChannels; ix++)
     {
-        voltages[ix] = rawToVoltage(rawValues[ix], channelList[ix]);
+        voltages[ix] = RawToVoltage(rawValues[ix], channelList[ix]);
     }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-// double adc3208::readVoltage(uint8_t channel, uint8_t averageCount)
+// double adc3208::ReadVoltage(uint8_t channel, uint8_t averageCount)
 
-double adc3208::readVoltage(uint8_t channel, uint8_t averageCount)
+double adc3208::ReadVoltage(uint8_t channel, uint8_t averageCount)
 {
     uint16_t adcRaw = 0;
     double  voltage = 0.0;
 
-	adcRaw = adc3208::readRaw(channel, averageCount);
-   	voltage = adc3208::rawToVoltage(adcRaw, channel);
+	adcRaw = adc3208::ReadRaw(channel, averageCount);
+   	voltage = adc3208::RawToVoltage(adcRaw, channel);
      
     return voltage;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-// double adc3208::rawToVoltage(uint16_t adcRaw, uint8_t channel)
+// double adc3208::RawToVoltage(uint16_t adcRaw, uint8_t channel)
 
-double adc3208::rawToVoltage(uint16_t adcRaw, uint8_t channel)
+double adc3208::RawToVoltage(uint16_t adcRaw, uint8_t channel)
 {
     double voltage = 0.0;
     
@@ -187,14 +189,14 @@ double adc3208::rawToVoltage(uint16_t adcRaw, uint8_t channel)
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-// bool adc3208::isButtonPressed(uint8_t analogButton)
+// bool adc3208::IsButtonPressed(uint8_t analogButton)
 //
 // button 1 mapped to ADC channel 6 
 // button 2 mapped to ADC channel 7 
 //
 // button pressed = LOW voltage!
 
-bool adc3208::isButtonPressed(uint8_t buttonNumber)
+bool adc3208::IsButtonPressed(uint8_t buttonNumber)
 {
     bool isPressed = false;
     uint16_t adcValue = 0;
@@ -203,7 +205,7 @@ bool adc3208::isButtonPressed(uint8_t buttonNumber)
     if ((buttonNumber == 1) || (buttonNumber == 2))
     {
 		adcChannel = buttonNumber + 5;	// ADC channel 6/7
-        adcValue = adc3208::readRaw(adcChannel);
+        adcValue = adc3208::ReadRaw(adcChannel);
         isPressed = (adcValue < (ADC_MAX_VALUE/2));
     }
 

@@ -2,7 +2,9 @@
  * bits.h
  *
  * Created: 19-10-2022 08:54:02
- *  Author: rasmsmee
+ *  Authors: 	Roel Smeets & Gerard Harkema
+ *  Revision: V2.0
+ *  Modified: 07-09-2026
  */ 
 
 

@@ -1,8 +1,10 @@
 /*
- * tsprintf.c
+ * ts_printf.cpp
  *
  * Created: 11-9-2022 22:43:20
  *  Author: Roel Smeets
+ *  Revision: V2.0
+ *  Modified: 07-09-2026
  */ 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -32,6 +34,11 @@ xTaskHandle handle_PrintfTask		  = NULL;
 portMUX_TYPE printfMux = portMUX_INITIALIZER_UNLOCKED;
 
 
+///////////////////////////////////////////////////////////////////////////////
+// void PrintfTask(void *pvParameters)
+//
+// dequeues buffered messages and prints them on the single-threaded Serial port
+
 void PrintfTask(void *pvParameters)
 {
 	char *messageBuffer = NULL;
@@ -50,9 +57,9 @@ void PrintfTask(void *pvParameters)
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-// void StartPrintTask(void *pvParameters)
+// void StartTsPrintfTask(void *pvParameters)
 
-void Start_ts_printfTask(void *pvParameters)
+void StartTsPrintfTask(void *pvParameters)
 {
 	char *messageBuffer = NULL;
 		

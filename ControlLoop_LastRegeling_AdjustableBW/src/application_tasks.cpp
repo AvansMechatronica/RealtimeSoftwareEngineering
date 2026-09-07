@@ -1,8 +1,10 @@
 /*
- * ApplicationTasks.c
+ * application_tasks.cpp
  *
  * Created: 27-11-2023 14:57:44
- *  Author: rasmsmee
+ *  Authors: 	Roel Smeets & Gerard Harkema
+ *  Revision: V2.0
+ *  Modified: 07-09-2026
  */ 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -39,8 +41,12 @@ SemaphoreHandle_t	handle_RestartSemaphore = NULL;
 QueueHandle_t		handle_ParameterQueue	= NULL;
 
 ///////////////////////////////////////////////////////////////////////////////
-// void StartApplicationTasks(void)
+// hardware handle shared by all application tasks
+
 HardwareConfig *hardwareConfig;
+
+///////////////////////////////////////////////////////////////////////////////
+// void StartApplicationTasks(void)
 
 void StartApplicationTasks(void)
 {
@@ -65,8 +71,8 @@ void StartApplicationTasks(void)
 	if (handle_ThreadEventGroup == NULL)
 	{
 	}
-
-	configureHardware(hardwareConfig);
+#if 0
+	ConfigureHardware(hardwareConfig);
 	result = xTaskCreate(ControlTask, "tsk_Control", (configMINIMAL_STACK_SIZE), hardwareConfig, 0, &controlTaskHandle);
 	if (result == pdPASS )
 	{
@@ -79,5 +85,6 @@ void StartApplicationTasks(void)
 	if (result == pdPASS )
 	{
 	}
+#endif
 }
 

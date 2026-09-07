@@ -1,10 +1,12 @@
 /*
-*  Map.h
+*  map.h
 *
 *  Copyright (c) 2016 by Avans Hogeschool.
 * 
 *  Date:    28-may-2016
 *  Author:  Roel Smeets
+*  Revision: V2.0
+*  Modified: 07-09-2026
 */
 
 #ifndef _MAP_H

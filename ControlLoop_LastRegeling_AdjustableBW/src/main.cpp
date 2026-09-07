@@ -1,8 +1,10 @@
 /*
- * main.c
+ * main.cpp
  *
  * Created: 13-11-2023 19:36:36
  * Author: Roel Smeets
+ * Revision: V2.0
+ * Modified: 07-09-2026
  */ 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -21,19 +23,11 @@
 
 #include "led_lib.h"
 #include "command_console.h"
+#include "heartbeat.h"
 #include "oled_lib.h"
 #include "application_tasks.h"
 #include "ts_printf.h"
 #include "system_info.h"
-
-///////////////////////////////////////////////////////////////////////////////
-// Function prototypes
-
-void HeartbeatTask(void *pvParameters);
-void StartHeartbeatTask(void);
-
-//void vApplicationIdleHook( void );
-//void vApplicationMallocFailedHook(void);
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -47,28 +41,15 @@ oledDisplay statusOled;
 #endif
 
 ///////////////////////////////////////////////////////////////////////////////
-// void StartHeartbeatTask(void)
-
-void StartHeartbeatTask(void)
-{
-	BaseType_t result = pdFAIL;
-
-	result = xTaskCreate(HeartbeatTask, "tsk_Heartbeat", (configMINIMAL_STACK_SIZE * 2), NULL, 1, &heartbeatTaskHandle);
-	if (result == pdPASS)
-	{
-	}
-}
-
-
-///////////////////////////////////////////////////////////////////////////////
 // Stack overflow hook
 
+#if 0
 void vApplicationStackOverflowHook(TaskHandle_t xTask, char * pcTaskName)
 {
   Serial.printf("Stack overflow in task %s\n", pcTaskName);
 	while (true)
 	{
-		statusLed.set(LED_BLUE, isLedOn);
+		statusLed.Set(LED_BLUE, isLedOn);
 		isLedOn = !isLedOn;
     delay(50);
 	}
@@ -83,55 +64,36 @@ void vApplicationMallocFailedHook(void)
   Serial.printf("Malloc failed!\n");
 	while (true)
 	{
-		statusLed.set(LED_BLUE, isLedOn);
+		statusLed.Set(LED_BLUE, isLedOn);
 		isLedOn = !isLedOn;
     delay(50);
 	}
 }
 
+#endif
 
-///////////////////////////////////////////////////////////////////////////////
-// void HeartbeatTask(void *pvParameters)
-
-void HeartbeatTask(void *pvParameters)
-{
-	Serial.printf("> Heartbeat should be running, flashing onboard LED...\n");
-	
-	while (true)
-	{
-    statusLed.set(LED_BLUE, isLedOn);
-    isLedOn = !isLedOn;
-    delay(500);
-	}
-	
-	/* Should never go here */
-	vTaskDelete(NULL);
-}
 
 
 ///////////////////////////////////////////////////////////////////////////////
-// int main (void)
+// void setup(void)
 
 void setup (void)
 {
 	Serial.begin(115200);
 	delay(1000);
 	Serial.println("System initializing");
-	Start_ts_printfTask(NULL);
+	StartTsPrintfTask(NULL);
 
-
-  // Initialize the LED before starting the heartbeat task
-	statusLed.init();
 #ifdef INCLUDE_OLED_DISPLAY
-	bool isOledOk  = statusOled.init();
+	bool isOledOk  = statusOled.Init();
 	if(!isOledOk) {
 		Serial.println("OLED Init failed!");
 	}
-	statusOled.clear();
-	statusOled.writeLine(1, "System Initializing", ALIGN_CENTER);
+	statusOled.Clear();
+	statusOled.WriteLine(1, "System Initializing", ALIGN_CENTER);
 
 #endif
-	StartHeartbeatTask();
+	StartHeartbeatTask(LED_PIN_ESP32_BOARD);
 	delay(500);
 
 	RegisterSystemInfoCommands();
@@ -143,16 +105,16 @@ void setup (void)
 
 	delay(500);
 #ifdef INCLUDE_OLED_DISPLAY
-	statusOled.clear();
+	statusOled.Clear();
 	char buffer[128];
-	statusOled.writeLine(0, "System Ready", ALIGN_CENTER);
+	statusOled.WriteLine(0, "System Ready", ALIGN_CENTER);
 	sprintf(buffer, "Build: %s", __TIMESTAMP__);
-	statusOled.writeLine(1, buffer, ALIGN_CENTER);
+	statusOled.WriteLine(1, buffer, ALIGN_CENTER);
 	const char *version = ESP.getSdkVersion();
 	sprintf(buffer, "ESP32 SDK: %s", version);
-	statusOled.writeLine(2, buffer, ALIGN_CENTER);
+	statusOled.WriteLine(2, buffer, ALIGN_CENTER);
 	sprintf(buffer, "FreeRTOS: %s", tskKERNEL_VERSION_NUMBER);
-	statusOled.writeLine(3, buffer, ALIGN_CENTER);
+	statusOled.WriteLine(3, buffer, ALIGN_CENTER);
 #endif
 }
 

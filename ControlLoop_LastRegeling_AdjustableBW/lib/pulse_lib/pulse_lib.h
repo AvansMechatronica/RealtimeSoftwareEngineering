@@ -1,3 +1,10 @@
+/*
+ * pulse_lib.h
+ *
+ * Revision: V2.0
+ * Modified: 07-09-2026
+ */ 
+
 #ifndef PULSE_LIB_H
 #define PULSE_LIB_H
 
@@ -7,16 +14,16 @@
 class PulseLib {    
   public:
     PulseLib();
-    void begin(int pin);
-    void pulse(int duration_ms);
-    void pulseAsync(int duration_ms);
-    bool isPulsing();
-    void stopPulse();
+    void Begin(int pin);
+    void Pulse(int duration_ms);
+    void PulseAsync(int duration_ms);
+    bool IsPulsing();
+    void StopPulse();
 
-    void generetePulses(int pulseWidthMs, int pauseWidthMs, int pulseCount);
-    void generetePulsesAsync(int pulseWidthMs, int pauseWidthMs, int pulseCount);
-    void tick();
-    int getRemainingPulses();
+    void GeneratePulses(int pulseWidthMs, int pauseWidthMs, int pulseCount);
+    void GeneratePulsesAsync(int pulseWidthMs, int pauseWidthMs, int pulseCount);
+    void Tick();
+    int GetRemainingPulses();
     
   private:
     int _pin;
