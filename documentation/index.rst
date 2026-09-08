@@ -17,7 +17,7 @@ Workshop Realtime Software Engineering
    :caption: Inhoudsopgave:
 
    documentation/overview.md
-   documentation/arduino.md
+   documentation/node_mcu.md
    documentation/install.md
    documentation/assignment_1.md
    documentation/assignment_2.md
