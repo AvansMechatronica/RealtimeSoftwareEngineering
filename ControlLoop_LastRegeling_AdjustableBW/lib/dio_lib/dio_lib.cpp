@@ -30,7 +30,8 @@ void dio_device::Init(void)
 
 	for (pin = 0; pin < N_INPUT_BITS; pin++)
 	{
-		pinMode(InputPins[pin], INPUT_PULLDOWN); 
+		//pinMode(InputPins[pin], INPUT_PULLDOWN); // Not available on ESP32
+		pinMode(InputPins[pin], INPUT); 
 	}
 
 	for (pin = 0; pin < N_OUTPUT_BITS; pin++)

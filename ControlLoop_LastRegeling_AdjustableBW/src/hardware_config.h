@@ -26,6 +26,6 @@ typedef struct {
 } HardwareConfig;
 
 
-bool ConfigureHardware(HardwareConfig *config);
+HardwareConfig *ConfigureHardware(void);
 
 #endif  // HARDWARE_CONFIG_H_   

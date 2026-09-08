@@ -23,6 +23,7 @@
 #include "control_task.h"
 #include "parameter_setting_task.h"
 #include "hardware_config.h"
+#include "ts_printf.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -44,6 +45,7 @@ QueueHandle_t		handle_ParameterQueue	= NULL;
 // hardware handle shared by all application tasks
 
 HardwareConfig *hardwareConfig;
+
 
 ///////////////////////////////////////////////////////////////////////////////
 // void StartApplicationTasks(void)
@@ -71,8 +73,16 @@ void StartApplicationTasks(void)
 	if (handle_ThreadEventGroup == NULL)
 	{
 	}
-#if 0
-	ConfigureHardware(hardwareConfig);
+	hardwareConfig = ConfigureHardware();
+	if (hardwareConfig == NULL)
+	{
+		ts_printf("Failed to configure hardware.\n");
+		while(1);
+	}
+
+	hardwareConfig->dio.SetBit(1);
+
+
 	result = xTaskCreate(ControlTask, "tsk_Control", (configMINIMAL_STACK_SIZE), hardwareConfig, 0, &controlTaskHandle);
 	if (result == pdPASS )
 	{
@@ -81,6 +91,7 @@ void StartApplicationTasks(void)
 	if (result == pdPASS )
 	{
 	}
+#if 0
 	result = xTaskCreate(ParameterSettingTask, "tsk_ParamHandler", (configMINIMAL_STACK_SIZE), hardwareConfig, 0, &parameterSettingTaskHandle);
 	if (result == pdPASS )
 	{

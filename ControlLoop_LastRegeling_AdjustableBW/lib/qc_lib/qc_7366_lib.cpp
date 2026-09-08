@@ -25,9 +25,14 @@
 ///////////////////////////////////////////////////////////////////////////////
 // void qc7366::Init(void)
 
-void qc7366::Init(spi *spi)
+void qc7366::Init(spi *spi_bus)
 {
-	this->spi_bus = spi;
+	if (spi_bus == nullptr)
+	{
+		return;
+	}
+
+	this->spi_bus = spi_bus;
 
 	uint8_t channel		 = 0;
 	uint8_t defaultMode  = 0;

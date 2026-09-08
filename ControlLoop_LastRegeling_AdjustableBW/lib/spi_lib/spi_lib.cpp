@@ -43,12 +43,10 @@ void spi::Init(void)
 		vspi.begin(VSPI_SCLK, VSPI_MISO, VSPI_MOSI, VSPI_SS);
 		vspi.setHwCs(false);  // false = disable VSPI_SS, Default = disabled!
 
-		semaphore = xSemaphoreCreateBinary();
+		semaphore = xSemaphoreCreateMutex();
 		if (semaphore == NULL)
 		{
-			// handle error, e.g., print an error message or halt execution
-			//Serial.println("Failed to create semaphore for SPI");
-			//while (1); // halt execution
+			return;
 		}
 
 		isSPIInitialised = true;

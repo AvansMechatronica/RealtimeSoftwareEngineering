@@ -184,7 +184,7 @@ private:
     uint8_t GetSPIDeviceNumber(uint8_t qcChannel);
 	void SendCommand(uint8_t channel, uint8_t commandByte);
 
-	spi *spi_bus;
+	spi *spi_bus = nullptr;
     SPISettings QCSPISettings = SPISettings(SPI_QC_SPEED, SPI_MSBFIRST, SPI_MODE0);
 
 };

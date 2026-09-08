@@ -135,13 +135,14 @@ void ControlTask(void *pvParameters)
 	BaseType_t waitForAllbits = pdTRUE;
 	BaseType_t clearAllbits	  = pdFALSE;
 	TickType_t ticksToWait	  = portMAX_DELAY;
-
 	double wblFactor = 0.0;
 	command_console::RegisterCommand("controlloopstats", [](const char *args) {
 		(void)args;
 		printControlLoopStats();
 	}, "Prints the current control loop statistics");
 	ts_printf("> starting ControlTask (load)\n");
+#if 0
+
 
 	MotorInitialize(hardwareConfig);
 	MotorDisableESCONController();
@@ -170,8 +171,11 @@ void ControlTask(void *pvParameters)
 	ticksToWait = portMAX_DELAY;
 	xSemaphoreTake(handle_RestartSemaphore, ticksToWait);	// wait for SW1 first button press
 
+#endif
+
 	while (true)
 	{
+#if 0
 		MotorGotoHomePosition(MOVE_LEFT);
 
 		hardwareConfig->qc.ClearCountRegister(QC_CHANNEL_0);
@@ -184,6 +188,7 @@ void ControlTask(void *pvParameters)
 		ts_printf("> running with wblFactor: %.3f\n", wblFactor);
 		PosctrlInitParameters(wblFactor);
 		ControlLoop();	// this loop exits by pressing button SW1
+#endif
 	}
 	
 	/* Should never go here */

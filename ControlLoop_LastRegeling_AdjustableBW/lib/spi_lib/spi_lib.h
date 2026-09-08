@@ -85,7 +85,7 @@ protected:
         SPI_SEL_1,
         SPI_SEL_2,		// MSB, bit 2
     };
-    SemaphoreHandle_t semaphore;
+    SemaphoreHandle_t semaphore = nullptr;
 
 };
 
