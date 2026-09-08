@@ -24,7 +24,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 // void adc3208::Init(void)
 
-void adc3208::Init(spi *spi_bus)
+void adc3208::Init(spi_device *spi_bus)
 {
     this->spi_bus = spi_bus;
 	ADCSPISettings._clock    = SPI_ADC_SPEED;

@@ -67,7 +67,7 @@
 class adc3208{
 public:
 
-    void Init(spi *spi_bus);
+    void Init(spi_device *spi_bus);
 
     uint16_t ReadRaw(uint8_t channel, uint8_t averageCount = 1);
     void ReadRawMultiple(uint8_t channelList[], uint8_t numChannels, uint16_t rawValues[]);
@@ -76,7 +76,7 @@ public:
     double ReadVoltage(uint8_t channel, uint8_t averageCount = 1);
     bool   IsButtonPressed(uint8_t analogButton);
 private:
-    spi *spi_bus;
+    spi_device *spi_bus;
     SPISettings ADCSPISettings = SPISettings(SPI_ADC_SPEED, MSBFIRST, SPI_MODE0);
     double RawToVoltage(uint16_t adcRaw, uint8_t channel);
 };
