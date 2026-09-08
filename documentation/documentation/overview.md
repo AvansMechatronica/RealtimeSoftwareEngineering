@@ -15,7 +15,7 @@ Bij de workshop wordt gebruikgemaakt van het NodeMCU-Shield, zoals weergegeven i
 ![NodeMCU-Shield](../images/node_mcu_shield.jpg)
 *Figuur 1. NodeMCU-Shield*
 
-:::{info}
+:::{attention}
 In de workshop wordt geprogrammeerd in de taal C, echter alle bibliotheek functies zijn geschreven in C++. Je kunt alle member-functies van een object aanroepen zoals je dat in C zou doen, echter de functie wordt voorafgegaan met een verwijzing naar het object gevolgd door een ``.``(directe toegang) of een ``->``(bij pointers) operator. Hier is een voorbeeld:
 
 *Voorbeeld van directe toegang tot member-functies van een object in C++*
