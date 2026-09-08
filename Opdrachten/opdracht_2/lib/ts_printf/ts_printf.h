@@ -15,14 +15,15 @@
 extern "C" {
 #endif
 
-void StartTsPrintfTask(void *pvParameters);
-void ts_printf(const char *format, ...);
-
 #ifdef DEBUG
 #define ts_debug(...) ts_printf(__VA_ARGS__)
 #else
 #define ts_debug(...) do { } while (0)
 #endif
+
+
+void StartTsPrintfTask(void *pvParameters);
+void ts_printf(const char *format, ...);
 
 #ifdef __cplusplus
 }

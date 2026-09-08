@@ -53,7 +53,7 @@ In dit practicum wordt gebruikgemaakt van een externe klok van 1 kHz, met een pe
 
 Dit kloksignaal is afkomstig van een klokgenerator die met een vaste frequentie interrupts genereert die door FreeRTOS worden afgehandeld. De klok is afgeleid van een kristaloscillator.
 
-De klokgenerator wordt met de daarvoor bedoelde kabel aangesloten op connector `DIG IN` (`J4`) van het RTSW-shield. Bit 0 van deze digitale input is de ingang voor het kloksignaal.
+De klokgenerator wordt met de daarvoor bedoelde kabel aangesloten op connector `DIG IN` (`J4`) van het NodeMCU-Shield. Bit 0 van deze digitale input is de ingang voor het kloksignaal.
 
 > **Let op:** deze opdracht is vergelijkbaar met de vorige opdracht, waarbij een drukknop een interrupt genereerde. Ook de code is vergelijkbaar. Een belangrijk verschil is echter dat de frequentie van de interrupts hoger is ($f = 1\ \mathrm{kHz}$, $T = 1\ \mathrm{ms}$), waardoor de interrupt-handler daarop moet worden aangepast.
 

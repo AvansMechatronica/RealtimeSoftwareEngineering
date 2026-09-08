@@ -41,7 +41,7 @@ Voor het meten van spanningen wordt de on-chip ADC van de processor op de Arduin
 - `bool adc_IsConversionReady(uint8_t channel)`: retourneert `true` als de conversie van het betreffende kanaal klaar is en `false` als de ADC nog bezig is met de conversie. De ADC-waarde die met `adc_ReadData` wordt uitgelezen, is uitsluitend geldig wanneer de conversie klaar is.
 - `uint32_t adc_ReadData(uint8_t channel)`: retourneert de 12-bits ADC-waarde van het opgegeven kanaal.
 
-In de volgende opdrachten worden de spanningen gemeten die worden ingesteld met de twee instelpotmeters op het RTSW-shield.
+In de volgende opdrachten worden de spanningen gemeten die worden ingesteld met de twee instelpotmeters op het NodeMCU-Shield.
 
 ### Opdracht
 

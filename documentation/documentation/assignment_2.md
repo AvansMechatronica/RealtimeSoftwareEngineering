@@ -1,59 +1,49 @@
-# Opdracht 2: Tasks en priorities in FreeRTOS
+# Opdrachten 2: Tasks en priorities in FreeRTOS
 
 In dit practicum komen de volgende onderwerpen aan bod:
 
-•	Het maken van tasks (= taak, threads) in FreeRTOS
-•	Het wijzigen van task priorities
-•	Het gebruik van de functie vPrintString
-•	Het gebruik van delays en het effect daarvan op de uitvoering van tasks
-
-
-1.	Aansturen van de LED’s op het RTSW-shield
-
-In dit practicum worden enkele van de 4 LED’s op het RTSW-shield aangestuurd. Voor het aansturen van een LED  wordt de volgende functie gebruikt:
-
-led_SetState(uint8_t ledNumber, bool ledOn)
-
-ledNumber is het nummer van de aan te sturen LED, en moet liggen ligt tussen 0 en 3:
-•	0 = meest RECHTSE LED, bit 0, Least significant Bit (aangegeven op het board met D1)
-•	3 = meest LINKSE LED, bit 3, Most Significant bit (aangegeven op het board met D4)
-
-ledOn is een boolean met de waarden:
-•	true:	LED aan
-# Opdracht 2: Tasks en priorities in FreeRTOS
-
-In dit practicum komen de volgende onderwerpen aan bod:
-
-- Het maken van tasks (taken of threads) in FreeRTOS
+- Het maken van tasks (= taak, threads) in FreeRTOS
 - Het wijzigen van task priorities
-- Het gebruik van de functie `vPrintString`
+- Het gebruik van de functie ts_printf
 - Het gebruik van delays en het effect daarvan op de uitvoering van tasks
 
-## 1. Aansturen van de LED's op het RTSW-shield
 
-In dit practicum worden enkele van de vier LED's op het RTSW-shield aangestuurd. Voor het aansturen van een LED wordt de volgende functie gebruikt:
+## Aansturen van de LED’s op het NodeMCU-Shield
 
-```c
-led_SetState(uint8_t ledNumber, bool ledOn)
+In dit practicum worden enkele van de 6 LED’s op het NodeMCU-Shield aangestuurd. De LED's zijn aangesloten op de digitale uitgangen D1 t/m D6. Voor het aansturen van een LED  wordt de volgende functie gebruikt:
+
+```cpp
+// Zet de LED aan op basis van het ledNumber
+dio.SetBit(ledNumber);
+// Zet de LED uit op basis van het ledNumber
+dio.ClearBit(ledNumber);
 ```
 
-`ledNumber` is het nummer van de aan te sturen LED en moet tussen 0 en 3 liggen:
+ledNumber is het nummer van de aan te sturen LED, en moet liggen ligt tussen 0 en 5:
+- 0 = meest RECHTSE LED, bit 0, Least significant Bit (aangegeven op het board met D1)
+- 5 = meest LINKSE LED, bit 5, Most Significant bit (aangegeven op het board met D6)
 
-- `0` = meest rechtse LED, bit 0, Least Significant Bit (op het board aangegeven met D1)
-- `3` = meest linkse LED, bit 3, Most Significant Bit (op het board aangegeven met D4)
+De `setBit` en de `clearBit` member-functies van het `dio` object van de `dio_device` klasse.
+Om deze klasse te gebruiken, moet eerst een object van het type `dio_device` worden aangemaakt, zoals hieronder weergegeven.
 
-`ledOn` is een boolean met de volgende waarden:
+```cpp
+// HAL includes for RTSW board
+#include "dio_lib.h"
 
-- `true`: LED aan
-- `false`: LED uit
+dio_device dio;
+```
 
-## 2. Tasks in FreeRTOS
+## 2.1 Tasks in FreeRTOS
+Open in visual code de folder/map `<path-to-your-project>/opdrachten/opdracht-2`.
+:::note
+Zie [installatie-instructies](...install.md) voor instructies over het installeren van de benodigde software.
+:::
 
-Gebruik in de volgende opdrachten de solution `RTSW_week_2_Framework.sln`. Voeg uitsluitend code toe aan, of wijzig code in, het bestand `main.c`. Alle overige folders bevatten bestanden voor de systeemconfiguratie. Laat deze **ongewijzigd**.
+Voeg uitsluitend code toe aan, of wijzig code in, het bestand `src/main.c`. Alle overige folders bevatten bestanden voor de systeemconfiguratie, bibliotheken, enz. Laat deze **ongewijzigd**.
 
 In de functie `StartUserTasks()` is onder andere een task gecreëerd die een LED laat knipperen. De code die door deze task wordt uitgevoerd, staat in de functie `UserTask`. Deze task wordt gemaakt en gestart met de volgende code, die gebruikmaakt van de FreeRTOS-functie `xTaskCreate`:
 
-```c
+```cpp
 result = xTaskCreate(UserTask, "tsk_User", configMINIMAL_STACK_SIZE,
 					 NULL, priority, &handle_UserTask);
 ```
@@ -85,7 +75,7 @@ Voorbeeld van `task-stats`:
 
 Voorbeeld van `run-time-stats`:
 
-## 3. Task priorities in FreeRTOS
+## 2.2 Task priorities in FreeRTOS
 
 Het resultaat van de vorige opdrachten is een programma met twee onafhankelijke tasks, waarbij elke task één LED laat knipperen. Beide tasks hebben dezelfde prioriteit, namelijk 0.
 
@@ -94,7 +84,7 @@ Het resultaat van de vorige opdrachten is een programma met twee onafhankelijke 
 - Gebruik de task handle die bij `xTaskCreate` is aangemaakt.
 - De prioriteit van `UserTask_2` kan op elk willekeurig moment door iedereen worden aangepast, dus ook bijvoorbeeld in `UserTask`.
 
-## 4. Delay- en sleepfuncties
+## 2.3 Delay- en sleepfuncties
 
 Een task hoeft niet altijd bezig te zijn met de uitvoering van een programma. Tijdens de uitvoering bevindt een task zich in de `ready`- of `running`-state. Een task kan ook wachten op een bepaalde gebeurtenis of totdat een bepaalde tijd is verstreken. In dat geval bevindt de task zich in de zogenoemde `blocked`-state.
 
@@ -105,16 +95,6 @@ De functie `dirtyDelay` is echter zeer inefficiënt: de CPU voert hierin zinloze
 De functie `vTaskDelay` werkt met clock ticks van het systeem. Het is echter vaak makkelijker om tijden in (milli)seconden te specificeren. Hiervoor is de bibliotheekfunctie `taskSleep` beschikbaar. Deze functie maakt gebruik van `vTaskDelay` en rekent de gewenste tijd, gespecificeerd in milliseconden, om naar het bijbehorende aantal ticks.
 
 Bij de volgende opdrachten wordt gebruikgemaakt van de code zoals die tot en met opdracht 9 is gemaakt. Dat betekent dat `UserTask` prioriteit 0 heeft en `UserTask_2` prioriteit 1 of 2, in elk geval hoger dan 0. Het effect hiervan is dat de task met de hoogste prioriteit (1 of 2) alle CPU-tijd krijgt, waardoor alleen de bijbehorende LED knippert. De andere LED blijft uit, omdat de bijbehorende task een lagere prioriteit heeft (0) en dus niet aan de beurt komt.
-
-
- 
-
-
-
-
-
- 
-
 
 
 De functie vTaskDelay werkt met clock ticks van het systeem, het is echter vaak makkelijker om tijden te specificeren in (milli)seconden. Hiervoor is de bibliotheekfunctie taskSleep beschikbaar, die (uiteraard) weer gebruik maakt van vTaskDelay, en de gewenste tijd, gespecificeerd in milliseconden, omrekent naar het daarbij behorende aantal ticks.
