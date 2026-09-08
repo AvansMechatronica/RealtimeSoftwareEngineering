@@ -36,7 +36,7 @@ dio_device dio;
 ## 2.1 Tasks in FreeRTOS
 Open in visual code de folder/map `<path-to-your-project>/opdrachten/opdracht-2`.
 :::note
-Zie [installatie-instructies](...install.md) voor instructies over het installeren van de benodigde software.
+Zie [installatie-instructies](install.md) voor instructies over het installeren van de benodigde software.
 :::
 
 Voeg uitsluitend code toe aan, of wijzig code in, het bestand `src/main.c`. Alle overige folders bevatten bestanden voor de systeemconfiguratie, bibliotheken, enz. Laat deze **ongewijzigd**.

@@ -26,7 +26,7 @@ De basis van het NodeMCU is een ESP-32 microcontroller.
 ![NodeMCU Detail](../images/node_mcu_detail.jpg)
 *Figuur 3. Detail NodeMCU*
 
-Gedetailleerde schema's zijn te vinden in het [PDF-bestand](../pdf/node_mcu_schematics.pdf).
+
 
 ## Overzicht van subsystemen
 
