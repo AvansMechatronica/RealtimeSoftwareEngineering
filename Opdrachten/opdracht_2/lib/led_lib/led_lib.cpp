@@ -1,0 +1,65 @@
+///////////////////////////////////////////////////////////////////////////////
+//
+// led_lib.cpp
+//
+// Authors: 	Roel Smeets & Gerard Harkema
+// Edit date: 	28-06-2025
+// Revision: 	V2.0
+// Modified: 	07-09-2026
+//
+///////////////////////////////////////////////////////////////////////////////
+
+///////////////////////////////////////////////////////////////////////////////
+// system #includes
+
+#include <Arduino.h>
+
+///////////////////////////////////////////////////////////////////////////////
+// application #includes
+
+#include "led_lib.h"
+
+///////////////////////////////////////////////////////////////////////////////
+// table with pin assignment for LED's
+
+static const uint8_t G_LEDPins[N_LEDS] =
+{
+	LED_BUILTIN,	// GPIO pin of blue LED on ESP32 module
+	LED_PCB,		// GPIO pin of red LED on PCB
+};
+
+led::led()
+{
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// void led::Init(void)
+// configures the GPIO pins of all LEDs as outputs and turns them off
+
+void led::Init(void) 
+{
+	for (uint8_t led = 0; led < N_LEDS; led++)
+	{
+		pinMode(G_LEDPins[led], 	 OUTPUT); 
+		digitalWrite(G_LEDPins[led], LOW); 
+	}
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// bool led::IsValidNumber(uint8_t ledNumber)
+
+bool led::IsValidNumber(uint8_t ledNumber)
+{
+	return (ledNumber < N_LEDS);	
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// void led::Set(uint8_t ledNumber, bool ledOn)
+
+void led::Set(uint8_t ledNumber, bool ledOn)
+{
+	if (IsValidNumber(ledNumber))
+	{
+		digitalWrite(G_LEDPins[ledNumber], ledOn ? HIGH : LOW);
+	}
+}
