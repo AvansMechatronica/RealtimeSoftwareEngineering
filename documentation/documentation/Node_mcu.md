@@ -1,5 +1,6 @@
 # Systeemoverzicht NodeMCU-shield
 
+
 In deze module wordt het NodeMCU-shield en zijn perifere componenten beschreven.
 De basis van het NodeMCU is een ESP-32 microcontroller.
 
