@@ -21,7 +21,6 @@
 #include "system_info.h"
 
 
-
 ///////////////////////////////////////////////////////////////////////////////
 // HAL includes for RTSW board
 #include "dio_lib.h"
@@ -42,10 +41,7 @@ xTaskHandle handle_UserTask		= NULL;
 // their implementations below. FreeRTOS tasks use a void pointer parameter,
 // even when the task does not need application-specific parameters.
 
-void HartbeatTask(void *pvParameters);
 void UserTask(void *pvParameters);
-
-void StartHartbeatTask(void);
 void StartUserTasks(void);
 
 void dirtyDelay(void);

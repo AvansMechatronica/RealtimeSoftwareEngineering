@@ -52,29 +52,27 @@ adc3208 adc;
 // their implementations below. FreeRTOS tasks use a void pointer parameter,
 // even when the task does not need application-specific parameters.
 
-void HartbeatTask(void *pvParameters);
 void TaskADC(void *pvParameters);
 
-void StartHartbeatTask(void);
-void StartTaskADCs(void);
+void StartUserTasks(void);
 
 
 ///////////////////////////////////////////////////////////////////////////////
-// StartTaskADCs
+// StartUserTasks
 //
 // Creates the application's user task. The task runs independently from the
 // Arduino loop() function under the control of the FreeRTOS scheduler.
 //
-// configMINIMAL_STACK_SIZE is sufficient for this small task because it only
-// uses a DIO object, a few integer variables, and the output functions. The
+// configMINIMAL_STACK_SIZE is sufficient for this small task because it only uses
+// a few integer variables, and the output functions. The
 // priority is deliberately kept low so system and console tasks can continue
 // to run when they need processor time.
 
-void StartTaskADCs(void)
+void StartUserTasks(void)
 {
 	BaseType_t result = pdFAIL;
 	uint8_t priority = 0;
-	uint32_t adcChannel = 0;
+	uint32_t adcChannel = 4; // Channel of the RV1/P0 potmeter
 
 	// TODO: counting semaphore toevoegen
 	
@@ -84,7 +82,7 @@ void StartTaskADCs(void)
 		// The task was created successfully. The scheduler will call TaskADC
 		// when the task receives processor time.
 	}
-	// TODO: task maken voor ADC kanaal 1
+	// TODO: task maken voor ADC kanaal 5
 }
 
 
@@ -144,7 +142,7 @@ void setup (void)
 	adc.Init(&spi);
 
 	// Start the application task that controls the DIO output.
-	StartTaskADCs();
+	StartUserTasks();
 	
 	// Start the interactive command console after the shared services exist.
 	StartCommandConsoleTask(NULL);

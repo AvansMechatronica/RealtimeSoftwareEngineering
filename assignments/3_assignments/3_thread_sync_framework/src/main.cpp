@@ -24,16 +24,27 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 // HAL includes for RTSW board
-// None
+#include "spi_lib.h"
+#include "adc_3208_lib.h"
 
 ///////////////////////////////////////////////////////////////////////////////
 // FreeRTOS task handle
 //
-// The handle is filled by xTaskCreate() when UserTask is started. It can be
+// The handle is filled by xTaskCreate() when TaskADC is started. It can be
 // used later to identify, suspend, resume, or delete the task. Initializing it
 // to NULL makes it clear that the task does not exist before setup starts it.
 
-xTaskHandle handle_UserTask		= NULL;
+xTaskHandle handle_TaskADC		= NULL;
+xTaskHandle handle_TaskDisplay	= NULL;
+
+///////////////////////////////////////////////////////////////////////////////
+// SPI and ADC instances
+//
+// These objects represent the SPI interface and the ADC hardware. They are
+// used throughout the application to perform analog-to-digital conversions.
+spi_device spi;
+adc3208 adc;
+
 
 ///////////////////////////////////////////////////////////////////////////////
 // Function prototypes
@@ -41,8 +52,9 @@ xTaskHandle handle_UserTask		= NULL;
 // These declarations make the task and startup functions available before
 // their implementations below. FreeRTOS tasks use a void pointer parameter,
 // even when the task does not need application-specific parameters.
+void TaskADC(void *pvParameters);
+void TaskDisplay(void *pvParameters);
 
-void UserTask(void *pvParameters);
 void StartUserTasks(void);
 
 
@@ -52,8 +64,8 @@ void StartUserTasks(void);
 // Creates the application's user task. The task runs independently from the
 // Arduino loop() function under the control of the FreeRTOS scheduler.
 //
-// configMINIMAL_STACK_SIZE is sufficient for this small task because it only
-// uses a few integer variables, and the output functions. The
+// configMINIMAL_STACK_SIZE is sufficient for this small task because it only uses
+// a few integer variables, and the output functions. The
 // priority is deliberately kept low so system and console tasks can continue
 // to run when they need processor time.
 
@@ -61,45 +73,73 @@ void StartUserTasks(void)
 {
 	BaseType_t result = pdFAIL;
 	uint8_t priority = 0;
+	uint32_t adcChannel = 4; // Channel of the RV1/P0 potmeter
+
+	// TODO: maak 2 counting semaphores semaADC en semaDisplay 
+	// met de juiste (!!) beginwaarden
 	
-	result = xTaskCreate(UserTask, "tsk_User", (configMINIMAL_STACK_SIZE), NULL, priority, &handle_UserTask);
+	result = xTaskCreate(TaskDisplay, "tsk_Display", (configMINIMAL_STACK_SIZE), NULL, priority, &handle_TaskDisplay);
 	if (result == pdPASS )
 	{
-		// The task was created successfully. The scheduler will call UserTask
+	}
+	result = xTaskCreate(TaskADC, "tsk_ADC", (configMINIMAL_STACK_SIZE), (void*)(adcChannel), priority, &handle_TaskADC);
+	if (result == pdPASS )
+	{
+		// The task was created successfully. The scheduler will call TaskADC
 		// when the task receives processor time.
 	}
-	// When creation fails, the task handle remains NULL. There is currently no
-	// recovery action here, so the application continues without UserTask.
+	// TODO: task maken voor ADC kanaal 5
 }
 
-uint32_t G_NumberOfVisitors = 0;
+
 ///////////////////////////////////////////////////////////////////////////////
-// UserTask
+// TaskADC
 //
-// Initializes the digital I/O abstraction and repeatedly toggles one output
-// bit. The connected LED therefore changes state on every cycle, providing a
-// simple visual indication that the task is alive and being scheduled.
+// Reads and processes ADC values from the specified channel. The task measures
+// analog input signals and provides the data for further processing or display.
 //
-// pvParameters is part of the standard FreeRTOS task signature. This task does
-// not currently require parameters, so it is intentionally unused.
+// pvParameters is part of the standard FreeRTOS task signature. This task uses
+// it to receive the ADC channel number to be monitored.
 
-void UserTask(void *pvParameters)
+float G_ADCValue = 0;
+
+void TaskADC(void *pvParameters)
 {
-	uint32_t zooEntry = (uint32_t) (pvParameters);
+	uint32_t adcValue = 0;
+	uint32_t channel = (uint32_t)(pvParameters);
 	
-	ts_printf("> ZooEntry %d started\n", zooEntry);
+	ts_printf("> Task ADC started, channel %lu\n", channel);
 
-	// TODO: tel gespecificeerd aantal bezoekers voor het entreepoortje
-	
-	ts_printf("> ZooEntry %lu: Total visitors = %lu\n", zooEntry, G_NumberOfVisitors);
-	
-	// TODO: na het tellen in een oneindinge lange sleep gaan
+	while (true)
+	{
+		// TODO:
+		// wacht op juiste semafoor
+		// doe ADC werk
+		// deblokkeer juiste semafoor
+		// wacht 2 seconden
+	}
 	
 	// we never get here!
 	vTaskDelete(NULL);
 }
 
+///////////////////////////////////////////////////////////////////////////////
+// void TaskDisplay(void *pvParameters)
 
+void TaskDisplay(void *pvParameters)
+{
+	ts_printf("> Task Display started\n");
+
+	while (true)
+	{
+		// TODO: wacht op juiste semafoor
+		ts_printf("[DISP] ADC value = %4.2f\n", G_ADCValue);
+		// TODO: deblokkeer juiste semafoor
+	}
+	
+	// we never get here!
+	vTaskDelete(NULL);
+}
 
 ///////////////////////////////////////////////////////////////////////////////
 // setup
@@ -119,12 +159,17 @@ void setup (void)
 	StartTsPrintfTask(NULL);
 
 	// Blink the board LED as a heartbeat so the system's main activity can be
-	// observed independently from the LED controlled by UserTask.
+	// observed independently from the LED controlled by TaskADC.
 	StartHeartbeatTask(LED_PIN_ESP32_BOARD);
 	delay(500);
 	// Add commands that expose system information through the console.
 	RegisterSystemInfoCommands();
 	delay(500);
+
+	// Initialize the SPI hardware before accessing the ADC.
+	spi.Init();
+	// Initialize the ADC hardware before accessing the analog input.
+	adc.Init(&spi);
 
 	// Start the application task that controls the DIO output.
 	StartUserTasks();
