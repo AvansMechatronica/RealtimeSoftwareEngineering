@@ -6,7 +6,7 @@ In dit practicum komt het gebruik van interrupts in FreeRTOS aan bod. Er zijn dr
 - In opdracht 2 worden periodiek interrupts gegenereerd door een clock generator.
 - In opdracht 3 worden periodieke interrupts gebruikt voor het uitvoeren van een lege control task. Daarnaast wordt een afzonderlijke task gebruikt voor het instellen van een parameter voor de control task.
 
-## 1. Hardware-interrupts met drukknoppen
+## 5.1 Hardware-interrupts met drukknoppen
 
 Hardware-interrupts onderbreken de lopende programma-executie omdat er een externe gebeurtenis plaatsvindt, dus een gebeurtenis in de fysieke buitenwereld die onmiddellijk aandacht van de processor nodig heeft. Deze interrupts kunnen bijvoorbeeld afkomstig zijn van een extern device dat data beschikbaar heeft voor verwerking.
 
@@ -19,7 +19,7 @@ In FreeRTOS heeft een ISR een hogere prioriteit dan elke andere task. Dat beteke
 - Een ISR moet zo kort mogelijk zijn, zowel in tijd als in uitvoerbare code. In een ISR mogen alleen de hoogst noodzakelijke acties worden uitgevoerd. Welke acties dat zijn, hangt meestal af van het device dat de interrupt genereert.
 - In een ISR mag slechts gebruik worden gemaakt van enkele speciale FreeRTOS-functies. Deze hebben de vorm `<functienaam>FromISR`. Andere FreeRTOS-functies mogen absoluut niet worden gebruikt, omdat het systeem anders kan crashen of vastlopen. Een voorbeeld van een FreeRTOS-functie die in een ISR wel mag worden gebruikt, is `xSemaphoreGiveFromISR`.
 
-### Deferred Interrupt Processing
+### 5.1.1 Deferred Interrupt Processing
 
 Om een interrupt toch in een normale FreeRTOS-task te kunnen afhandelen, wordt gebruikgemaakt van *Deferred Interrupt Processing* (uitgestelde interruptafhandeling). Hierbij wordt de niet-tijdkritische verwerking van de data niet in de ISR zelf uitgevoerd, maar uitgesteld en verder afgehandeld in een normale FreeRTOS-task. Meestal heeft die task een hogere prioriteit dan alle andere tasks, maar per definitie een lagere prioriteit dan de interrupt.
 
@@ -34,7 +34,7 @@ Zie figuur 1 voor een voorbeeld van *Deferred Interrupt Processing*. Bron: [Free
 
 Als de FreeRTOS-task die de interrupt moet afhandelen een voldoende hoge prioriteit heeft ten opzichte van de overige tasks, wordt deze onmiddellijk uitgevoerd nadat de zeer korte ISR klaar is. Feitelijk wordt de verwerking van de interrupt aaneengesloten in de tijd uitgevoerd, alsof alle verwerking in de ISR zelf had plaatsgevonden. Zie figuur 1: alle interruptverwerking vindt plaats tussen tijdstippen $t_2$ en $t_4$, ook al wordt een deel van de verwerking uitgevoerd door een task, het blauwe deel.
 
-### Opdracht
+### 5.1.2 Opdracht
 
 Om inzicht te krijgen in de werking van interrupts, wordt in de volgende opdracht een interrupt gegenereerd door het indrukken van één of meer van de vier drukknoppen op het shield. Deze interrupt wordt afgehandeld door een ISR en een bijbehorende FreeRTOS-task. Als een knop wordt ingedrukt, gebeurt het volgende:
 
@@ -45,7 +45,7 @@ Maak in de volgende opdracht gebruik van de solution `RTSW_week_5_ButtonInterrup
 
 Zoek in het bestand `main.c` naar de tekenreeks `TODO` voor de bijbehorende aanwijzingen in de broncode.
 
-## 2. Periodieke clock-interrupts
+## 5.2 Periodieke clock-interrupts
 
 Mechatronische regelsystemen maken vaak gebruik van een hard periodiek kloksignaal met een vaste frequentie, afkomstig van een externe bron. De frequentie waarmee sensoren moeten worden gesampled en de frequentie waarmee actuatoren moeten worden aangestuurd, bepalen de gewenste frequentie van dat externe kloksignaal.
 
@@ -57,19 +57,19 @@ De klokgenerator wordt met de daarvoor bedoelde kabel aangesloten op connector `
 
 > **Let op:** deze opdracht is vergelijkbaar met de vorige opdracht, waarbij een drukknop een interrupt genereerde. Ook de code is vergelijkbaar. Een belangrijk verschil is echter dat de frequentie van de interrupts hoger is ($f = 1\ \mathrm{kHz}$, $T = 1\ \mathrm{ms}$), waardoor de interrupt-handler daarop moet worden aangepast.
 
-### Opdracht
+### 5.2.1 Opdracht
 
 Maak in de volgende opdracht gebruik van de solution `RTSW_week_5_TimerInterrupts_Framework.sln`. Voeg uitsluitend code toe aan, of wijzig code in, het bestand `main.c`. Alle overige folders bevatten bestanden voor de systeemconfiguratie. Laat deze **ongewijzigd**.
 
 Zoek in het bestand `main.c` naar de tekenreeks `TODO` voor de bijbehorende aanwijzingen in de broncode.
 
-## 3. Periodieke clock-interrupts combineren met queues
+## 5.3 Periodieke clock-interrupts combineren met queues
 
 In een mechatronisch regelsysteem is er minimaal één task die periodiek het regelalgoritme uitvoert: de control task. De periodetijd wordt bepaald door de klokfrequentie van een externe klok, zoals in opdracht 2 met een frequentie van 1 kHz. In opdracht 2 is de control task onder andere geïmplementeerd in de functie `TaskTimerInterruptHandler`.
 
 Daarnaast zijn er meestal één of meer tasks met een andere functionaliteit, zoals het tijdens runtime instellen van een of meer parameters in de control task. In deze opdracht krijgt de control task een waarde aangeleverd door een task die één van de potmeters uitleest en de waarde daarvan in een queue zet. Deze queue bevat precies één waarde. De control task leest de waarde uit die in de queue is gezet.
 
-### Opdracht
+### 5.3.1 Opdracht
 
 Maak in de volgende opdracht gebruik van de solution `RTSW_week_5_TimerInterrupts_2_Framework.sln`. Voeg uitsluitend code toe aan, of wijzig code in, het bestand `main.c`. Alle overige folders bevatten bestanden voor de systeemconfiguratie. Laat deze **ongewijzigd**.
 

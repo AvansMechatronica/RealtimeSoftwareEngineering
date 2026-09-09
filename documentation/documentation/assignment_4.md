@@ -6,7 +6,7 @@ In dit practicum komen de volgende onderwerpen aan bod:
 - Het genereren van analoge signalen met een digitaal-analoogconverter (DAC)
 - Het bepalen van posities met een quadratuur-encoder
 
-## 1. Producers, consumers en queues
+## 4.1. Producers, consumers en queues
 
 In voorgaande practica werd data tussen tasks uitgewisseld met globale variabelen, of werd een gemeenschappelijke globale variabele door twee of meer tasks gewijzigd. Iedere task kan een globale variabele lezen en/of schrijven. Dat betekent dat de toegang tot zo’n variabele altijd moet worden afgeschermd met bijvoorbeeld een mutex. Een groot nadeel, of beter gezegd probleem, is dat elke variabele door alle tasks kan worden gewijzigd.
 
@@ -16,7 +16,7 @@ In dit practicum is de producer een task die een ADC uitleest en de ADC-datasamp
 
 Daarnaast wordt een task gemaakt die de queue monitort en continu laat zien hoeveel data, in dit geval ADC-meetwaarden, in de queue staat.
 
-### Opdracht
+### 4.1.1 Opdracht
 
 Maak in de volgende opdracht gebruik van de solution `RTSW_week_4_Queue_Framework.sln`. Voeg uitsluitend code toe aan, of wijzig code in, het bestand `main.c`. Alle overige folders bevatten bestanden voor de systeemconfiguratie. Laat deze **ongewijzigd**.
 
@@ -24,7 +24,7 @@ Om regelmatig weer te geven hoeveel elementen in de queue staan, wordt een monit
 
 In bovenstaande opdracht raakt de queue net vol: zodra de producer vijf samples in de queue heeft gezet, leest de consumer deze weer uit. De queue is dus weer leeg als het volgende sample beschikbaar komt.
 
-## 2. Genereren van een analoog signaal met een digitaal-analoogconverter
+## 4.2. Genereren van een analoog signaal met een digitaal-analoogconverter
 
 Analoge signalen in een mechatronisch regelsysteem, bijvoorbeeld voor de aansturing van een motor, worden gemaakt met een digitaal-naar-analoogconverter (DAC). De hardware in dit practicum bevat vier analoge uitgangskanalen, waarvan de spanning instelbaar is tussen -10 volt en +10 volt. Deze spanning wordt gegenereerd door een 12-bits DAC met een bijbehorende uitgangsversterker.
 
@@ -44,11 +44,11 @@ In de volgende opdracht wordt de DAC aangestuurd om een analoge golfvorm te make
 >
 > Een geschikte wachttijd tussen het aanbieden van opeenvolgende DAC-waarden is ongeveer 20 µs. Gebruik hiervoor de FreeRTOS-functie `delay_us()`. Deze functie maakt **geen** gebruik van de FreeRTOS-scheduler. Het proces waarin deze functie wordt aangeroepen, wordt dus niet in de ready-queue geplaatst.
 
-### Opdracht
+### 4.2.1 Opdracht
 
 Maak in deze opdracht gebruik van de solution `RTSW_week_4_DAC_Framework.sln`. Voeg uitsluitend code toe aan, of wijzig code in, het bestand `main.c`. Alle overige folders bevatten bestanden voor de systeemconfiguratie. Laat deze **ongewijzigd**.
 
-## 3. Nauwkeurige positiebepaling met een quadratuur-encoder
+## 4.3. Nauwkeurige positiebepaling met een quadratuur-encoder
 
 Voor het bepalen van posities bij bewegende mechatronische systemen wordt vaak gebruikgemaakt van zogenoemde quadratuur-encoders of positieopnemers. Deze encoders genereren tijdens een beweging twee digitale signalen. De onderlinge fase van deze signalen geeft de draai- of bewegingsrichting aan, bijvoorbeeld linksom of rechtsom.
 
@@ -63,6 +63,6 @@ Het optellen en aftellen van deze quadratuursignalen wordt volledig in hardware 
 
 Omdat quadratuur-encoders meestal mechanisch aan een opstelling zijn gekoppeld, wordt in het practicum gebruikgemaakt van een quadratuur-interface. Hierbij wordt de encoder gesimuleerd met een draaiknop die de quadratuursignalen A en B genereert. Het indexsignaal wordt gegenereerd door de draaiknop in te drukken. Deze interface kan daarnaast ook worden gebruikt om rechtstreeks een quadratuur-encoder aan te sluiten.
 
-### Opdracht
+### 4.3.1 Opdracht
 
 Maak in de volgende opdracht gebruik van de solution `RTSW_week_4_Quadrature_Framework.sln`. Voeg uitsluitend code toe aan, of wijzig code in, het bestand `main.c`. Alle overige folders bevatten bestanden voor de systeemconfiguratie. Laat deze **ongewijzigd**.

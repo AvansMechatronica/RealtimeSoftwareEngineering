@@ -44,8 +44,12 @@ Voeg uitsluitend code toe aan, of wijzig code in, het bestand `src/main.c`. Alle
 In de functie `StartUserTasks()` is onder andere een task gecreëerd die een LED laat knipperen. De code die door deze task wordt uitgevoerd, staat in de functie `UserTask`. Deze task wordt gemaakt en gestart met de volgende code, die gebruikmaakt van de FreeRTOS-functie `xTaskCreate`:
 
 ```cpp
-result = xTaskCreate(UserTask, "tsk_User", configMINIMAL_STACK_SIZE,
-					 NULL, priority, &handle_UserTask);
+result = xTaskCreate(UserTask, 
+                     "tsk_User",
+					 configMINIMAL_STACK_SIZE,
+					 NULL, 
+					 priority, 
+					 &handle_UserTask);
 ```
 
 De parameters voor deze functie zijn achtereenvolgens:
