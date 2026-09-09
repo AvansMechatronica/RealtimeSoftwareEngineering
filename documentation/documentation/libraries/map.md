@@ -1,8 +1,8 @@
-# Map / Conversion Library
+# Map-/conversiebibliotheek
 
 ## Overzicht
 
-Deze bibliotheek bevat basisfunctie-helpers voor het schalen van waardes van het ene bereik naar het andere. De functies zijn bedoeld als Arduino-achtige helpers voor mapping en begrenzing.
+Deze bibliotheek bevat basisfunctie-helpers voor het schalen van waarden van het ene bereik naar het andere. De functies zijn bedoeld als Arduino-achtige helpers voor mapping en begrenzing.
 
 ## API
 

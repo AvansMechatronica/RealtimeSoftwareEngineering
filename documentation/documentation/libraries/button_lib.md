@@ -1,8 +1,8 @@
-# Button Library
+# Knopbibliotheek
 
 ## Overzicht
 
-`button` is een kleine helper-library voor het beheren van digitale en analoge drukknoppen. De library gebruikt een `adc3208`-interface om analoge knopstatussen te detecteren.
+`button` is een kleine helper-bibliotheek voor het beheren van digitale en analoge drukknoppen. De bibliotheek gebruikt een `adc3208`-interface om analoge knopstatussen te detecteren.
 
 ## Kenmerken
 

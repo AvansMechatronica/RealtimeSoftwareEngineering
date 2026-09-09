@@ -1,4 +1,4 @@
-# Pulse Library
+# Pulse-bibliotheek
 
 ## Overzicht
 

@@ -1,4 +1,4 @@
-# LED Library
+# LED-bibliotheek
 
 ## Overzicht
 

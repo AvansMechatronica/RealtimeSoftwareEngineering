@@ -1,4 +1,4 @@
-# OLED Display Library
+# OLED-displaybibliotheek
 
 ## Overzicht
 

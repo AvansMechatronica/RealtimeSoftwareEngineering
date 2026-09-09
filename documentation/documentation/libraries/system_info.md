@@ -1,4 +1,4 @@
-# System Information Library
+# Systeeminformatie-bibliotheek
 
 ## Overzicht
 

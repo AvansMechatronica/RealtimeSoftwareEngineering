@@ -1,8 +1,8 @@
-# Quadrature Counter Library
+# Quadratuurtellertje-bibliotheek
 
 ## Overzicht
 
-`qc7366` is een driver voor de LS7366R quadrature counter. De library maakt het mogelijk om tellerregisters te initialiseren, te lezen, te wissen en te configureren.
+`qc7366` is een driver voor de LS7366R quadratuurcounter. De bibliotheek maakt het mogelijk om tellerregisters te initialiseren, te lezen, te wissen en te configureren.
 
 ## Kenmerken
 

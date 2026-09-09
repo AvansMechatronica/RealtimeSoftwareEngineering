@@ -1,8 +1,8 @@
-# Command Console Library
+# Command Console-bibliotheek
 
 ## Overzicht
 
-`command_console` biedt een eenvoudige command-based console voor een ESP32-project. Het maakt het mogelijk om opdrachten te registreren, uit te voeren en overzichtelijk weer te geven via een tekstinterface.
+`command_console` biedt een eenvoudige opdrachtgebaseerde console voor een ESP32-project. Het maakt het mogelijk om opdrachten te registreren, uit te voeren en overzichtelijk weer te geven via een tekstinterface.
 
 ## API
 

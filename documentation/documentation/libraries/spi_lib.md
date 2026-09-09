@@ -1,8 +1,8 @@
-# SPI Library
+# SPI-bibliotheek
 
 ## Overzicht
 
-`spi_device` is de centrale SPI-abstractie in deze bibliotheekset. De library beheert het VSPI-bus, device-selectie via een 74HC138 MUX en basisgegevensoverdracht naar SPI-slaves.
+`spi_device` is de centrale SPI-abstractie in deze bibliotheekset. De bibliotheek beheert de VSPI-bus, device-selectie via een 74HC138 MUX en basisgegevensoverdracht naar SPI-slaves.
 
 ## API
 

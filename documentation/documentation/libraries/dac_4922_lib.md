@@ -1,8 +1,8 @@
-# DAC 4922 Library
+# DAC 4922 Bibliotheek
 
 ## Overzicht
 
-`dac4922` is een bibliotheek voor de MCP4922 dual-output DAC. De library ondersteunt het schrijven van raw-waarden en het omzetten van voltages naar een juiste DAC-waarde.
+`dac4922` is een bibliotheek voor de MCP4922 dual-output DAC. De bibliotheek ondersteunt het schrijven van ruwe waarden en het omzetten van spanningen naar een juiste DAC-waarde.
 
 ## Kenmerken
 

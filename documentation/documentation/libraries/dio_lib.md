@@ -1,8 +1,8 @@
-# Digital I/O Library
+# Digitale I/O-bibliotheek
 
 ## Overzicht
 
-`dio_device` is een compacte bibliotheek voor het beheren van digitale inputs en outputs op een ESP32. De library defineert vaste GPIO-pinnen voor input- en output-bitvelden.
+`dio_device` is een compacte bibliotheek voor het beheren van digitale ingangen en uitgangen op een ESP32. De bibliotheek definieert vaste GPIO-pinnen voor input- en output-bitvelden.
 
 ## API
 

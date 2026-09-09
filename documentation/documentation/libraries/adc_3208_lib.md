@@ -1,8 +1,8 @@
-# ADC 3208 Library
+# ADC 3208 Bibliotheek
 
 ## Overzicht
 
-`adc3208` is a driver for the MCP3208 8-channel analog-to-digital converter. The library is built for ESP32 and uses the shared SPI bus abstraction from the SPI library in this workspace.
+`adc3208` is een driver voor de MCP3208 8-kanaals analoog-naar-digitaalomzetter. De bibliotheek is ontwikkeld voor ESP32 en maakt gebruik van de gedeelde SPI-busabstractie uit de SPI-bibliotheek in deze set.
 
 ## Kenmerken
 

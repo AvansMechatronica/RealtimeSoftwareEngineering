@@ -1,4 +1,4 @@
-# TS Printf Library
+# TS Printf-bibliotheek
 
 ## Overzicht
 

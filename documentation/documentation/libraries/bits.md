@@ -1,8 +1,8 @@
-# Miscellaneous Bit Definitions
+# Diversen bitdefinities
 
 ## Overzicht
 
-`bits.h` bevat een compacte set macro-definities voor individuele bitmaskers. De library is bedoeld om bit-controle in embedded C/C++-code te vereenvoudigen.
+`bits.h` bevat een compacte set macro-definities voor individuele bitmaskers. De bibliotheek is bedoeld om bitcontrole in embedded C/C++-code te vereenvoudigen.
 
 ## API
 

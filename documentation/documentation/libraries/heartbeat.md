@@ -1,8 +1,8 @@
-# Heartbeat Library
+# Heartbeat-bibliotheek
 
 ## Overzicht
 
-`heartbeat` levert een eenvoudige heartbeat-task voor een ESP32-pagina of systeemstatusindicatie. De bibliotheek gebruikt een GPIO-pin om periodiek een signaal te togglen.
+`heartbeat` levert een eenvoudige heartbeat-task voor een ESP32-project of systeemstatusindicatie. De bibliotheek gebruikt een GPIO-pin om periodiek een signaal te togglen.
 
 ## API
 
