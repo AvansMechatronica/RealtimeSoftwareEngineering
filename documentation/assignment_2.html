@@ -1,0 +1,248 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="nl" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Opdrachten 2: Tasks en priorities in FreeRTOS &mdash; Realtime Software Engineering Workshop 0.1 documentatie</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=a57088fb"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../_static/copybutton.js?v=f281be69"></script>
+      <script src="../_static/translations.js?v=e4d38c6a"></script>
+      <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Zoeken" href="../search.html" />
+    <link rel="next" title="Opdracht 3: Mutual exclusion en task synchronisation in FreeRTOS" href="assignment_3.html" />
+    <link rel="prev" title="Opdracht 1: Installatie van de software" href="assignment_1.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            Realtime Software Engineering Workshop
+              <img src="../_static/avans-hogeschool-logo.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Zoek in documentatie" aria-label="Zoek in documentatie" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigatiemenu">
+              <p class="caption" role="heading"><span class="caption-text">Inhoudsopgave:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="overview.html">Inleiding</a></li>
+<li class="toctree-l1"><a class="reference internal" href="node_mcu.html">Systeemoverzicht NodeMCU-shield</a></li>
+<li class="toctree-l1"><a class="reference internal" href="install.html">Visual Studio Code en PlatformIO</a></li>
+<li class="toctree-l1"><a class="reference internal" href="assignment_1.html">Opdracht 1: Installatie van de software</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Opdrachten 2: Tasks en priorities in FreeRTOS</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#aansturen-van-de-leds-op-het-nodemcu-shield">Aansturen van de LED’s op het NodeMCU-Shield</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#tasks-in-freertos">2.1 Tasks in FreeRTOS</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#aanwijzingen">Aanwijzingen</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#voorbeelden-van-uitvoer">Voorbeelden van uitvoer</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#task-priorities-in-freertos">2.2 Task priorities in FreeRTOS</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id1">Aanwijzingen</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#delay-en-sleepfuncties">2.3 Delay- en sleepfuncties</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="assignment_3.html">Opdracht 3: Mutual exclusion en task synchronisation in FreeRTOS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="assignment_4.html">Opdracht 4: Producers, consumers en queues in FreeRTOS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="assignment_5.html">Opdracht 5: Interrupts in FreeRTOS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="assignment_6.html">Opdracht 6:</a></li>
+<li class="toctree-l1"><a class="reference internal" href="libraries.html">Softwarebibliotheken</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Voorbeeldprogramma’s</a></li>
+<li class="toctree-l1"><a class="reference internal" href="faq.html">Veelgestelde vragen</a></li>
+<li class="toctree-l1"><a class="reference internal" href="teacher_manual.html">Docentenhandleiding</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Navigatiemenu voor mobiel" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Realtime Software Engineering Workshop</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Paginanavigatie">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Opdrachten 2: Tasks en priorities in FreeRTOS</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/documentation/assignment_2.md.txt" rel="nofollow"> Bekijk paginabron</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section class="tex2jax_ignore mathjax_ignore" id="opdrachten-2-tasks-en-priorities-in-freertos">
+<h1>Opdrachten 2: Tasks en priorities in FreeRTOS<a class="headerlink" href="#opdrachten-2-tasks-en-priorities-in-freertos" title="Link to this heading"></a></h1>
+<p>In dit practicum komen de volgende onderwerpen aan bod:</p>
+<ul class="simple">
+<li><p>Het maken van tasks (= taak, threads) in FreeRTOS</p></li>
+<li><p>Het wijzigen van task priorities</p></li>
+<li><p>Het gebruik van de functie ts_printf</p></li>
+<li><p>Het gebruik van delays en het effect daarvan op de uitvoering van tasks</p></li>
+</ul>
+<section id="aansturen-van-de-leds-op-het-nodemcu-shield">
+<h2>Aansturen van de LED’s op het NodeMCU-Shield<a class="headerlink" href="#aansturen-van-de-leds-op-het-nodemcu-shield" title="Link to this heading"></a></h2>
+<p>In dit practicum worden enkele van de 6 LED’s op het NodeMCU-Shield aangestuurd. De LED’s zijn aangesloten op de digitale uitgangen D1 t/m D6. Voor het aansturen van een LED  wordt de volgende functie gebruikt:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="c1">// Zet de LED aan op basis van het ledNumber</span>
+<span class="n">dio</span><span class="p">.</span><span class="n">SetBit</span><span class="p">(</span><span class="n">ledNumber</span><span class="p">);</span>
+<span class="c1">// Zet de LED uit op basis van het ledNumber</span>
+<span class="n">dio</span><span class="p">.</span><span class="n">ClearBit</span><span class="p">(</span><span class="n">ledNumber</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>ledNumber is het nummer van de aan te sturen LED, en moet liggen ligt tussen 0 en 5:</p>
+<ul class="simple">
+<li><p>0 = meest RECHTSE LED, bit 0, Least significant Bit (aangegeven op het board met D1)</p></li>
+<li><p>5 = meest LINKSE LED, bit 5, Most Significant bit (aangegeven op het board met D6)</p></li>
+</ul>
+<p>De <code class="docutils literal notranslate"><span class="pre">setBit</span></code> en de <code class="docutils literal notranslate"><span class="pre">clearBit</span></code> member-functies van het <code class="docutils literal notranslate"><span class="pre">dio</span></code> object van de <code class="docutils literal notranslate"><span class="pre">dio_device</span></code> klasse.
+Om deze klasse te gebruiken, moet eerst een object van het type <code class="docutils literal notranslate"><span class="pre">dio_device</span></code> worden aangemaakt, zoals hieronder weergegeven.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="c1">// HAL includes for RTSW board</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;dio_lib.h&quot;</span>
+
+<span class="n">dio_device</span><span class="w"> </span><span class="n">dio</span><span class="p">;</span>
+</pre></div>
+</div>
+</section>
+<section id="tasks-in-freertos">
+<h2>2.1 Tasks in FreeRTOS<a class="headerlink" href="#tasks-in-freertos" title="Link to this heading"></a></h2>
+<p>Open in visual code de folder/map <code class="docutils literal notranslate"><span class="pre">&lt;path-to-your-project&gt;/assignments/1_assignment/1_basics_framework</span></code>.</p>
+<div class="admonition note">
+<p class="admonition-title">Notitie</p>
+<p>Zie <a class="reference internal" href="install.html#verkrijgen-van-de-workshopbestanden"><span class="std std-ref">installatie-instructies</span></a> voor instructies over het installeren van de benodigde software.</p>
+</div>
+<p>Voeg uitsluitend code toe aan, of wijzig code in, het bestand <code class="docutils literal notranslate"><span class="pre">src/main.c</span></code>. Alle overige folders bevatten bestanden voor de systeemconfiguratie, bibliotheken, enz. Laat deze <strong>ongewijzigd</strong>.</p>
+<p>In de functie <code class="docutils literal notranslate"><span class="pre">StartUserTasks()</span></code> is onder andere een task gecreëerd die een LED laat knipperen. De code die door deze task wordt uitgevoerd, staat in de functie <code class="docutils literal notranslate"><span class="pre">UserTask</span></code>. Deze task wordt gemaakt en gestart met de volgende code, die gebruikmaakt van de FreeRTOS-functie <code class="docutils literal notranslate"><span class="pre">xTaskCreate</span></code>:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">xTaskCreate</span><span class="p">(</span><span class="n">UserTask</span><span class="p">,</span><span class="w"> </span>
+<span class="w">                     </span><span class="s">&quot;tsk_User&quot;</span><span class="p">,</span>
+<span class="w">					 </span><span class="n">configMINIMAL_STACK_SIZE</span><span class="p">,</span>
+<span class="w">					 </span><span class="nb">NULL</span><span class="p">,</span><span class="w"> </span>
+<span class="w">					 </span><span class="n">priority</span><span class="p">,</span><span class="w"> </span>
+<span class="w">					 </span><span class="o">&amp;</span><span class="n">handle_UserTask</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>De parameters voor deze functie zijn achtereenvolgens:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">UserTask</span></code>: de functie die door de task wordt uitgevoerd. Bekijk in de broncode wat deze functie doet.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;tsk_User&quot;</span></code>: de human-readable naam waaronder deze task wordt uitgevoerd. Deze naam wordt onder andere gebruikt door de commando’s <code class="docutils literal notranslate"><span class="pre">task-stats</span></code> en <code class="docutils literal notranslate"><span class="pre">run-time-stats</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">configMINIMAL_STACK_SIZE</span></code>: de grootte van de stack (de toegewezen geheugenruimte) in bytes.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">NULL</span></code>: de parameter die aan de task kan worden meegegeven. Voorlopig is deze <code class="docutils literal notranslate"><span class="pre">NULL</span></code> (een null-pointer, oftewel ongebruikt).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">priority</span></code>: de prioriteit van de task. Tasks met een hogere prioriteit hebben bij het gebruik van de CPU voorrang op tasks met een lagere prioriteit. Prioriteit 0 is het laagst en prioriteit 4 het hoogst in deze practicumconfiguratie.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&amp;handle_UserTask</span></code>: het adres van de handle die <code class="docutils literal notranslate"><span class="pre">xTaskCreate</span></code> aan de aanroeper teruggeeft. Met deze handle kan later, indien nodig, naar deze task worden verwezen.</p></li>
+</ul>
+<section id="aanwijzingen">
+<h3>Aanwijzingen<a class="headerlink" href="#aanwijzingen" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>Declareer een variabele van het juiste type met de naam <code class="docutils literal notranslate"><span class="pre">handle_UserTask_2</span></code>.</p></li>
+<li><p>Maak een functie <code class="docutils literal notranslate"><span class="pre">UserTask_2</span></code> die LED D2 laat knipperen. Deze functie wordt dus bijna een kopie van <code class="docutils literal notranslate"><span class="pre">UserTask</span></code>.</p></li>
+<li><p>Voeg aan de functie <code class="docutils literal notranslate"><span class="pre">StartUserTasks()</span></code> de bijbehorende code toe om <code class="docutils literal notranslate"><span class="pre">UserTask_2</span></code> te starten.</p></li>
+<li><p>Geef de nieuwe task de naam <code class="docutils literal notranslate"><span class="pre">&quot;tsk_User_2&quot;</span></code>.</p></li>
+<li><p>Geef <code class="docutils literal notranslate"><span class="pre">UserTask_2</span></code> dezelfde prioriteit als <code class="docutils literal notranslate"><span class="pre">UserTask</span></code>; beide hebben prioriteit 0.</p></li>
+</ul>
+</section>
+<section id="voorbeelden-van-uitvoer">
+<h3>Voorbeelden van uitvoer<a class="headerlink" href="#voorbeelden-van-uitvoer" title="Link to this heading"></a></h3>
+<p>Voorbeeld van de programma-uitvoer in Console/Terminal:</p>
+<p><em>Figuur 1. Console/Terminal terminal window</em></p>
+<p>Voorbeeld van <code class="docutils literal notranslate"><span class="pre">tasks</span></code>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">CommandConsole</span>       <span class="n">RUN</span>       <span class="mi">1</span>   <span class="mi">1328</span>
+<span class="n">IDLE0</span>                <span class="n">READY</span>     <span class="mi">0</span>    <span class="mi">576</span>
+<span class="n">tsk_User</span>             <span class="n">READY</span>     <span class="mi">0</span>     <span class="mi">88</span>
+<span class="n">IDLE1</span>                <span class="n">READY</span>     <span class="mi">0</span>    <span class="mi">568</span>
+<span class="n">loopTask</span>             <span class="n">BLOCK</span>     <span class="mi">1</span>   <span class="mi">7244</span>
+<span class="n">tsk_Heartbeat</span>        <span class="n">BLOCK</span>     <span class="mi">1</span>    <span class="mi">860</span>
+<span class="n">esp_timer</span>            <span class="n">SUSP</span>     <span class="mi">22</span>   <span class="mi">8160</span>
+<span class="n">Tmr</span> <span class="n">Svc</span>              <span class="n">BLOCK</span>     <span class="mi">1</span>   <span class="mi">3596</span>
+<span class="n">ipc1</span>                 <span class="n">SUSP</span>     <span class="mi">24</span>    <span class="mi">480</span>
+<span class="n">tsk_Printf</span>           <span class="n">BLOCK</span>    <span class="mi">23</span>    <span class="mi">700</span>
+<span class="n">ipc0</span>                 <span class="n">SUSP</span>     <span class="mi">24</span>    <span class="mi">484</span>
+<span class="n">tsk_User_2</span>           <span class="n">READY</span>     <span class="mi">1</span>     <span class="mi">88</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="task-priorities-in-freertos">
+<h2>2.2 Task priorities in FreeRTOS<a class="headerlink" href="#task-priorities-in-freertos" title="Link to this heading"></a></h2>
+<p>Het resultaat van de vorige opdrachten is een programma met twee onafhankelijke tasks, waarbij elke task één LED laat knipperen. Beide tasks hebben dezelfde prioriteit, namelijk 0.</p>
+<section id="id1">
+<h3>Aanwijzingen<a class="headerlink" href="#id1" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>Gebruik de task handle die bij <code class="docutils literal notranslate"><span class="pre">xTaskCreate</span></code> is aangemaakt.</p></li>
+<li><p>De prioriteit van <code class="docutils literal notranslate"><span class="pre">UserTask_2</span></code> kan op elk willekeurig moment door iedereen worden aangepast, dus ook bijvoorbeeld in <code class="docutils literal notranslate"><span class="pre">UserTask</span></code>.</p></li>
+</ul>
+</section>
+</section>
+<section id="delay-en-sleepfuncties">
+<h2>2.3 Delay- en sleepfuncties<a class="headerlink" href="#delay-en-sleepfuncties" title="Link to this heading"></a></h2>
+<p>Een task hoeft niet altijd bezig te zijn met de uitvoering van een programma. Tijdens de uitvoering bevindt een task zich in de <code class="docutils literal notranslate"><span class="pre">ready</span></code>- of <code class="docutils literal notranslate"><span class="pre">running</span></code>-state. Een task kan ook wachten op een bepaalde gebeurtenis of totdat een bepaalde tijd is verstreken. In dat geval bevindt de task zich in de zogenoemde <code class="docutils literal notranslate"><span class="pre">blocked</span></code>-state.</p>
+<p>De tasks uit de voorgaande opdrachten bevonden zich altijd in de <code class="docutils literal notranslate"><span class="pre">running</span></code>- of <code class="docutils literal notranslate"><span class="pre">ready</span></code>-state. Dat is ook het geval wanneer een task met de functie <code class="docutils literal notranslate"><span class="pre">dirtyDelay</span></code> actief staat te wachten totdat een bepaalde tijd is verstreken.</p>
+<p>De functie <code class="docutils literal notranslate"><span class="pre">dirtyDelay</span></code> is echter zeer inefficiënt: de CPU voert hierin zinloze acties uit, zoals optellen, om tijd te doden. Het is veel efficiënter om een task in de <code class="docutils literal notranslate"><span class="pre">blocked</span></code>-state te zetten en de task te laten wachten totdat de wachttijd voorbij is. Daarna kan de task weer tijdelijk worden uitgevoerd. Gedurende die wachttijd kunnen andere tasks door de CPU worden uitgevoerd. Dit kan worden gerealiseerd door <code class="docutils literal notranslate"><span class="pre">dirtyDelay</span></code> te vervangen door een efficiëntere FreeRTOS-delayfunctie.</p>
+<p>De functie <code class="docutils literal notranslate"><span class="pre">vTaskDelay</span></code> werkt met clock ticks van het systeem. Het is echter vaak makkelijker om tijden in (milli)seconden te specificeren. Hiervoor is de bibliotheekfunctie <code class="docutils literal notranslate"><span class="pre">taskSleep</span></code> beschikbaar. Deze functie maakt gebruik van <code class="docutils literal notranslate"><span class="pre">vTaskDelay</span></code> en rekent de gewenste tijd, gespecificeerd in milliseconden, om naar het bijbehorende aantal ticks.</p>
+<p>Bij de volgende opdrachten wordt gebruikgemaakt van de code zoals die tot en met opdracht 9 is gemaakt. Dat betekent dat <code class="docutils literal notranslate"><span class="pre">UserTask</span></code> prioriteit 0 heeft en <code class="docutils literal notranslate"><span class="pre">UserTask_2</span></code> prioriteit 1 of 2, in elk geval hoger dan 0. Het effect hiervan is dat de task met de hoogste prioriteit (1 of 2) alle CPU-tijd krijgt, waardoor alleen de bijbehorende LED knippert. De andere LED blijft uit, omdat de bijbehorende task een lagere prioriteit heeft (0) en dus niet aan de beurt komt.</p>
+<p>De functie vTaskDelay werkt met clock ticks van het systeem, het is echter vaak makkelijker om tijden te specificeren in (milli)seconden. Hiervoor is de bibliotheekfunctie taskSleep beschikbaar, die (uiteraard) weer gebruik maakt van vTaskDelay, en de gewenste tijd, gespecificeerd in milliseconden, omrekent naar het daarbij behorende aantal ticks.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Voettekst">
+        <a href="assignment_1.html" class="btn btn-neutral float-left" title="Opdracht 1: Installatie van de software" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Vorige</a>
+        <a href="assignment_3.html" class="btn btn-neutral float-right" title="Opdracht 3: Mutual exclusion en task synchronisation in FreeRTOS" accesskey="n" rel="next">Volgende <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright Gerard Harkema.</p>
+  </div>
+
+  Gebouwd met <a href="https://www.sphinx-doc.org/">Sphinx</a> met een
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">thema</a>
+    geleverd door <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

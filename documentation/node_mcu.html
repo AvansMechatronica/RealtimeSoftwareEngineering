@@ -1,0 +1,173 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="nl" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Systeemoverzicht NodeMCU-shield &mdash; Realtime Software Engineering Workshop 0.1 documentatie</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=a57088fb"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../_static/copybutton.js?v=f281be69"></script>
+      <script src="../_static/translations.js?v=e4d38c6a"></script>
+      <script src="../_static/design-tabs.js?v=f930bc37"></script>
+      <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+      <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Zoeken" href="../search.html" />
+    <link rel="next" title="Visual Studio Code en PlatformIO" href="install.html" />
+    <link rel="prev" title="Inleiding" href="overview.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            Realtime Software Engineering Workshop
+              <img src="../_static/avans-hogeschool-logo.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Zoek in documentatie" aria-label="Zoek in documentatie" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigatiemenu">
+              <p class="caption" role="heading"><span class="caption-text">Inhoudsopgave:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="overview.html">Inleiding</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Systeemoverzicht NodeMCU-shield</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#kenmerken-van-de-esp32">Kenmerken van de ESP32</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#blokschema-nodemcu">Blokschema NodeMCU</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#overzicht-van-subsystemen">Overzicht van subsystemen</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="install.html">Visual Studio Code en PlatformIO</a></li>
+<li class="toctree-l1"><a class="reference internal" href="assignment_1.html">Opdracht 1: Installatie van de software</a></li>
+<li class="toctree-l1"><a class="reference internal" href="assignment_2.html">Opdrachten 2: Tasks en priorities in FreeRTOS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="assignment_3.html">Opdracht 3: Mutual exclusion en task synchronisation in FreeRTOS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="assignment_4.html">Opdracht 4: Producers, consumers en queues in FreeRTOS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="assignment_5.html">Opdracht 5: Interrupts in FreeRTOS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="assignment_6.html">Opdracht 6:</a></li>
+<li class="toctree-l1"><a class="reference internal" href="libraries.html">Softwarebibliotheken</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Voorbeeldprogramma’s</a></li>
+<li class="toctree-l1"><a class="reference internal" href="faq.html">Veelgestelde vragen</a></li>
+<li class="toctree-l1"><a class="reference internal" href="teacher_manual.html">Docentenhandleiding</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Navigatiemenu voor mobiel" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Realtime Software Engineering Workshop</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Paginanavigatie">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Systeemoverzicht NodeMCU-shield</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/documentation/node_mcu.md.txt" rel="nofollow"> Bekijk paginabron</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section class="tex2jax_ignore mathjax_ignore" id="systeemoverzicht-nodemcu-shield">
+<h1>Systeemoverzicht NodeMCU-shield<a class="headerlink" href="#systeemoverzicht-nodemcu-shield" title="Link to this heading"></a></h1>
+<p>In deze module wordt het NodeMCU-shield en zijn perifere componenten beschreven.
+De basis van het NodeMCU is een ESP-32 microcontroller.</p>
+<section id="kenmerken-van-de-esp32">
+<h2>Kenmerken van de ESP32<a class="headerlink" href="#kenmerken-van-de-esp32" title="Link to this heading"></a></h2>
+<p><img alt="ESP32-DevKitC" src="../_images/esp32.jpg" /></p>
+<p><em>Figuur 1. ESP32-DevKitC</em></p>
+<ul class="simple">
+<li><p>Microcontroller: Xtensa LX6 dual-core</p></li>
+<li><p>Operating voltage: 3.3 V</p></li>
+<li><p>Input voltage (recommended): 5 V</p></li>
+<li><p>Input voltage (limits): 4.5-5.5 V</p></li>
+<li><p>Digital I/O pins: 34 (waarvan 15 als PWM-uitgang)</p></li>
+<li><p>Analog input pins: 18</p></li>
+<li><p>Flash memory: 4 MB</p></li>
+<li><p>SRAM: 520 KB</p></li>
+<li><p>EEPROM: 0 KB</p></li>
+<li><p>Clock speed: 240 MHz</p></li>
+</ul>
+</section>
+<section id="blokschema-nodemcu">
+<h2>Blokschema NodeMCU<a class="headerlink" href="#blokschema-nodemcu" title="Link to this heading"></a></h2>
+<p><img alt="Blokschema van de NodeMCU" src="../_images/node_mcu_abstract.png" />
+<em>Figuur 2. Blokschema NodeMCU</em>
+<img alt="NodeMCU Detail" src="../_images/node_mcu_detail.jpg" />
+<em>Figuur 3. Detail NodeMCU</em></p>
+</section>
+<section id="overzicht-van-subsystemen">
+<h2>Overzicht van subsystemen<a class="headerlink" href="#overzicht-van-subsystemen" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p><strong>Microcontroller core (sheet 2/9):</strong> NodeMCU-32S-hostmodule dat randapparatuur aanstuurt via SPI, I2C en parallelle GPIO’s. Dit onderdeel bevat een SSD1306-OLED-display, een SC16IS740 I2C-naar-UART-bridge en een 74HC138 3-naar-8-decoder voor de SPI-chipselectsignalen (<code class="docutils literal notranslate"><span class="pre">CS_DAC01</span></code>, <code class="docutils literal notranslate"><span class="pre">CS_DAC23</span></code>, <code class="docutils literal notranslate"><span class="pre">CS_ADC</span></code>, <code class="docutils literal notranslate"><span class="pre">CS_QC0</span></code>, <code class="docutils literal notranslate"><span class="pre">CS_QC1</span></code>).</p></li>
+<li><p><strong>DAC-uitgangsversterkers (sheet 3/9):</strong> Twee MCP4922 dual-channel 12-bits SPI-DAC’s, samen vier kanalen, met TL084-opamps voor niveaushifting. Hiermee ontstaat een uitgebreid bipolair uitgangsbereik, gebaseerd op een MCP1525-precisiereferentie van 2,5 V.</p></li>
+<li><p><strong>ADC-ingangsversterkers (sheet 4/9):</strong> Een 8-kanaals MCP3208 SPI-ADC die signalen ontvangt van vier externe, niveauverschoven analoge ingangen via J3, twee onboard-kalibratiepotentiometers en twee analoge drukknoppen.</p></li>
+<li><p><strong>Quadraturetellers (sheet 5/9):</strong> Twee LS7366R-IC’s voor quadrature-encodertelling, geklokt door een externe oscillator van 20 MHz. De encoders zijn via een 74LVC245A-niveautranslator verbonden met de J7-encoderheader.</p></li>
+<li><p><strong>Digitale I/O (sheet 5/9):</strong> Gebufferde parallelle interfaces met een 6-bits 5V-naar-3,3V-ingangspoort (74LVC245A op J11) en een 6-bits 3,3V-naar-5V-uitgangsdriver (74HCTC245 op J9) met indicatie-leds.</p></li>
+<li><p><strong>Klokgenerator (sheet 6/9):</strong> Een zelfstandig timingsysteem met een oscillator van 1 MHz en 74HCT390-dubbele decade-rippledelers. Dit levert deel-frequenties tot 1 Hz op connector J6.</p></li>
+<li><p><strong>Voeding (sheet 7/9):</strong> Een hoofdvoeding van +12 VDC voedt een buckconverter (R-78E5.0-1.0) voor de primaire +5V-rail en een LDO (NCP1117LPST33) voor +3,3 V. Een geïsoleerde TBA2-0523 DC/DC-module met L78L12- en L79L12-regelaars genereert schone <span class="math notranslate nohighlight">\(\pm 12\)</span> V-rails voor de analoge opamps.</p></li>
+</ul>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Voettekst">
+        <a href="overview.html" class="btn btn-neutral float-left" title="Inleiding" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Vorige</a>
+        <a href="install.html" class="btn btn-neutral float-right" title="Visual Studio Code en PlatformIO" accesskey="n" rel="next">Volgende <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright Gerard Harkema.</p>
+  </div>
+
+  Gebouwd met <a href="https://www.sphinx-doc.org/">Sphinx</a> met een
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">thema</a>
+    geleverd door <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

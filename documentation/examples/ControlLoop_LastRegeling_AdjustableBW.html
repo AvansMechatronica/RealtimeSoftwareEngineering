@@ -1,0 +1,201 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="nl" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ControlLoop_LastRegeling_AdjustableBW &mdash; Realtime Software Engineering Workshop 0.1 documentatie</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=a57088fb"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=f281be69"></script>
+      <script src="../../_static/translations.js?v=e4d38c6a"></script>
+      <script src="../../_static/design-tabs.js?v=f930bc37"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Zoeken" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            Realtime Software Engineering Workshop
+              <img src="../../_static/avans-hogeschool-logo.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Zoek in documentatie" aria-label="Zoek in documentatie" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigatiemenu">
+              <p class="caption" role="heading"><span class="caption-text">Inhoudsopgave:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../overview.html">Inleiding</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../node_mcu.html">Systeemoverzicht NodeMCU-shield</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../install.html">Visual Studio Code en PlatformIO</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../assignment_1.html">Opdracht 1: Installatie van de software</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../assignment_2.html">Opdrachten 2: Tasks en priorities in FreeRTOS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../assignment_3.html">Opdracht 3: Mutual exclusion en task synchronisation in FreeRTOS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../assignment_4.html">Opdracht 4: Producers, consumers en queues in FreeRTOS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../assignment_5.html">Opdracht 5: Interrupts in FreeRTOS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../assignment_6.html">Opdracht 6:</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../libraries.html">Softwarebibliotheken</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples.html">Voorbeeldprogramma’s</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../faq.html">Veelgestelde vragen</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../teacher_manual.html">Docentenhandleiding</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Navigatiemenu voor mobiel" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Realtime Software Engineering Workshop</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Paginanavigatie">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">ControlLoop_LastRegeling_AdjustableBW</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/documentation/examples/ControlLoop_LastRegeling_AdjustableBW.md.txt" rel="nofollow"> Bekijk paginabron</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section class="tex2jax_ignore mathjax_ignore" id="controlloop-lastregeling-adjustablebw">
+<h1>ControlLoop_LastRegeling_AdjustableBW<a class="headerlink" href="#controlloop-lastregeling-adjustablebw" title="Link to this heading"></a></h1>
+<section id="overzicht">
+<h2>Overzicht<a class="headerlink" href="#overzicht" title="Link to this heading"></a></h2>
+<p>Dit project is een real-time regelapplicatie voor een ESP32 (FreeRTOS/Arduino-framework, via
+PlatformIO) die de positie regelt van een slede die via een tandriem wordt aangedreven door een
+motor (motorzijde) en waarbij een last aan de andere kant van de tandriem hangt (lastzijde). De
+regelaar heeft een <strong>instelbare bandbreedte</strong> (adjustable bandwidth, <code class="docutils literal notranslate"><span class="pre">wblFactor</span></code>), die tijdens
+bedrijf via een potentiometer/ADC-kanaal live kan worden bijgesteld.</p>
+</section>
+<section id="functionaliteit">
+<h2>Functionaliteit<a class="headerlink" href="#functionaliteit" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p><strong>Positieregeling (<code class="docutils literal notranslate"><span class="pre">position_controller_motor.cpp</span></code>)</strong>: implementeert het mechanische model
+(massa’s, traagheidsmomenten, overbrengingsverhoudingen, torsiestijfheid van de tandriem) en de
+regellus die elke 1 ms (<code class="docutils literal notranslate"><span class="pre">Ts</span> <span class="pre">=</span> <span class="pre">0.001</span> <span class="pre">s</span></code>) wordt uitgevoerd. De regelbandbreedte wordt bepaald door
+de parameter <code class="docutils literal notranslate"><span class="pre">wblFactor</span></code>.</p></li>
+<li><p><strong>Motoraansturing (<code class="docutils literal notranslate"><span class="pre">motor_control.cpp</span></code>)</strong>: stuurt de ESCON-motorcontroller aan via DAC-uitgangen,
+leest digitale ingangen (eindschakelaars links/rechts, overload-detectie, ATOM-foutstatus) en
+biedt functies om de slede naar de home-positie te bewegen (<code class="docutils literal notranslate"><span class="pre">MotorGotoHomePosition</span></code>) of te
+stoppen.</p></li>
+<li><p><strong>Regellus-taak (<code class="docutils literal notranslate"><span class="pre">control_task.cpp</span></code>)</strong>: draait op een hardware-timer van 1 ms
+(<code class="docutils literal notranslate"><span class="pre">InitializePeriodicTimer</span></code>) die via een ISR een semafoor geeft om de regellus te ontgrendelen.
+Bij het opstarten wordt gewacht op de knoppen- en parametertaak (via een event group), waarna de
+slede naar de linker home-positie beweegt en de quadratuur-encoders worden gereset. Met de
+restart-knop (SW1) wordt de regellus gestart/herstart.</p></li>
+<li><p><strong>Parameterinstelling (<code class="docutils literal notranslate"><span class="pre">parameter_setting_task.cpp</span></code>)</strong>: leest continu een ADC-kanaal uit
+(potentiometer) en zet dit om naar de bandbreedtefactor <code class="docutils literal notranslate"><span class="pre">wblFactor</span></code>
+(bereik <code class="docutils literal notranslate"><span class="pre">WBLFACTOR_MIN</span></code>..<code class="docutils literal notranslate"><span class="pre">WBLFACTOR_MAX</span></code>). Bij een significante wijziging
+(&gt; <code class="docutils literal notranslate"><span class="pre">WBLTHRESHOLD</span></code>) wordt de nieuwe waarde doorgegeven aan de regellus via een queue
+(<code class="docutils literal notranslate"><span class="pre">handle_ParameterQueue</span></code>). Met knop B2 kan de huidige waarde worden opgevraagd/getoond.</p></li>
+<li><p><strong>Knopafhandeling (<code class="docutils literal notranslate"><span class="pre">button_handler_task.cpp</span></code>)</strong>: bewaakt de restart-knop (SW1) en geeft bij een
+druk op de knop een semafoor (<code class="docutils literal notranslate"><span class="pre">handle_RestartSemaphore</span></code>) om de regellus te (her)starten of te
+onderbreken.</p></li>
+<li><p><strong>Hardwareconfiguratie (<code class="docutils literal notranslate"><span class="pre">hardware_config.cpp</span></code>)</strong>: initialiseert en bundelt alle
+hardware-interfaces (digitale I/O, SPI-bus, quadratuurtellers, DAC, ADC, knoppen) in één
+<code class="docutils literal notranslate"><span class="pre">HardwareConfig</span></code>-structuur die als gedeelde context aan alle taken wordt doorgegeven.</p></li>
+</ul>
+</section>
+<section id="taken-freertos">
+<h2>Taken (FreeRTOS)<a class="headerlink" href="#taken-freertos" title="Link to this heading"></a></h2>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Taak</p></th>
+<th class="head"><p>Bestand</p></th>
+<th class="head"><p>Rol</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">ControlTask</span></code></p></td>
+<td><p>control_task.cpp</p></td>
+<td><p>1 ms regellus, aansturing motor/positie</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">ButtonHandlerTask</span></code></p></td>
+<td><p>button_handler_task.cpp</p></td>
+<td><p>detecteert restart-knop SW1</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">ParameterSettingTask</span></code></p></td>
+<td><p>parameter_setting_task.cpp</p></td>
+<td><p>leest bandbreedte-potmeter uit, toont waarde op B2</p></td>
+</tr>
+</tbody>
+</table>
+<p>Deze taken worden opgestart via <code class="docutils literal notranslate"><span class="pre">StartApplicationTasks()</span></code> in <code class="docutils literal notranslate"><span class="pre">application_tasks.cpp</span></code>, samen met
+een event group, binaire semafoor en queue om te synchroniseren en parameters uit te wisselen.</p>
+</section>
+<section id="overige-onderdelen">
+<h2>Overige onderdelen<a class="headerlink" href="#overige-onderdelen" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p><strong>OLED-display</strong>: toont statusinformatie (optioneel, via <code class="docutils literal notranslate"><span class="pre">INCLUDE_OLED_DISPLAY</span></code> build-flag).</p></li>
+<li><p><strong>Command console</strong>: registreert commando’s zoals <code class="docutils literal notranslate"><span class="pre">controlloopstats</span></code> om regellus-statistieken
+(timerinterrupts, gemiste ticks, loop-teller) op te vragen.</p></li>
+<li><p><strong>Heartbeat-taak</strong>: knippert een status-LED om aan te geven dat het systeem draait.</p></li>
+</ul>
+</section>
+<section id="build">
+<h2>Build<a class="headerlink" href="#build" title="Link to this heading"></a></h2>
+<p>Gebouwd met PlatformIO voor het board <code class="docutils literal notranslate"><span class="pre">esp32doit-devkit-v1</span></code> (Arduino-framework). Zie
+<a class="reference internal" href="#platformio.ini"><span class="xref myst">platformio.ini</span></a> voor build-flags en library-afhankelijkheden.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright Gerard Harkema.</p>
+  </div>
+
+  Gebouwd met <a href="https://www.sphinx-doc.org/">Sphinx</a> met een
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">thema</a>
+    geleverd door <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

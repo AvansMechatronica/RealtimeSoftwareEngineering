@@ -1,0 +1,163 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="nl" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Softwarebibliotheken &mdash; Realtime Software Engineering Workshop 0.1 documentatie</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=a57088fb"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../_static/copybutton.js?v=f281be69"></script>
+      <script src="../_static/translations.js?v=e4d38c6a"></script>
+      <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Zoeken" href="../search.html" />
+    <link rel="next" title="Voorbeeldprogramma’s" href="examples.html" />
+    <link rel="prev" title="Opdracht 6:" href="assignment_6.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            Realtime Software Engineering Workshop
+              <img src="../_static/avans-hogeschool-logo.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Zoek in documentatie" aria-label="Zoek in documentatie" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigatiemenu">
+              <p class="caption" role="heading"><span class="caption-text">Inhoudsopgave:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="overview.html">Inleiding</a></li>
+<li class="toctree-l1"><a class="reference internal" href="node_mcu.html">Systeemoverzicht NodeMCU-shield</a></li>
+<li class="toctree-l1"><a class="reference internal" href="install.html">Visual Studio Code en PlatformIO</a></li>
+<li class="toctree-l1"><a class="reference internal" href="assignment_1.html">Opdracht 1: Installatie van de software</a></li>
+<li class="toctree-l1"><a class="reference internal" href="assignment_2.html">Opdrachten 2: Tasks en priorities in FreeRTOS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="assignment_3.html">Opdracht 3: Mutual exclusion en task synchronisation in FreeRTOS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="assignment_4.html">Opdracht 4: Producers, consumers en queues in FreeRTOS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="assignment_5.html">Opdracht 5: Interrupts in FreeRTOS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="assignment_6.html">Opdracht 6:</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Softwarebibliotheken</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#systeembibliotheken">Systeembibliotheken</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#hardwarebibliotheken">Hardwarebibliotheken</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#ondersteunende-bibliotheken">Ondersteunende bibliotheken</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Voorbeeldprogramma’s</a></li>
+<li class="toctree-l1"><a class="reference internal" href="faq.html">Veelgestelde vragen</a></li>
+<li class="toctree-l1"><a class="reference internal" href="teacher_manual.html">Docentenhandleiding</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Navigatiemenu voor mobiel" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Realtime Software Engineering Workshop</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Paginanavigatie">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Softwarebibliotheken</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/documentation/libraries.md.txt" rel="nofollow"> Bekijk paginabron</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section class="tex2jax_ignore mathjax_ignore" id="softwarebibliotheken">
+<h1>Softwarebibliotheken<a class="headerlink" href="#softwarebibliotheken" title="Link to this heading"></a></h1>
+<section id="systeembibliotheken">
+<h2>Systeembibliotheken<a class="headerlink" href="#systeembibliotheken" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p><a class="reference internal" href="libraries/system_info.html"><span class="std std-doc">Systeeminformatie</span></a></p></li>
+<li><p><a class="reference internal" href="libraries/ts_printf.html"><span class="std std-doc">ts_printf</span></a></p></li>
+<li><p><a class="reference internal" href="libraries/heartbeat.html"><span class="std std-doc">Heartbeat</span></a></p></li>
+<li><p><a class="reference internal" href="libraries/command_console.html"><span class="std std-doc">Command Console</span></a></p></li>
+</ul>
+</section>
+<section id="hardwarebibliotheken">
+<h2>Hardwarebibliotheken<a class="headerlink" href="#hardwarebibliotheken" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p><a class="reference internal" href="libraries/adc_3208_lib.html"><span class="std std-doc">ADC 3208 Bibliotheek</span></a></p></li>
+<li><p><a class="reference internal" href="libraries/button_lib.html"><span class="std std-doc">Knopbibliotheek</span></a></p></li>
+<li><p><a class="reference internal" href="libraries/dac_4922_lib.html"><span class="std std-doc">DAC 4922 Bibliotheek</span></a></p></li>
+<li><p><a class="reference internal" href="libraries/dio_lib.html"><span class="std std-doc">DIO Bibliotheek</span></a></p></li>
+<li><p><a class="reference internal" href="libraries/led_lib.html"><span class="std std-doc">LED Bibliotheek</span></a></p></li>
+<li><p><a class="reference internal" href="libraries/oled_lib.html"><span class="std std-doc">OLED Bibliotheek</span></a></p></li>
+<li><p><a class="reference internal" href="libraries/pulse_lib.html"><span class="std std-doc">Pulse Bibliotheek</span></a></p></li>
+<li><p><a class="reference internal" href="libraries/qc_7366_lib.html"><span class="std std-doc">QC 7366 Bibliotheek</span></a></p></li>
+<li><p><a class="reference internal" href="libraries/spi_lib.html"><span class="std std-doc">SPI Bibliotheek</span></a></p></li>
+</ul>
+</section>
+<section id="ondersteunende-bibliotheken">
+<h2>Ondersteunende bibliotheken<a class="headerlink" href="#ondersteunende-bibliotheken" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p><a class="reference internal" href="libraries/map.html"><span class="std std-doc">Map / conversie</span></a></p></li>
+<li><p><a class="reference internal" href="libraries/bits.html"><span class="std std-doc">Bits</span></a></p></li>
+</ul>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Voettekst">
+        <a href="assignment_6.html" class="btn btn-neutral float-left" title="Opdracht 6:" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Vorige</a>
+        <a href="examples.html" class="btn btn-neutral float-right" title="Voorbeeldprogramma’s" accesskey="n" rel="next">Volgende <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright Gerard Harkema.</p>
+  </div>
+
+  Gebouwd met <a href="https://www.sphinx-doc.org/">Sphinx</a> met een
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">thema</a>
+    geleverd door <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

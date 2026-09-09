@@ -1,0 +1,199 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="nl" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Visual Studio Code en PlatformIO &mdash; Realtime Software Engineering Workshop 0.1 documentatie</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=a57088fb"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../_static/copybutton.js?v=f281be69"></script>
+      <script src="../_static/translations.js?v=e4d38c6a"></script>
+      <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Zoeken" href="../search.html" />
+    <link rel="next" title="Opdracht 1: Installatie van de software" href="assignment_1.html" />
+    <link rel="prev" title="Systeemoverzicht NodeMCU-shield" href="node_mcu.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            Realtime Software Engineering Workshop
+              <img src="../_static/avans-hogeschool-logo.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Zoek in documentatie" aria-label="Zoek in documentatie" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigatiemenu">
+              <p class="caption" role="heading"><span class="caption-text">Inhoudsopgave:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="overview.html">Inleiding</a></li>
+<li class="toctree-l1"><a class="reference internal" href="node_mcu.html">Systeemoverzicht NodeMCU-shield</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Visual Studio Code en PlatformIO</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#installeren-van-visual-studio-code">Installeren van Visual Studio Code</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#installeren-van-de-platformio-extensie">Installeren van de PlatformIO-extensie</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#platformio-gebruiken-in-vs-code">PlatformIO gebruiken in VS Code</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#verkrijgen-van-de-workshopbestanden">Verkrijgen van de workshopbestanden</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="assignment_1.html">Opdracht 1: Installatie van de software</a></li>
+<li class="toctree-l1"><a class="reference internal" href="assignment_2.html">Opdrachten 2: Tasks en priorities in FreeRTOS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="assignment_3.html">Opdracht 3: Mutual exclusion en task synchronisation in FreeRTOS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="assignment_4.html">Opdracht 4: Producers, consumers en queues in FreeRTOS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="assignment_5.html">Opdracht 5: Interrupts in FreeRTOS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="assignment_6.html">Opdracht 6:</a></li>
+<li class="toctree-l1"><a class="reference internal" href="libraries.html">Softwarebibliotheken</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Voorbeeldprogramma’s</a></li>
+<li class="toctree-l1"><a class="reference internal" href="faq.html">Veelgestelde vragen</a></li>
+<li class="toctree-l1"><a class="reference internal" href="teacher_manual.html">Docentenhandleiding</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Navigatiemenu voor mobiel" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Realtime Software Engineering Workshop</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Paginanavigatie">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Visual Studio Code en PlatformIO</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/documentation/install.md.txt" rel="nofollow"> Bekijk paginabron</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section class="tex2jax_ignore mathjax_ignore" id="visual-studio-code-en-platformio">
+<h1>Visual Studio Code en PlatformIO<a class="headerlink" href="#visual-studio-code-en-platformio" title="Link to this heading"></a></h1>
+<p>In deze sectie lees je hoe je Visual Studio Code (VS Code) en PlatformIO installeert voor het ontwikkelen van microcontrollerprojecten.</p>
+<section id="installeren-van-visual-studio-code">
+<h2>Installeren van Visual Studio Code<a class="headerlink" href="#installeren-van-visual-studio-code" title="Link to this heading"></a></h2>
+<ol class="arabic simple">
+<li><p>Ga naar de officiele website: <a class="reference external" href="https://code.visualstudio.com/">https://code.visualstudio.com/</a>.</p></li>
+<li><p>Download de versie voor jouw besturingssysteem.</p></li>
+<li><p>Volg de installatiestappen op het scherm.</p></li>
+</ol>
+</section>
+<section id="installeren-van-de-platformio-extensie">
+<h2>Installeren van de PlatformIO-extensie<a class="headerlink" href="#installeren-van-de-platformio-extensie" title="Link to this heading"></a></h2>
+<ol class="arabic simple">
+<li><p>Open Visual Studio Code.</p></li>
+<li><p>Open Extensions via het zijbalk-icoon of met <code class="docutils literal notranslate"><span class="pre">Ctrl+Shift+X</span></code>.</p></li>
+<li><p>Zoek op <code class="docutils literal notranslate"><span class="pre">PlatformIO</span> <span class="pre">IDE</span></code>.</p></li>
+<li><p>Klik op <code class="docutils literal notranslate"><span class="pre">Install</span></code>.</p></li>
+</ol>
+</section>
+<section id="platformio-gebruiken-in-vs-code">
+<h2>PlatformIO gebruiken in VS Code<a class="headerlink" href="#platformio-gebruiken-in-vs-code" title="Link to this heading"></a></h2>
+<ol class="arabic simple">
+<li><p>Klik na installatie op het PlatformIO-icoon in de zijbalk.</p></li>
+<li><p>Open <code class="docutils literal notranslate"><span class="pre">PlatformIO</span> <span class="pre">Home</span></code>.</p></li>
+<li><p>Kies <code class="docutils literal notranslate"><span class="pre">New</span> <span class="pre">Project</span></code> om een nieuw project te maken.</p></li>
+</ol>
+</section>
+<section id="verkrijgen-van-de-workshopbestanden">
+<h2>Verkrijgen van de workshopbestanden<a class="headerlink" href="#verkrijgen-van-de-workshopbestanden" title="Link to this heading"></a></h2>
+<p>Om te starten heb je de workshopbestanden nodig met code, schema’s en opdrachtinstructies.</p>
+<div class="sd-card sd-sphinx-override sd-mb-3 sd-shadow-sm docutils">
+<div class="sd-card-body docutils">
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-0" name="sd-tab-set-0" type="radio">
+<label class="sd-tab-label" for="sd-tab-item-0">
+Download ZIP</label><div class="sd-tab-content docutils">
+<p class="sd-card-text">Download de bestanden als ZIP via:
+<a class="reference external" href="https://github.com/AvansMechatronica/RealtimeSoftwareEngineering/archive/refs/heads/main.zip">Download Workshop Bestanden</a></p>
+<p class="sd-card-text">Pak het ZIP-bestand uit in een map die je makkelijk terugvindt.</p>
+</div>
+<input id="sd-tab-item-1" name="sd-tab-set-0" type="radio">
+<label class="sd-tab-label" for="sd-tab-item-1">
+Git Clone</label><div class="sd-tab-content docutils">
+<p class="sd-card-text">Als je al bekend bent met Git en github, kun je de bestanden ook via Github verkrijgen. Volg de onderstaande stappen:</p>
+<ul class="simple">
+<li><p class="sd-card-text">Maak een account aan bij <a class="reference external" href="https://github.com/">Github</a> en login op dit account</p></li>
+<li><p class="sd-card-text">Open de <a class="reference external" href="https://github.com/AvansMechatronica/RealtimeSoftwareEngineering">RealtimeSoftwareEngineering</a> repository</p></li>
+<li><p class="sd-card-text">Maak een Fork van de repository naar je eigen Github account door op het <strong>Fork icoon</strong>  te klikken:</p></li>
+</ul>
+<p class="sd-card-text"><img alt="image" src="../_images/fork.jpg" /></p>
+<ul class="simple">
+<li><p class="sd-card-text">Volg de instructies, maar wijzig de naam van de nieuwe repository niet. Bevestig met <strong>Create Fork</strong></p></li>
+<li><p class="sd-card-text">Nu kun je de workshop clonen naar je lokale machine:</p></li>
+</ul>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/&lt;jouw_account_naam&gt;/RealtimeSoftwareEngineering.git
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Waarschuwing</p>
+<p>Plaats de bestanden niet in een <code class="docutils literal notranslate"><span class="pre">OneDrive</span></code>-map. Dit kan compileerproblemen veroorzaken.</p>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Voettekst">
+        <a href="node_mcu.html" class="btn btn-neutral float-left" title="Systeemoverzicht NodeMCU-shield" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Vorige</a>
+        <a href="assignment_1.html" class="btn btn-neutral float-right" title="Opdracht 1: Installatie van de software" accesskey="n" rel="next">Volgende <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright Gerard Harkema.</p>
+  </div>
+
+  Gebouwd met <a href="https://www.sphinx-doc.org/">Sphinx</a> met een
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">thema</a>
+    geleverd door <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
