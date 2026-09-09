@@ -34,7 +34,7 @@ dio_device dio;
 ```
 
 ## 2.1 Tasks in FreeRTOS
-Open in visual code de folder/map `<path-to-your-project>/assignments/1_assignment/1_basics`.
+Open in visual code de folder/map `<path-to-your-project>/assignments/1_assignment/1_basics_framework`.
 :::{note}
 Zie [installatie-instructies](install.md#verkrijgen-van-de-workshopbestanden) voor instructies over het installeren van de benodigde software.
 :::
