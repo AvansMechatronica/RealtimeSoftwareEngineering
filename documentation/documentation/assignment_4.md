@@ -20,7 +20,7 @@ Daarnaast wordt een task gemaakt die de queue monitort en continu laat zien hoev
 
 Maak in de volgende opdracht gebruik van de solution `RTSW_week_4_Queue_Framework.sln`. Voeg uitsluitend code toe aan, of wijzig code in, het bestand `main.c`. Alle overige folders bevatten bestanden voor de systeemconfiguratie. Laat deze **ongewijzigd**.
 
-Om regelmatig weer te geven hoeveel elementen in de queue staan, wordt een monitor-task toegevoegd die elke 200 ms het aantal elementen in Termite weergeeft. Deze task wijzigt dus niet de inhoud van de queue, maar geeft uitsluitend de status weer.
+Om regelmatig weer te geven hoeveel elementen in de queue staan, wordt een monitor-task toegevoegd die elke 200 ms het aantal elementen in Console/Terminal weergeeft. Deze task wijzigt dus niet de inhoud van de queue, maar geeft uitsluitend de status weer.
 
 In bovenstaande opdracht raakt de queue net vol: zodra de producer vijf samples in de queue heeft gezet, leest de consumer deze weer uit. De queue is dus weer leeg als het volgende sample beschikbaar komt.
 

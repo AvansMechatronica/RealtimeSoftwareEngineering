@@ -34,7 +34,7 @@ dio_device dio;
 ```
 
 ## 2.1 Tasks in FreeRTOS
-Open in visual code de folder/map `<path-to-your-project>/opdrachten/opdracht-2`.
+Open in visual code de folder/map `<path-to-your-project>/assignments/1_assignment/1_basics`.
 :::{note}
 Zie [installatie-instructies](install.md#verkrijgen-van-de-workshopbestanden) voor instructies over het installeren van de benodigde software.
 :::
@@ -67,13 +67,26 @@ De parameters voor deze functie zijn achtereenvolgens:
 
 ### Voorbeelden van uitvoer
 
-Voorbeeld van de programma-uitvoer in Termite:
+Voorbeeld van de programma-uitvoer in Console/Terminal:
 
-*Figuur 1. Termite terminal window*
+*Figuur 1. Console/Terminal terminal window*
 
-Voorbeeld van `task-stats`:
+Voorbeeld van `tasks`:
+```
+CommandConsole       RUN       1   1328
+IDLE0                READY     0    576
+tsk_User             READY     0     88
+IDLE1                READY     0    568
+loopTask             BLOCK     1   7244
+tsk_Heartbeat        BLOCK     1    860
+esp_timer            SUSP     22   8160
+Tmr Svc              BLOCK     1   3596
+ipc1                 SUSP     24    480
+tsk_Printf           BLOCK    23    700
+ipc0                 SUSP     24    484
+tsk_User_2           READY     1     88
+```
 
-Voorbeeld van `run-time-stats`:
 
 ## 2.2 Task priorities in FreeRTOS
 
