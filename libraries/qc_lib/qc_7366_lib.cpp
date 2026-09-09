@@ -25,7 +25,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 // void qc7366::Init(void)
 
-void qc7366::Init(spi *spi_bus)
+void qc7366::Init(spi_device *spi_bus)
 {
 	if (spi_bus == nullptr)
 	{

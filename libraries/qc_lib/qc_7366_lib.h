@@ -160,7 +160,7 @@ enum qc_channel_t
 
 class qc7366 {
 public:
-	void Init(spi *spi_bus);
+	void Init(spi_device *spi_bus);
 	void	WriteModeRegister(uint8_t channel, mode_register_t modeRegister, uint8_t valueMDR);
 	void 	ClearModeRegister(uint8_t channel, mode_register_t modeRegister);
 	uint8_t ReadModeRegister(uint8_t channel, mode_register_t modeRegister);
@@ -184,7 +184,7 @@ private:
     uint8_t GetSPIDeviceNumber(uint8_t qcChannel);
 	void SendCommand(uint8_t channel, uint8_t commandByte);
 
-	spi *spi_bus = nullptr;
+	spi_device *spi_bus = nullptr;
     SPISettings QCSPISettings = SPISettings(SPI_QC_SPEED, SPI_MSBFIRST, SPI_MODE0);
 
 };
