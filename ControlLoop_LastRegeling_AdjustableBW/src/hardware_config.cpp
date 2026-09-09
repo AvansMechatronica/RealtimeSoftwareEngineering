@@ -10,7 +10,7 @@
 static HardwareConfig config;
 
 ///////////////////////////////////////////////////////////////////////////////
-// bool ConfigureHardware(HardwareConfig *config)
+// HardwareConfig *ConfigureHardware(void)
 
 
 HardwareConfig *ConfigureHardware(void) {

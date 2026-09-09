@@ -83,19 +83,17 @@ void StartApplicationTasks(void)
 	hardwareConfig->dio.SetBit(1);
 
 
-	result = xTaskCreate(ControlTask, "tsk_Control", (configMINIMAL_STACK_SIZE), hardwareConfig, 0, &controlTaskHandle);
+	result = xTaskCreate(ControlTask, "tsk_Control", 4 * (configMINIMAL_STACK_SIZE), hardwareConfig, 0, &controlTaskHandle);
 	if (result == pdPASS )
 	{
 	}
-	result = xTaskCreate(ButtonHandlerTask, "tsk_Button", (configMINIMAL_STACK_SIZE), hardwareConfig, 0, &buttonHandlerTaskHandle);
+	result = xTaskCreate(ButtonHandlerTask, "tsk_Button", 4 * (configMINIMAL_STACK_SIZE), hardwareConfig, 0, &buttonHandlerTaskHandle);
 	if (result == pdPASS )
 	{
 	}
-#if 0
-	result = xTaskCreate(ParameterSettingTask, "tsk_ParamHandler", (configMINIMAL_STACK_SIZE), hardwareConfig, 0, &parameterSettingTaskHandle);
+	result = xTaskCreate(ParameterSettingTask, "tsk_ParamHandler", 4 * (configMINIMAL_STACK_SIZE), hardwareConfig, 0, &parameterSettingTaskHandle);
 	if (result == pdPASS )
 	{
 	}
-#endif
 }
 

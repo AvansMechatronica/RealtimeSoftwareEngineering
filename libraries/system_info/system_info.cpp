@@ -25,21 +25,7 @@ constexpr UBaseType_t kMaxTasks = 32;
 // registers the taskstats/tasks/memory/version/cpuinfo console commands
 void RegisterSystemInfoCommands()
 {
-	RegisterCommand("taskstats", [](const char *args) {
-		(void)args;
-		PrintTaskStats();
-	}, "Show command console task details");
-
-	RegisterCommand("tasks", [](const char *args) {
-		(void)args;
-		PrintTasksInfo();
-	}, "Show current task snapshot");
-
-	RegisterCommand("memory", [](const char *args) {
-		(void)args;
-		PrintMemoryInfo();
-	}, "Show ESP32 heap memory information");
-
+	
 	RegisterCommand("version", [](const char *args) {
 		(void)args;
 		PrintVersion();
@@ -49,6 +35,23 @@ void RegisterSystemInfoCommands()
 		(void)args;
 		PrintCPUInfo();
 	}, "Show ESP32 CPU/chip information");
+
+	RegisterCommand("memory", [](const char *args) {
+		(void)args;
+		PrintMemoryInfo();
+	}, "Show ESP32 heap memory information");
+	
+#if 0
+	RegisterCommand("taskstats", [](const char *args) {
+		(void)args;
+		PrintTaskStats();
+	}, "Show command console task details");
+#endif
+	RegisterCommand("tasks", [](const char *args) {
+		(void)args;
+		PrintTasksInfo();
+	}, "Show current task snapshot");
+
 }
 
 // prints ESP32 heap usage figures
@@ -146,7 +149,6 @@ void PrintTasksInfo()
 	ts_printf("Task diagnostics unavailable in this build (no task snapshot/trace support).\n");
 #endif
 }
-
 
 
 

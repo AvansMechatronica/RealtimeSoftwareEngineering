@@ -376,7 +376,7 @@ void PosctrlRunControllerMotorSide(void)
 	
 	if ((tickCount % 1000) == 0)
 	{
-		ts_printf(".");
+		ts_debug(".");
 	}
 	
 }

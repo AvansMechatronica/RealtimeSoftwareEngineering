@@ -141,7 +141,6 @@ void ControlTask(void *pvParameters)
 		printControlLoopStats();
 	}, "Prints the current control loop statistics");
 	ts_printf("> starting ControlTask (load)\n");
-#if 0
 
 
 	MotorInitialize(hardwareConfig);
@@ -171,16 +170,13 @@ void ControlTask(void *pvParameters)
 	ticksToWait = portMAX_DELAY;
 	xSemaphoreTake(handle_RestartSemaphore, ticksToWait);	// wait for SW1 first button press
 
-#endif
-
 	while (true)
 	{
-#if 0
 		MotorGotoHomePosition(MOVE_LEFT);
 
 		hardwareConfig->qc.ClearCountRegister(QC_CHANNEL_0);
 		hardwareConfig->qc.ClearCountRegister(QC_CHANNEL_1);
-		ts_printf("> HOME");
+		ts_printf("> Quadrature encoder reset\n");
 		
 		// always leave parameter value in queue! So use xQueuePeek
 		ticksToWait = 0;
@@ -188,7 +184,6 @@ void ControlTask(void *pvParameters)
 		ts_printf("> running with wblFactor: %.3f\n", wblFactor);
 		PosctrlInitParameters(wblFactor);
 		ControlLoop();	// this loop exits by pressing button SW1
-#endif
 	}
 	
 	/* Should never go here */
