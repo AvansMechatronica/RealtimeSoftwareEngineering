@@ -62,13 +62,13 @@
 
 class dac4922{
 public:
-    void Init(spi *spi_bus);
+    void Init(spi_device *spi_bus);
     void Write(uint8_t dacChannel, uint16_t dacValue);
     void SetOutputVoltage(uint8_t dacChannel, float outputVoltage);
     void SetOutputVoltageAll(float outputVoltage);
 private:
     uint8_t GetSPIDeviceNumber(uint8_t dacChannel);
-    spi *spi_bus;
+    spi_device *spi_bus;
     SPISettings DACSPISettings = SPISettings(SPI_DAC_SPEED, MSBFIRST, SPI_MODE0);
 };
 

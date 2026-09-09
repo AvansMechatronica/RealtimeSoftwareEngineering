@@ -29,7 +29,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 // void dac4922::Init(void)
 
-void dac4922::Init(spi *spi_bus)
+void dac4922::Init(spi_device *spi_bus)
 {
 	this->spi_bus = spi_bus;
 	// Init the DAC chips the first time by writing any value - use zero volts
