@@ -2,7 +2,7 @@
  * main.cpp
  *
  * Created: 13-11-2023 19:36:36
- * Author: Roel Smeets
+ * Author: Roel Smeets & Gerard Harkema
  * Revision: V2.0
  * Modified: 07-09-2026
  */ 
@@ -24,7 +24,7 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 // HAL includes for RTSW board
-#include "dio_lib.h"
+// None
 
 ///////////////////////////////////////////////////////////////////////////////
 // FreeRTOS task handle
@@ -48,7 +48,6 @@ void UserTask(void *pvParameters);
 void StartHartbeatTask(void);
 void StartUserTasks(void);
 
-void dirtyDelay(void);
 
 ///////////////////////////////////////////////////////////////////////////////
 // StartUserTasks
@@ -76,26 +75,7 @@ void StartUserTasks(void)
 	// recovery action here, so the application continues without UserTask.
 }
 
-// dirtyDelay
-//
-// Provides a temporary, intentionally inaccurate delay for the exercise. A
-// volatile counter prevents the compiler from removing the loop completely.
-// This function occupies the CPU while it runs; a later implementation should
-// use a FreeRTOS delay such as vTaskDelay() to yield to other tasks instead.
-void dirtyDelay(void)
-{
-	volatile uint32_t count = 0;
-	
-	// Delay for a while
-	for (count = 0; count < 0xfffff; count++ )
-	{
-		/* This loop is just a very crude delay implementation. There is
-		nothing to do in here. Later exercises will replace this crude
-		loop with a proper delay function. */
-	}
-}
-
-
+uint32_t G_NumberOfVisitors = 0;
 ///////////////////////////////////////////////////////////////////////////////
 // UserTask
 //
@@ -108,31 +88,17 @@ void dirtyDelay(void)
 
 void UserTask(void *pvParameters)
 {
-	dio_device dio;
-	// Initialize the DIO hardware before accessing the digital output, LED's are connected to it.
-	dio.Init();
-
-	// Report that the task has started. This message uses the normal output
-	// function and is therefore independent of the DEBUG build switch.
-	ts_printf("> UserTask started\n");
-
-	uint8_t ledNr = 0;
+	uint32_t zooEntry = (uint32_t) (pvParameters);
 	
-	while (true)
-	{
-		// ts_debug() is only compiled into the output path when DEBUG is defined.
-		// This keeps repetitive scheduler diagnostics out of normal builds.
-		ts_debug("> thread 1\n");
-		// Turn the selected LED output on, wait, and then turn it off again.
-		dio.SetBit(ledNr);
-		dirtyDelay();
-		dio.ClearBit(ledNr);
-		dirtyDelay();
-	}
+	ts_printf("> ZooEntry %d started\n", zooEntry);
+
+	// TODO: tel gespecificeerd aantal bezoekers voor het entreepoortje
 	
-	// The loop is intentionally infinite, so this line is normally unreachable.
-	// It remains as the correct cleanup operation if the loop is later changed
-	// to terminate or the task receives an explicit exit condition.
+	ts_printf("> ZooEntry %lu: Total visitors = %lu\n", zooEntry, G_NumberOfVisitors);
+	
+	// TODO: na het tellen in een oneindinge lange sleep gaan
+	
+	// we never get here!
 	vTaskDelete(NULL);
 }
 
