@@ -58,7 +58,4 @@ een event group, binaire semafoor en queue om te synchroniseren en parameters ui
 Gebouwd met PlatformIO voor het board `esp32doit-devkit-v1` (Arduino-framework). Zie
 [platformio.ini](platformio.ini) voor build-flags en library-afhankelijkheden.
 
-## Bekende aandachtspunten
 
-Zie [FREERTOS_ISSUES.md](FREERTOS_ISSUES.md) voor een overzicht van bekende FreeRTOS-gerelateerde
-risico's en verbeterpunten in de huidige implementatie.
